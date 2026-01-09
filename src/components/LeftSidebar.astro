@@ -1,0 +1,86 @@
+---
+---
+
+<aside class="hidden md:block w-64 space-y-6">
+  <!-- 个人信息卡片 -->
+  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+    <!-- 大头像 -->
+    <div class="flex justify-center mb-6">
+      <div class="relative">
+        <img 
+          src="https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755" 
+          alt="博主头像" 
+          class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
+        />
+      </div>
+    </div>
+
+    <!-- 信息区：左右分布 -->
+    <div class="flex justify-between items-start">
+      <!-- 左侧：博主信息 -->
+      <div class="flex-1">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1">波罗歌</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">万维网中潮汛来</p>
+      </div>
+
+      <!-- 右侧：社交图标组 -->
+      <div class="flex space-x-2">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+           class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-all duration-200 hover:scale-110">
+          <span class="sr-only">GitHub</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true" width="20" height="20">
+            <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+          </svg>
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
+           class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-all duration-200 hover:scale-110">
+          <span class="sr-only">Twitter</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true" width="20" height="20">
+            <path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航菜单卡片 -->
+  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+    <nav class="space-y-1">
+      <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">导航</h3>
+      <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-slate-900 bg-blue-50 dark:bg-blue-900/20 dark:text-white">首页</a>
+      <a href="/blog" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">博客</a>
+      <a href="/about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">关于</a>
+    </nav>
+  </div>
+
+  <!-- 分类卡片 -->
+  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+    <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">分类</h3>
+    <ul class="space-y-2">
+      <li>
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+          前端开发
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">12</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+          后端开发
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">8</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+          设计
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">5</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+          生活
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">3</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
