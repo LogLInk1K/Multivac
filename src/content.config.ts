@@ -1,8 +1,8 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const blog = defineCollection({
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+const post = defineCollection({
+	loader: glob({ base: './post', pattern: '**/*.{md,mdx}' }),
 	schema: ({ image }) =>
 		z.object({
 			title: z.string().min(1, { message: '标题不能为空' }),
@@ -18,15 +18,4 @@ const blog = defineCollection({
 		}),
 });
 
-const pages = defineCollection({
-	loader: glob({ base: './src/content/pages', pattern: '**/*.{md,mdx}' }),
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string().optional(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-		}),
-});
-
-export const collections = { blog, pages };
+export const collections = { post };

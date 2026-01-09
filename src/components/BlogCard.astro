@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: CollectionEntry<'post'>;
   key?: string;
 }
 
@@ -16,7 +16,7 @@ const { id } = post;
   {/* 使用Grid布局实现自适应高度 */}
   <div class="grid grid-rows-[auto_1fr]">
     {/* 封面图片区域：设置最小高度确保美观 */}
-    <div class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105" style="min-height: 180px;">
+    <a href={`/post/${id}`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105 block" style="min-height: 180px;">
       {heroImage && (
         <div
           class="absolute inset-0 bg-cover bg-center"
@@ -24,7 +24,7 @@ const { id } = post;
           aria-label={typeof heroImage === 'string' ? title : title}
         ></div>
       )}
-    </div>
+    </a>
     
     {/* 内容区域：使用flex布局实现内部元素的垂直排列 */}
     <div class="p-6 flex flex-col justify-between">
@@ -33,7 +33,7 @@ const { id } = post;
           <FormattedDate date={pubDate} />
         </time>
         <h3 class="text-lg font-bold mb-2 line-clamp-1">
-          <a href={`/archives/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
+          <a href={`/post/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
             {title}
           </a>
         </h3>

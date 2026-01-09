@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import MainLayout from '../../layouts/MainLayout.astro';
 import LeftSidebar from '../../components/LeftSidebar.astro';
 import RightSidebar from '../../components/RightSidebar.astro';
-import BlogCard from '../../components/BlogCard.astro';
+import ArchiveItem from '../../components/ArchiveItem.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('post')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
@@ -28,9 +28,9 @@ const posts = (await getCollection('blog')).sort(
 
 				<!-- 中间内容区：所有屏幕显示 -->
 				<div>
-					<div class="space-y-6">
+					<div class="space-y-4">
 						{posts.map((post) => (
-							<BlogCard key={post.id} post={post} />
+							<ArchiveItem key={post.id} post={post} />
 						))}
 					</div>
 				</div>
