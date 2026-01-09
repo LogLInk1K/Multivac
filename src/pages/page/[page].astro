@@ -4,12 +4,12 @@ import BlogCard from '../../components/BlogCard.astro';
 import LeftSidebar from '../../components/LeftSidebar.astro';
 import RightSidebar from '../../components/RightSidebar.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 // 动态路由需要的getStaticPaths函数
 export async function getStaticPaths() {
   // 获取所有文章并按时间倒序排序
-  const allPosts = (await getCollection('blog', { filter: (post) => !post.data.draft }))
+  const allPosts = (await getCollection('blog', (post: CollectionEntry<'blog'>) => !post.data.draft))
     .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
 
   // 分页设置
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 }
 
 // 获取所有文章并按时间倒序排序
-const allPosts = (await getCollection('blog', { filter: (post) => !post.data.draft }))
+const allPosts = (await getCollection('blog', (post: CollectionEntry<'blog'>) => !post.data.draft))
   .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
 
 // 分页设置
@@ -41,85 +41,23 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 ---
 
 <MainLayout title={`${SITE_TITLE} - 第 ${currentPage} 页`} description={SITE_DESCRIPTION}>
-	<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
-			<!-- 大屏幕：三栏布局 -->
-			<!-- 中等屏幕：侧边栏上下排列在左，内容在右 -->
-			<!-- 小屏幕：单列堆叠 -->
-			<div class="grid grid-cols-1 gap-8">
-				<!-- 大屏幕三栏布局 -->
-				<div class="hidden xl:grid grid-cols-[256px_1fr_256px] gap-8">
-					<!-- 左侧边栏 -->
-					<div>
+	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+			<!-- 响应式布局：小屏幕单列，中等屏幕两栏，大屏幕三栏 -->
+			<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] xl:grid-cols-[272px_1fr_272px] gap-6">
+				<!-- 左侧边栏：中等屏幕和大屏幕显示 -->
+				<div class="hidden md:block">
+					<div class="space-y-6">
 						<LeftSidebar />
-					</div>
-
-					<!-- 中间内容区 -->
-					<div>
-						<div class="grid grid-cols-1 gap-8">
-							{posts.map((post) => (
-								<BlogCard key={post.id} post={post} />
-							))}
+						<!-- 中等屏幕：右侧边栏显示在左侧边栏下方 -->
+						<div class="md:block xl:hidden">
+							<RightSidebar />
 						</div>
-
-						<!-- 分页控件 -->
-						{totalPages > 1 && (
-							<div class="flex justify-center mt-12">
-								<nav class="inline-flex items-center space-x-2">
-									<!-- 上一页按钮 -->
-									{currentPage > 1 && (
-										<a 
-											href={currentPage === 2 ? '/' : `/page/${currentPage - 1}/`} 
-											class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-										>
-											上一页
-										</a>
-									)}
-
-									<!-- 页码按钮 -->
-									{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-										<a
-											key={pageNum}
-											href={pageNum === 1 ? '/' : `/page/${pageNum}/`}
-											class={`px-4 py-2 border rounded-md transition-colors ${currentPage === pageNum 
-												? 'bg-blue-600 text-white border-blue-600' 
-												: 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700'}
-											`}
-										>
-											{pageNum}
-										</a>
-									))}
-
-									<!-- 下一页按钮 -->
-									{currentPage < totalPages && (
-										<a
-											href={`/page/${currentPage + 1}/`}
-											class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-										>
-											下一页
-										</a>
-									)}
-								</nav>
-							</div>
-						)}
-					</div>
-
-					<!-- 右侧边栏 -->
-					<div>
-						<RightSidebar />
 					</div>
 				</div>
 
-				<!-- 中等屏幕布局 -->
-				<div class="hidden md:grid lg:grid xl:hidden grid-cols-[256px_1fr] gap-8">
-					<!-- 侧边栏堆叠区 -->
-					<div class="space-y-8">
-						<LeftSidebar />
-						<RightSidebar />
-					</div>
-
-					<!-- 内容区域 -->
-					<div class="grid grid-cols-1 gap-8">
+				<!-- 中间内容区：所有屏幕显示 -->
+				<div>
+					<div class="space-y-6">
 						{posts.map((post) => (
 							<BlogCard key={post.id} post={post} />
 						))}
@@ -133,7 +71,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								{currentPage > 1 && (
 									<a 
 										href={currentPage === 2 ? '/' : `/page/${currentPage - 1}/`} 
-										class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark transition-colors"
 									>
 										上一页
 									</a>
@@ -142,11 +80,10 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								<!-- 页码按钮 -->
 								{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
 									<a
-										key={pageNum}
 										href={pageNum === 1 ? '/' : `/page/${pageNum}/`}
 										class={`px-4 py-2 border rounded-md transition-colors ${currentPage === pageNum 
-											? 'bg-blue-600 text-white border-blue-600' 
-											: 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700'}
+											? 'bg-primary-light text-white border-primary-light dark:bg-primary-dark dark:border-primary-dark' 
+											: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark'}
 										`}
 									>
 										{pageNum}
@@ -157,7 +94,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								{currentPage < totalPages && (
 									<a
 										href={`/page/${currentPage + 1}/`}
-										class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark transition-colors"
 									>
 										下一页
 									</a>
@@ -167,55 +104,8 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 					)}
 				</div>
 
-				<!-- 小屏幕布局 -->
-				<div class="md:hidden space-y-8">
-					<LeftSidebar />
-					<div class="grid grid-cols-1 gap-8">
-						{posts.map((post) => (
-							<BlogCard key={post.id} post={post} />
-						))}
-					</div>
-
-					<!-- 分页控件 -->
-					{totalPages > 1 && (
-						<div class="flex justify-center mt-12">
-							<nav class="inline-flex items-center space-x-2">
-								<!-- 上一页按钮 -->
-								{currentPage > 1 && (
-									<a 
-										href={currentPage === 2 ? '/' : `/page/${currentPage - 1}/`} 
-										class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-									>
-										上一页
-									</a>
-								)}
-
-								<!-- 页码按钮 -->
-								{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-									<a
-										key={pageNum}
-										href={pageNum === 1 ? '/' : `/page/${pageNum}/`}
-										class={`px-4 py-2 border rounded-md transition-colors ${currentPage === pageNum 
-											? 'bg-blue-600 text-white border-blue-600' 
-											: 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700'}
-										`}
-									>
-										{pageNum}
-									</a>
-								))}
-
-								<!-- 下一页按钮 -->
-								{currentPage < totalPages && (
-									<a
-										href={`/page/${currentPage + 1}/`}
-										class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-									>
-										下一页
-									</a>
-								)}
-							</nav>
-						</div>
-					)}
+				<!-- 右侧边栏：大屏幕显示 -->
+				<div class="hidden xl:block">
 					<RightSidebar />
 				</div>
 			</div>

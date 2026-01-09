@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<MainLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+			<!-- 响应式布局：小屏幕单列，中等及大屏幕双栏 -->
+			<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] gap-6">
+				<!-- 左侧边栏：中等及大屏幕显示 -->
+				<div class="hidden md:block">
+					<div class="space-y-6">
+						<LeftSidebar />
+						<!-- 中等及大屏幕：右侧边栏显示在左侧边栏下方 -->
+						<div class="md:block">
+							<RightSidebar />
+						</div>
+					</div>
+				</div>
+
+				<!-- 中间内容区：所有屏幕显示 -->
+				<div>
+					<div class="space-y-6">
+						{posts.map((post) => (
+							<BlogCard key={post.id} post={post} />
+						))}
+					</div>
+				</div>
+			</div>
+	</section>
+</MainLayout>

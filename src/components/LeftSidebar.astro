@@ -1,16 +1,16 @@
 ---
 ---
 
-<aside class="hidden md:block w-64 space-y-6">
+<aside class="hidden md:block w-[272px] space-y-6">
   <!-- 个人信息卡片 -->
-  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm">
     <!-- 大头像 -->
     <div class="flex justify-center mb-6">
       <div class="relative">
         <img 
           src="https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755" 
           alt="博主头像" 
-          class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
+          class="w-24 h-24 rounded-full object-cover border-4 border-card-light dark:border-card-dark shadow-lg"
         />
       </div>
     </div>
@@ -19,66 +19,106 @@
     <div class="flex justify-between items-start">
       <!-- 左侧：博主信息 -->
       <div class="flex-1">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1">波罗歌</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400">万维网中潮汛来</p>
+        <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-1">波罗歌</h2>
+        <p class="text-sm text-text-light dark:text-text-dark opacity-80">万维网中潮汛来</p>
       </div>
 
       <!-- 右侧：社交图标组 -->
       <div class="flex space-x-2">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
-           class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-all duration-200 hover:scale-110">
+        <a href="https://github.com/LogLInk1K" target="_blank" rel="noopener noreferrer" 
+           class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-all duration-200 hover:scale-110 relative group">
           <span class="sr-only">GitHub</span>
           <svg viewBox="0 0 16 16" aria-hidden="true" width="20" height="20">
             <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
           </svg>
+          <!-- 悬浮窗口 -->
+          <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-lg shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none whitespace-nowrap">
+            GitHub
+          </div>
         </a>
-        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
-           class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-all duration-200 hover:scale-110">
-          <span class="sr-only">Twitter</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true" width="20" height="20">
-            <path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"></path>
+        <a href="https://space.bilibili.com/12787362" target="_blank" rel="noopener noreferrer" 
+           class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-all duration-200 hover:scale-110 relative group">
+          <span class="sr-only">Bilibili</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+            <path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"></path>
           </svg>
+          <!-- 悬浮窗口 -->
+          <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-lg shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none whitespace-nowrap">
+            Bilibili
+          </div>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- 导航菜单卡片 -->
-  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-    <nav class="space-y-1">
-      <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">导航</h3>
-      <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-slate-900 bg-blue-50 dark:bg-blue-900/20 dark:text-white">首页</a>
-      <a href="/blog" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">博客</a>
-      <a href="/about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">关于</a>
-    </nav>
+  <!-- 公告卡片 -->
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm">
+    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">公告</h3>
+    <div class="space-y-4">
+      <!-- 第一段：虫洞图片 -->
+      <div>
+        <a href="https://www.foreverblog.cn/go.html" target="_blank" rel="noopener noreferrer">
+          <!-- 浅色主题虫洞图片 -->
+          <img 
+            src="https://foreverblog.cn/assets/logo/wormhole_4_tp.gif" 
+            alt="虫洞" 
+            class="w-1/2 h-auto dark:hidden cursor-pointer"
+          />
+          <!-- 深色主题虫洞图片 -->
+          <img 
+            src="https://foreverblog.cn/assets/logo/wormhole_2_tp.gif" 
+            alt="虫洞" 
+            class="w-1/2 h-auto hidden dark:block cursor-pointer"
+          />
+        </a>
+      </div>
+      <!-- 第二段：文字说明 -->
+      <p class="text-sm text-text-light dark:text-text-dark">
+        穿梭虫洞-随机访问十年之约友链博客
+      </p>
+      <!-- 第三段：logo图片 -->
+      <div>
+        <a href="https://www.foreverblog.cn" target="_blank" rel="noopener noreferrer">
+          <img 
+            src="https://www.foreverblog.cn/assets/logo/logo_en_default.png" 
+            alt="十年之约" 
+            class="w-1/2 h-auto cursor-pointer"
+          />
+        </a>
+      </div>
+      <!-- 第四段：活动说明 -->
+      <p class="text-sm text-text-light dark:text-text-dark">
+        本博客已加入十年之约活动
+      </p>
+    </div>
   </div>
 
   <!-- 分类卡片 -->
-  <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-    <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">分类</h3>
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm">
+    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">分类</h3>
     <ul class="space-y-2">
       <li>
-        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-text-light hover:text-text-light hover:bg-hover-light dark:text-text-dark dark:hover:text-text-dark dark:hover:bg-hover-dark">
           前端开发
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">12</span>
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-tag-light text-text-light dark:bg-tag-dark dark:text-text-dark">12</span>
         </a>
       </li>
       <li>
-        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-text-light hover:text-text-light hover:bg-hover-light dark:text-text-dark dark:hover:text-text-dark dark:hover:bg-hover-dark">
           后端开发
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">8</span>
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-tag-light text-text-light dark:bg-tag-dark dark:text-text-dark">8</span>
         </a>
       </li>
       <li>
-        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-text-light hover:text-text-light hover:bg-hover-light dark:text-text-dark dark:hover:text-text-dark dark:hover:bg-hover-dark">
           设计
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">5</span>
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-tag-light text-text-light dark:bg-tag-dark dark:text-text-dark">5</span>
         </a>
       </li>
       <li>
-        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-gray-700">
+        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-text-light hover:text-text-light hover:bg-hover-light dark:text-text-dark dark:hover:text-text-dark dark:hover:bg-hover-dark">
           生活
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-gray-700 dark:text-gray-200">3</span>
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-medium bg-tag-light text-text-light dark:bg-tag-dark dark:text-text-dark">3</span>
         </a>
       </li>
     </ul>

@@ -4,40 +4,41 @@ import FormattedDate from './FormattedDate.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  key?: string;
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, heroImage, tags } = post.data;
+const { title, description, pubDate, heroImage } = post.data;
 const { id } = post;
 ---
 
-<article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-  {/* 使用grid布局精确控制3/4和1/4高度 */}
-  <div class="grid grid-rows-[3fr_1fr] h-96">
-    {/* 封面图片区域：精确占3/4高度 */}
-    <div class="relative overflow-hidden bg-slate-100 dark:bg-gray-700 transition-transform duration-500 hover:scale-105" style="min-height: 0;">
+<article class="bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+  {/* 使用Grid布局实现自适应高度 */}
+  <div class="grid grid-rows-[auto_1fr]">
+    {/* 封面图片区域：设置最小高度确保美观 */}
+    <div class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105" style="min-height: 180px;">
       {heroImage && (
         <div
           class="absolute inset-0 bg-cover bg-center"
           style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
-          aria-label={typeof heroImage === 'string' ? title : (heroImage.alt || title)}
+          aria-label={typeof heroImage === 'string' ? title : title}
         ></div>
       )}
     </div>
     
-    {/* 内容区域：精确占1/4高度 */}
+    {/* 内容区域：使用flex布局实现内部元素的垂直排列 */}
     <div class="p-6 flex flex-col justify-between">
       <div>
-        <time class="block text-xs text-slate-500 dark:text-slate-400 mb-2">
+        <time class="block text-xs text-text-light dark:text-text-dark opacity-80 mb-2">
           <FormattedDate date={pubDate} />
         </time>
         <h3 class="text-lg font-bold mb-2 line-clamp-1">
-          <a href={`/blog/${id}`} class="text-slate-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+          <a href={`/archives/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
             {title}
           </a>
         </h3>
       </div>
-      <p class="text-sm text-slate-600 dark:text-slate-300 line-clamp-1">
+      <p class="text-sm text-text-light dark:text-text-dark line-clamp-1">
         {description}
       </p>
     </div>
