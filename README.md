@@ -1,62 +1,73 @@
-# Astro Starter Kit: Blog
+# 个人博客
 
-```sh
-npm create astro@latest -- --template blog
+一个简单的个人技术博客，该项目主要用于个人分享和学习。
+
+## 🛠️ 技术选型
+
+- **Astro 5.x**：现代化的静态站点生成器，提供优秀的性能和开发体验
+- **Tailwind CSS 3.x**：实用优先的 CSS 框架，快速构建美观界面
+- **Markdown & MDX**：简单易用的写作格式，支持代码高亮和组件嵌入
+- **TypeScript**：增强代码可靠性和可维护性
+- **Vite**：快速的构建工具和开发服务器
+
+## 🚀 快速开始
+
+### 环境要求
+- Node.js 18+ 或更高版本
+
+### 本地运行
+
+```bash
+# 克隆仓库
+git clone https://github.com/yourusername/your-blog.git
+cd your-blog
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+浏览器访问 `http://localhost:4321` 查看博客。
 
-Features:
+## 🔧 如何使用
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+### 添加博客文章
 
-## 🚀 Project Structure
+在 `src/content/blog/` 目录下创建 Markdown 文件，使用以下格式：
 
-Inside of your Astro project, you'll see the following folders and files:
+```markdown
+---
+title: "文章标题"
+description: "文章简介"
+date: 2024-01-01
+tags: ["标签1", "标签2"]
+---
 
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+# 正文内容
+
+使用 Markdown 语法撰写文章内容...
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### 修改个人信息
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+编辑 `src/components/LeftSidebar.astro` 文件，更新头像、姓名、签名和社交媒体链接。
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## 📦 部署
 
-Any static assets, like images, can be placed in the `public/` directory.
+构建生产版本：
 
-## 🧞 Commands
+```bash
+npm run build
+```
 
-All commands are run from the root of the project, from a terminal:
+生成的静态文件位于 `dist/` 目录，可以部署到任意静态站点托管服务：
+- [Vercel](https://vercel.com/)
+- [Netlify](https://www.netlify.com/)
+- [GitHub Pages](https://pages.github.com/)
+- [Cloudflare Pages](https://pages.cloudflare.com/)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 📄 许可证
 
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+MIT License
