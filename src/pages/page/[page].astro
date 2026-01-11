@@ -71,7 +71,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								{currentPage > 1 && (
 									<a 
 										href={currentPage === 2 ? '/' : `/page/${currentPage - 1}/`} 
-										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark transition-colors"
+										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
 									>
 										上一页
 									</a>
@@ -81,9 +81,9 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
 									<a
 										href={pageNum === 1 ? '/' : `/page/${pageNum}/`}
-										class={`px-4 py-2 border rounded-md transition-colors ${currentPage === pageNum 
+										class={`px-4 py-2 border rounded-3xl transition-all duration-300 ${currentPage === pageNum 
 											? 'bg-primary-light text-white border-primary-light dark:bg-primary-dark dark:border-primary-dark' 
-											: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark'}
+											: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg'}
 										`}
 									>
 										{pageNum}
@@ -94,7 +94,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 								{currentPage < totalPages && (
 									<a
 										href={`/page/${currentPage + 1}/`}
-										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark transition-colors"
+										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
 									>
 										下一页
 									</a>
