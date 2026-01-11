@@ -14,6 +14,7 @@ const allTags = posts.reduce((acc, post) => {
 }, {} as Record<string, number>);
 
 const sortedTags = Object.entries(allTags).sort((a, b) => b[1] - a[1]);
+const randomTags = [...sortedTags].sort(() => Math.random() - 0.5).slice(0, 10);
 
 // 2. 准备所有文章的精简数据供前端随机抽取
 interface PostSummary {
@@ -86,7 +87,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">标签</h3>
     <div class="flex flex-wrap gap-2">
-      {sortedTags.map(([tag, count]) => (
+      {randomTags.map(([tag, count]) => (
         <a href={`/tag/${tag}`} class="inline-flex items-center rounded-full text-xs font-medium overflow-hidden hover:scale-105 transition-all duration-200">
           <span class="px-3 py-1 bg-badge-light text-text-light dark:bg-badge-dark dark:text-text-dark">{tag}</span>
           <span class="px-2 py-1 bg-divider-light text-text-light dark:bg-divider-dark dark:text-text-dark opacity-60">{count}</span>

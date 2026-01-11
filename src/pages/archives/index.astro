@@ -9,6 +9,17 @@ import { SITE_DESCRIPTION} from '../../consts';
 const posts = (await getCollection('post')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const postsByYear = posts.reduce((acc, post) => {
+	const year = post.data.pubDate.getFullYear();
+	if (!acc[year]) {
+		acc[year] = [];
+	}
+	acc[year].push(post);
+	return acc;
+}, {} as Record<number, typeof posts>);
+
+const sortedYears = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 ---
 
 <MainLayout title=时光机 description={SITE_DESCRIPTION}>
@@ -28,9 +39,14 @@ const posts = (await getCollection('post')).sort(
 
 				<!-- 中间内容区：所有屏幕显示 -->
 				<div>
-					<div class="space-y-4">
-						{posts.map((post) => (
-							<ArchiveItem key={post.id} post={post} />
+					<div class="space-y-6">
+						{sortedYears.map((year) => (
+							<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+								<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">{year}</h2>
+								{postsByYear[year].map((post) => (
+									<ArchiveItem key={post.id} post={post} />
+								))}
+							</div>
 						))}
 					</div>
 				</div>

@@ -12,13 +12,13 @@ const { title, description, pubDate, heroImage, category, tags } = post.data;
 const { id } = post;
 ---
 
-<article class="bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden p-4 border border-border-light dark:border-border-dark">
+<article class="py-4 border-b border-border-light dark:border-border-dark last:border-b-0">
   {/* 小屏幕：垂直布局，图片居中 */}
   {/* 中大屏幕：水平布局 */}
-  <div class="flex flex-col md:flex-row gap-4">
+  <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
     {/* 可选的封面图片 */}
     {heroImage && (
-      <a href={`/post/${id}`} class="md:w-48 md:h-24 w-24 h-24 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden flex-shrink-0 mx-auto md:mx-0 block">
+      <a href={`/post/${id}`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
         <div
           class="w-full h-full bg-cover bg-center"
           style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
@@ -28,39 +28,12 @@ const { id } = post;
     )}
     
     {/* 内容区域 */}
-    <div class="flex-1 min-w-0 text-center md:text-left">
-      {/* 小屏幕：元数据在标题上方 */}
-      <div class="md:hidden flex flex-col items-center gap-1 text-xs text-text-light dark:text-text-dark opacity-60 mb-2">
-        <time>
-          <FormattedDate date={pubDate} />
-        </time>
-        <span>{Math.ceil((post.body?.length || 0) / 500)} 分钟阅读</span>
-      </div>
-      
+    <div class="flex-1 min-w-0 w-full">
       <h3 class="text-lg font-bold mb-2">
         <a href={`/post/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
           {title}
         </a>
       </h3>
-      
-      {/* 小屏幕：分类和标签 */}
-      <div class="md:hidden flex flex-wrap justify-center items-center gap-2 mb-3">
-        {category && (
-          <span class="px-2 py-1 text-xs font-medium bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark rounded-full">
-            {category}
-          </span>
-        )}
-        {tags && tags.length > 0 && tags.slice(0, 3).map((tag) => (
-          <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark bg-hover-light dark:bg-hover-dark rounded-full">
-            {tag}
-          </span>
-        ))}
-        {tags && tags.length > 3 && (
-          <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark opacity-60">
-            +{tags.length - 3}
-          </span>
-        )}
-      </div>
       
       {/* 显示完整摘要，不截断 */}
       <p class="text-sm text-text-light dark:text-text-dark opacity-90 mb-3 line-clamp-2">
@@ -86,8 +59,8 @@ const { id } = post;
         )}
       </div>
       
-      {/* 中大屏幕：元数据在描述下方 */}
-      <div class="hidden md:flex flex-row items-center gap-2 text-xs text-text-light dark:text-text-dark opacity-60">
+      {/* 元数据 */}
+      <div class="flex flex-row items-center gap-2 text-xs text-text-light dark:text-text-dark opacity-60">
         <time>
           <FormattedDate date={pubDate} />
         </time>
