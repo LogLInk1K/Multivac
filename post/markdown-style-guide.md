@@ -3,6 +3,8 @@ title: 'Markdown 风格指南'
 description: '这是一份在 Astro 中编写 Markdown 内容时可以使用的基本 Markdown 语法示例。'
 pubDate: '2024-06-19'
 heroImage: '/src/assets/blog-placeholder-1.jpg'
+category: '教程'
+tags: ['Markdown', '语法', '写作']
 ---
 
 这是一份在 Astro 中编写 Markdown 内容时可以使用的基本 Markdown 语法示例。

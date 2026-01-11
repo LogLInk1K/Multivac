@@ -3,6 +3,8 @@ title: '第三篇文章'
 description: '分享一些关于设计思维的思考'
 pubDate: '2022-07-22'
 heroImage: '/src/assets/blog-placeholder-2.jpg'
+category: '设计'
+tags: ['设计思维', '用户体验', '创新']
 ---
 
 设计思维是一种以人为本的创新方法，它强调理解用户需求、快速迭代和跨学科合作。在这篇文章中，我想分享一些关于设计思维的思考和实践经验。

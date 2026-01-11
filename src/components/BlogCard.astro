@@ -8,11 +8,11 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, heroImage } = post.data;
+const { title, description, pubDate, heroImage, category, tags } = post.data;
 const { id } = post;
 ---
 
-<article class="bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden">
+<article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden">
   {/* 使用Grid布局实现自适应高度 */}
   <div class="grid grid-rows-[auto_1fr]">
     {/* 封面图片区域：设置最小高度确保美观 */}
@@ -29,18 +29,41 @@ const { id } = post;
     {/* 内容区域：使用flex布局实现内部元素的垂直排列 */}
     <div class="p-6 flex flex-col justify-between">
       <div>
-        <time class="block text-xs text-text-light dark:text-text-dark opacity-80 mb-2">
-          <FormattedDate date={pubDate} />
-        </time>
+        <div class="flex flex-row items-center gap-2 text-xs text-text-light dark:text-text-dark opacity-80 mb-2">
+          <time>
+            <FormattedDate date={pubDate} />
+          </time>
+          <span class="text-gray-400">•</span>
+          <span>{Math.ceil((post.body?.length || 0) / 500)} 分钟阅读</span>
+        </div>
         <h3 class="text-lg font-bold mb-2 line-clamp-1">
-          <a href={`/post/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
+          <a href={`/post/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors flex items-center">
             {title}
           </a>
         </h3>
       </div>
-      <p class="text-sm text-text-light dark:text-text-dark line-clamp-1">
-        {description}
-      </p>
+      <div>
+        <p class="text-sm text-text-light dark:text-text-dark line-clamp-1 opacity-80 mb-3">
+          {description}
+        </p>
+        <div class="flex flex-wrap items-center gap-2">
+          {category && (
+            <span class="px-2 py-1 text-xs font-medium bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark rounded-full">
+              {category}
+            </span>
+          )}
+          {tags && tags.length > 0 && tags.slice(0, 3).map((tag) => (
+            <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark bg-hover-light dark:bg-hover-dark rounded-full">
+              {tag}
+            </span>
+          ))}
+          {tags && tags.length > 3 && (
+            <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark opacity-60">
+              +{tags.length - 3}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   </div>
 </article>

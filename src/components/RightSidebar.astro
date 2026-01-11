@@ -1,58 +1,212 @@
 ---
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+const posts = await getCollection('post');
+
+// 1. 标签逻辑处理
+const allTags = posts.reduce((acc, post) => {
+  const tags = post.data.tags || [];
+  tags.forEach(tag => {
+    acc[tag] = (acc[tag] || 0) + 1;
+  });
+  return acc;
+}, {} as Record<string, number>);
+
+const sortedTags = Object.entries(allTags).sort((a, b) => b[1] - a[1]);
+
+// 2. 准备所有文章的精简数据供前端随机抽取
+interface PostSummary {
+  id: string;
+  title: string;
+  pubDate: string;
+  heroImage?: string | { src: string };
+  category?: string;
+}
+
+const postSummaries: PostSummary[] = posts.map(post => ({
+  id: post.id,
+  title: post.data.title,
+  pubDate: post.data.pubDate.toISOString(),
+  heroImage: post.data.heroImage,
+  category: post.data.category,
+}));
+
+// 初始显示的 5 篇文章
+const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3);
 ---
 
 <aside class="hidden md:block w-[272px] space-y-6">
-  <!-- 热门文章卡片 -->
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">热门文章</h3>
-    <ul class="space-y-4">
-      <li>
-        <a href="#" class="block">
-          <p class="text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark">前端开发的未来趋势</p>
-          <p class="text-xs text-text-light dark:text-text-dark opacity-80 mt-1">2024年1月15日</p>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="block">
-          <p class="text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark">响应式设计最佳实践</p>
-          <p class="text-xs text-text-light dark:text-text-dark opacity-80 mt-1">2024年1月10日</p>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="block">
-          <p class="text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark">JavaScript 新特性解析</p>
-          <p class="text-xs text-text-light dark:text-text-dark opacity-80 mt-1">2024年1月5日</p>
-        </a>
-      </li>
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">随机推荐</h3>
+      <button 
+        type="button"
+        class="js-refresh-trigger relative z-10 p-1.5 rounded-full text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark transition-all active:scale-90" 
+        data-posts={JSON.stringify(postSummaries)}
+        title="刷新推荐"
+      >
+        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+      </button>
+    </div>
+    <ul class="js-posts-list-container space-y-4 transition-opacity duration-200">
+      {initialRandomPosts.map((post) => (
+        <li>
+          <a href={`/post/${post.id}`} class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+            <div class="flex gap-3 items-center">
+              {post.data.heroImage && (
+                <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
+                  <div
+                    class="w-full h-full bg-cover bg-center"
+                    style={`background-image: url('${typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src}');`}
+                    aria-label={post.data.title}
+                  ></div>
+                </div>
+              )}
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-light dark:text-text-dark opacity-50">
+                  <FormattedDate date={post.data.pubDate} />
+                  {post.data.category && (
+                    <>
+                      <span class="mx-1.5">{post.data.category}</span>
+                    </>
+                  )}
+                </p>
+                <p class="text-sm font-medium text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors line-clamp-2 mt-1">{post.data.title}</p>
+              </div>
+            </div>
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 
-  <!-- 标签卡片 -->
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">标签</h3>
     <div class="flex flex-wrap gap-2">
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">前端</a>
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">JavaScript</a>
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">CSS</a>
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">React</a>
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">Astro</a>
-      <a href="#" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-tag-light text-text-light hover:bg-hover-light dark:bg-tag-dark dark:text-text-dark dark:hover:bg-hover-dark">设计</a>
+      {sortedTags.map(([tag, count]) => (
+        <a href={`/tag/${tag}`} class="inline-flex items-center rounded-full text-xs font-medium overflow-hidden hover:scale-105 transition-all duration-200">
+          <span class="px-3 py-1 bg-badge-light text-text-light dark:bg-badge-dark dark:text-text-dark">{tag}</span>
+          <span class="px-2 py-1 bg-divider-light text-text-light dark:bg-divider-dark dark:text-text-dark opacity-60">{count}</span>
+        </a>
+      ))}
     </div>
   </div>
 
-  <!-- 订阅更新卡片 -->
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">订阅更新</h3>
-    <p class="text-sm text-text-light dark:text-text-dark mb-4">获取最新的文章和技术资讯</p>
-    <form class="flex mb-2">
+<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-[#f26522]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248S0 22.546 0 20.752s1.456-3.248 3.252-3.248 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-8.18v4.831c10.555.062 19.121 8.614 19.184 19.17h4.817c-.063-13.215-10.782-23.93-24.001-24.001z"></path>
+      </svg>
+      RSS 订阅
+    </h3>
+    <p class="text-sm text-text-light/70 dark:text-text-dark/70 mb-4">支持通过 RSS 客户端订阅本站更新，获取最直接的文章推送。</p>
+    <div class="flex mb-2">
       <div class="relative flex-grow">
-        <input type="email" placeholder="Email" class="w-full pl-10 pr-3 py-2 text-sm border border-border-light rounded-l-md border-r-0 focus:outline-none focus:ring-2 focus:ring-primary-light dark:bg-card-dark dark:border-border-dark dark:text-text-dark">
-        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-light dark:text-text-dark opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-        </svg>
+        <input type="text" readonly value="https://log.1k.ink/rss.xml" id="rss-link" class="w-full pl-3 pr-3 py-2 text-xs font-mono border border-border-light rounded-l-md border-r-0 focus:outline-none dark:bg-card-dark dark:border-border-dark dark:text-text-dark">
       </div>
-      <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-light rounded-r-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light dark:bg-primary-dark dark:hover:bg-primary-light whitespace-nowrap">订阅</button>
-    </form>
-    <p class="text-[10px] text-text-light dark:text-text-dark opacity-50">Powered by Google FeedBurner</p>
+      <button onclick="const el = document.getElementById('rss-link'); el.select(); navigator.clipboard.writeText(el.value).then(() => alert('已复制订阅链接')).catch(() => alert('复制失败')); el.blur();" class="px-4 py-2 text-sm font-medium text-white bg-primary-light rounded-r-md hover:bg-primary-dark focus:outline-none whitespace-nowrap">复制</button>
+    </div>
+    <p class="text-[10px] text-text-light dark:text-text-dark opacity-50 italic">将链接粘贴至您的阅读器（如 Feedly, NetNewsWire 或 Reeder）</p>
   </div>
 </aside>
+
+<script is:inline>
+  (function() {
+    /**
+     * 执行刷新逻辑
+     * @param {HTMLElement} btn 按钮元素
+     */
+    function refresh(btn) {
+      const cardContainer = btn.closest('div').parentElement;
+      const listContainer = cardContainer.querySelector('.js-posts-list-container');
+      const rawData = btn.getAttribute('data-posts');
+
+      if (!listContainer || !rawData) return;
+
+      // 1. 开始淡出
+      listContainer.style.opacity = '0';
+
+      setTimeout(() => {
+        try {
+          const allPosts = JSON.parse(rawData);
+          // 使用 Fisher-Yates 随机算法洗牌
+          const shuffled = [...allPosts];
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
+          const selected = shuffled.slice(0, 3);
+
+          // 2. 更新 HTML 内容
+          listContainer.innerHTML = selected.map(post => {
+            const date = new Date(post.pubDate).toLocaleDateString('zh-CN', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            });
+
+            const heroImageHtml = post.heroImage ? `
+              <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
+                <div
+                  class="w-full h-full bg-cover bg-center"
+                  style="background-image: url('${typeof post.heroImage === 'string' ? post.heroImage : post.heroImage.src}');"
+                  aria-label="${post.title}"
+                ></div>
+              </div>
+            ` : '';
+
+            const categoryHtml = post.category ? `
+              <span class="mx-1.5">${post.category}</span>
+            ` : '';
+
+            return `
+              <li>
+                <a href="/post/${post.id}" class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+                  <div class="flex gap-3 items-center">
+                    ${heroImageHtml}
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs text-text-light dark:text-text-dark opacity-50">
+                        ${date}
+                        ${categoryHtml}
+                      </p>
+                      <p class="text-sm font-medium text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors line-clamp-2 mt-1">${post.title}</p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            `;
+          }).join('');
+
+          // 3. 开始淡入
+          listContainer.style.opacity = '1';
+        } catch (e) {
+          console.error('[RandomPosts] Refresh error:', e);
+          listContainer.style.opacity = '1';
+        }
+      }, 200);
+    }
+
+    /**
+     * 处理点击事件冒泡
+     */
+    const onGlobalClick = (e) => {
+      const btn = e.target.closest('.js-refresh-trigger');
+      if (btn) {
+        refresh(btn);
+      }
+    };
+
+    // 初始化监听
+    document.addEventListener('click', onGlobalClick);
+
+    // 处理 Astro ViewTransitions 导致的页面替换
+    document.addEventListener('astro:after-swap', () => {
+      // 移除旧监听防止累加，重新添加以确保新 DOM 生效
+      document.removeEventListener('click', onGlobalClick);
+      document.addEventListener('click', onGlobalClick);
+    });
+  })();
+</script>

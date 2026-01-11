@@ -22,7 +22,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
     id="search-content"
     class="absolute top-[20%] left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 transition-all duration-300 scale-95 opacity-0"
   >
-    <div class="bg-card-light dark:bg-card-dark rounded-2xl shadow-2xl overflow-hidden border border-border-light dark:border-border-dark">
+    <div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-2xl overflow-hidden border border-border-light dark:border-border-dark">
       <div class="p-4 border-b border-border-light dark:border-border-dark">
         <div class="relative">
           <svg 
@@ -42,7 +42,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
             type="text" 
             id="search-input"
             placeholder="搜索文章..." 
-            class="w-full pl-12 pr-4 py-3 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark transition-all"
+            class="w-full pl-12 pr-4 py-3 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark transition-all"
             autocomplete="off"
           />
           <kbd class="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 text-xs bg-hover-light dark:bg-hover-dark text-text-light dark:text-text-dark rounded opacity-60">ESC</kbd>
@@ -146,7 +146,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
     resultsContainer.innerHTML = results.map((post) => `
       <a 
         href="/post/${post.id}" 
-        class="block p-4 rounded-xl hover:bg-hover-light dark:hover:bg-hover-dark transition-colors group"
+        class="block p-4 rounded-2xl hover:bg-hover-light dark:hover:bg-hover-dark transition-colors group"
       >
         <h3 class="font-bold text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors mb-1">
           ${post.title}

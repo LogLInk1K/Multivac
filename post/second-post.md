@@ -3,6 +3,8 @@ title: '第二篇文章'
 description: '探讨前端开发的未来趋势'
 pubDate: '2022-07-15'
 heroImage: '/src/assets/blog-placeholder-4.jpg'
+category: '技术'
+tags: ['前端', 'WebAssembly', '组件化', '性能优化']
 ---
 
 随着技术的不断发展，前端开发领域也在快速演进。从最初的静态网页到现在的复杂单页应用，前端开发已经成为构建现代网站和应用的核心。

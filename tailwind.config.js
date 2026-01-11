@@ -10,7 +10,7 @@ export default {
         // 主色调 - 明亮的蓝色，与黑色背景形成鲜明对比
         primary: {
           light: '#425aef',
-          dark: '#425aef', // 明亮的蓝色作为主色调
+          dark: '#ffc848',
         },
         // 背景色 - 纯黑色，现代感强
         background: {
@@ -46,6 +46,16 @@ export default {
         tag: {
           light: '#F1F5F9', // slate-100
           dark: '#1E3A8A', // 深蓝色标签背景
+        },
+        // 数字徽章背景色
+        badge: {
+          light: '#f2f2f7',
+          dark: '#2c2c2e',
+        },
+        // 分割线颜色（用于标签右侧数字背景）
+        divider: {
+          light: '#d1d1d6',
+          dark: '#48484a',
         },
       },
     },

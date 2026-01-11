@@ -3,6 +3,8 @@ title: '第一篇文章'
 description: '欢迎来到我的博客，这是我的第一篇文章。'
 pubDate: '2022-07-08'
 heroImage: '/src/assets/blog-placeholder-3.jpg'
+category: '生活'
+tags: ['博客', '介绍']
 ---
 
 欢迎来到我的博客！这是我发布的第一篇文章，很高兴能在这里与大家分享我的思考和见解。
