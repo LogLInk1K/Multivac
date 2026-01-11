@@ -2,37 +2,164 @@
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import SearchModal from './SearchModal.astro';
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-background-light dark:bg-background-dark">
-	<nav class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
-		<div class="flex-1">
-			<h2 class="text-2xl font-bold">
-				<a href="/" class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors">
-					{SITE_TITLE}
-				</a>
-			</h2>
-		</div>
-		<div class="hidden md:flex items-center space-x-8">
-			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/archives">文稿</HeaderLink>
-			<HeaderLink href="/about">关于</HeaderLink>
-		</div>
-		<div class="flex-1 flex justify-end items-center space-x-4">
-			<a href="https://github.com/LogLInk1K" target="_blank" rel="noopener noreferrer" class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors">
-				<span class="sr-only">GitHub</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="20" height="20">
-					<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-				</svg>
-			</a>
-			<a href="https://space.bilibili.com/12787362" target="_blank" rel="noopener noreferrer" class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors">
-				<span class="sr-only">Bilibili</span>
-				<svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
-					<path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"></path>
-				</svg>
-			</a>
-			<ThemeToggle />
-	</div>
-</nav>
+<header 
+    id="main-header"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out py-0"
+>
+    <nav 
+        id="nav-container"
+        class="relative max-w-[calc(100%-40px)] md:max-w-[calc(100%-40px)] xl:max-w-[1300px] mx-auto flex items-center transition-all duration-500 ease-in-out border-b border-transparent px-4 sm:px-6 lg:px-8 py-4"
+    >
+		<div
+			id="nav-bg"
+			class="absolute z-[-1] transition-all duration-500 ease-in-out
+          		 bg-white/90 dark:bg-black/70 opacity-0
+          		   rounded-full shadow-lg backdrop-blur-md ring-1 ring-white/20
+           		   top-2 bottom-2 left-0 right-0"
+		></div>
+        <div class="flex-1 shrink-0">
+            <h2 class="text-2xl font-bold whitespace-nowrap">
+                <a href="/" class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors">
+                    Log
+                </a>
+            </h2>
+        </div>
+
+        <div class="hidden md:flex items-center px-4 relative">
+            <div id="nav-links" class="flex items-center space-x-8 transition-all duration-300 translate-y-0">
+                <HeaderLink href="/">首页</HeaderLink>
+                <HeaderLink href="/archives">文稿</HeaderLink>
+                <HeaderLink href="/about">关于</HeaderLink>
+            </div>
+            <h1 id="page-title" class="absolute left-1/2 -translate-x-1/2 text-lg font-bold text-text-light dark:text-text-dark opacity-0 transition-all duration-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] translate-y-2 cursor-pointer hover:text-primary-light dark:hover:text-primary-dark" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"></h1>
+        </div>
+
+        <div class="flex-1 flex justify-end items-center shrink-0">
+            <button 
+                onclick="window.openSearchModal()" 
+                class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-4"
+                aria-label="搜索"
+            >
+                <svg 
+                    class="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
+                </svg>
+            </button>
+            <div id="theme-toggle-container" class="flex items-center mr-4">
+                <ThemeToggle />
+            </div>
+            <div 
+                id="scroll-counter"
+                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden"
+                onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            >
+                <span id="scroll-value">0</span>
+                <span 
+                    id="scroll-arrow"
+                    class="hidden text-sm font-sans whitespace-nowrap"
+                >
+                    返回顶部
+                </span>
+            </div>
+        </div>
+    </nav>
 </header>
 
+<SearchModal />
+
+<script>
+    const nav = document.getElementById('nav-container');
+    const navBg = document.getElementById('nav-bg');
+    const scrollCounter = document.getElementById('scroll-counter');
+    const scrollValue = document.getElementById('scroll-value');
+    const scrollArrow = document.getElementById('scroll-arrow');
+    const themeToggleContainer = document.getElementById('theme-toggle-container');
+    const navLinks = document.getElementById('nav-links');
+    const pageTitle = document.getElementById('page-title');
+
+    let lastScrollY = 0;
+    let isScrollingDown = false;
+
+    function updateHeader() {
+        const scrollY = window.scrollY;
+        const scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
+        lastScrollY = scrollY;
+        
+        if (scrollY > 20) {
+            nav?.classList.remove('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
+            nav?.classList.add('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+            navBg?.classList.replace('opacity-0', 'opacity-100');
+            
+            if (scrollDirection === 'down') {
+                navLinks?.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+                navLinks?.classList.remove('translate-y-0');
+                pageTitle?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+                pageTitle?.classList.add('translate-y-0');
+            } else {
+                navLinks?.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+                navLinks?.classList.add('translate-y-0');
+                pageTitle?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+                pageTitle?.classList.remove('translate-y-0');
+            }
+        } else {
+            nav?.classList.add('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
+            nav?.classList.remove('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+            navBg?.classList.replace('opacity-100', 'opacity-0');
+            navLinks?.classList.remove('opacity-0', 'pointer-events-none');
+            pageTitle?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer) {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
+            const displayValue = Math.floor(scrollPercent * 99);
+            
+            if (scrollY > 20) {
+                scrollCounter.classList.remove('opacity-0', 'w-0');
+                themeToggleContainer.classList.add('mr-4');
+                
+                if (displayValue >= 90) {
+                    scrollValue.classList.add('hidden');
+                    scrollArrow.classList.remove('hidden');
+                    scrollCounter.classList.remove('w-7');
+                    scrollCounter.classList.add('w-20', 'px-2');
+                } else {
+                    scrollValue.classList.remove('hidden');
+                    scrollArrow.classList.add('hidden');
+                    scrollCounter.classList.remove('w-20', 'px-2');
+                    scrollCounter.classList.add('w-7');
+                    scrollValue.textContent = displayValue.toString();
+                }
+            } else {
+                scrollCounter.classList.add('opacity-0', 'w-0');
+                scrollCounter.classList.remove('w-7', 'w-20', 'px-2');
+                themeToggleContainer.classList.remove('mr-4');
+            }
+        }
+    }
+
+    function setPageTitle() {
+        const title = document.title;
+        if (pageTitle) {
+            pageTitle.textContent = title;
+        }
+    }
+
+    window.addEventListener('scroll', updateHeader);
+    window.addEventListener('DOMContentLoaded', () => {
+        updateHeader();
+        setPageTitle();
+    });
+</script>
