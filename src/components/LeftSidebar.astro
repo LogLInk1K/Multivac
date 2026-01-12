@@ -68,12 +68,19 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
     <!-- Matrix Effect Script -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      let matrixInterval: number | undefined, avatarInterval: number | undefined, matrixTimeout: number | undefined;
+      
+      function initMatrixEffects() {
         const matrixCard = document.querySelector('.matrix-card');
         const matrixTexts = matrixCard?.querySelectorAll('.matrix-text') || [];
         const matrixChars = '0123456789ABCDEFG';
         let isAnimating = false;
         let changeCount = 0; // 跟踪奇数次/偶数次变化的计数器
+
+        // 清理旧的定时器
+        if (matrixInterval) clearInterval(matrixInterval);
+        if (avatarInterval) clearInterval(avatarInterval);
+        if (matrixTimeout) clearTimeout(matrixTimeout);
 
         // 根据时间获取问候语
         function getGreeting() {
@@ -161,13 +168,8 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         }
 
         // 每3秒自动触发一次Matrix效果
-        const matrixInterval = setInterval(triggerMatrixEffect, 10000);
+        matrixInterval = setInterval(triggerMatrixEffect, 10000) as unknown as number;
         
-        // 组件移除时清理定时器
-        matrixCard?.addEventListener('remove', () => {
-          clearInterval(matrixInterval);
-        });
-
         // 头像切换效果
         const avatarContainer = document.querySelector('.avatar-container');
         const avatarImage = document.querySelector('.avatar-image') as HTMLImageElement;
@@ -221,16 +223,25 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         }
 
         // 每5秒触发一次头像切换（第一次3秒后触发）
-        setTimeout(() => {
+        matrixTimeout = setTimeout(() => {
           triggerAvatarChange();
-          const avatarInterval = setInterval(triggerAvatarChange, 5000);
-          
-          // 组件移除时清理定时器
-          matrixCard?.addEventListener('remove', () => {
-            clearInterval(avatarInterval);
-          });
-        }, 3000);
-      });
+          avatarInterval = setInterval(triggerAvatarChange, 5000) as unknown as number;
+        }, 3000) as unknown as number;
+      }
+
+      // 清理函数
+      function cleanup() {
+        if (matrixInterval) clearInterval(matrixInterval);
+        if (avatarInterval) clearInterval(avatarInterval);
+        if (matrixTimeout) clearTimeout(matrixTimeout);
+      }
+
+      // 初始化
+      initMatrixEffects();
+      
+      // 适配 ClientRouter
+      document.addEventListener('astro:page-load', initMatrixEffects);
+      document.addEventListener('astro:before-preparation', cleanup);
     </script>
     
   </div>

@@ -159,11 +159,26 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
   }
 
   let searchTimeout;
+  let inputListener;
+  let backdropListener;
+  let keydownListener;
 
   function setupEventListeners() {
     initElements();
     
-    input?.addEventListener('input', async (e) => {
+    // 移除旧的监听器（如果存在）
+    if (inputListener && input) {
+      input.removeEventListener('input', inputListener);
+    }
+    if (backdropListener && backdrop) {
+      backdrop.removeEventListener('click', backdropListener);
+    }
+    if (keydownListener) {
+      document.removeEventListener('keydown', keydownListener);
+    }
+    
+    // 创建新的监听器
+    inputListener = async (e) => {
       clearTimeout(searchTimeout);
       const query = e.target.value;
       
@@ -184,30 +199,60 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
         const results = searchPosts(query);
         renderResults(results);
       }, 300);
-    });
+    };
 
-    backdrop?.addEventListener('click', closeModal);
+    backdropListener = () => {
+      closeModal();
+    };
+
+    keydownListener = (e) => {
+      if (e.key === 'Escape') {
+        initElements();
+        if (!modal?.classList.contains('hidden')) {
+          closeModal();
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        initElements();
+        if (modal?.classList.contains('hidden')) {
+          openModal();
+        } else {
+          closeModal();
+        }
+      }
+    };
+
+    // 添加新的监听器
+    if (input) input.addEventListener('input', inputListener);
+    if (backdrop) backdrop.addEventListener('click', backdropListener);
+    document.addEventListener('keydown', keydownListener);
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      initElements();
-      if (!modal?.classList.contains('hidden')) {
-        closeModal();
-      }
+  function cleanupEventListeners() {
+    if (inputListener && input) {
+      input.removeEventListener('input', inputListener);
     }
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      initElements();
-      if (modal?.classList.contains('hidden')) {
-        openModal();
-      } else {
-        closeModal();
-      }
+    if (backdropListener && backdrop) {
+      backdrop.removeEventListener('click', backdropListener);
     }
-  });
+    if (keydownListener) {
+      document.removeEventListener('keydown', keydownListener);
+    }
+  }
 
   window.openSearchModal = openModal;
 
-  document.addEventListener('DOMContentLoaded', setupEventListeners);
+  function init() {
+    // 确保模态框在页面切换时是关闭状态
+    closeModal();
+    setupEventListeners();
+  }
+
+  // 适配 ClientRouter 生命周期
+  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('astro:page-load', init);
+  
+  // 在页面切换前清理事件监听器
+  document.addEventListener('astro:before-preparation', cleanupEventListeners);
 </script>
