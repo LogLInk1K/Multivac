@@ -20,16 +20,16 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
     <!-- 顶部：1k.ink 文本 -->
     <div class="absolute top-4 left-0 right-0 flex justify-center">
       <div class="px-3 py-1 bg-white/20 dark:bg-black/50 rounded-full">
-        <span class="text-sm font-medium text-white">1k.ink</span>
+        <span class="text-sm font-medium text-white greeting-text">1k.ink</span>
       </div>
     </div>
     <!-- 中间：头像 -->
     <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center pt-12 pb-16">
-      <div class="relative">
+      <div class="relative avatar-container">
         <img 
           src="https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755" 
           alt="博主头像" 
-          class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg"
+          class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg avatar-image"
         />
       </div>
     </div>
@@ -71,9 +71,31 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       document.addEventListener('DOMContentLoaded', function() {
         const matrixCard = document.querySelector('.matrix-card');
         const matrixTexts = matrixCard?.querySelectorAll('.matrix-text') || [];
-        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const matrixChars = '0123456789ABCDEFG';
         let isAnimating = false;
         let changeCount = 0; // 跟踪奇数次/偶数次变化的计数器
+
+        // 根据时间获取问候语
+        function getGreeting() {
+          const hour = new Date().getHours();
+          if (hour >= 5 && hour < 12) {
+            return '早上好，夜之城！';
+          } else if (hour >= 12 && hour < 14) {
+            return '真香！';
+          } else if (hour >= 14 && hour < 18) {
+            return '三点几哩，饮茶先啦！';
+          } else if (hour >= 18 && hour < 22) {
+            return '真相只有一个！';
+          } else {
+            return '你见过凌晨四点的洛杉矶吗？';
+          }
+        }
+
+        // 更新问候语文本
+        const greetingText = document.querySelector('.greeting-text');
+        if (greetingText) {
+          greetingText.textContent = getGreeting();
+        }
 
         // Matrix效果函数
         function triggerMatrixEffect() {
@@ -139,12 +161,75 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         }
 
         // 每3秒自动触发一次Matrix效果
-        const matrixInterval = setInterval(triggerMatrixEffect, 3000);
+        const matrixInterval = setInterval(triggerMatrixEffect, 10000);
         
         // 组件移除时清理定时器
         matrixCard?.addEventListener('remove', () => {
           clearInterval(matrixInterval);
         });
+
+        // 头像切换效果
+        const avatarContainer = document.querySelector('.avatar-container');
+        const avatarImage = document.querySelector('.avatar-image') as HTMLImageElement;
+        const emojis = ['😋', '😼', '😎', '😺', '😸', '😹', '🦊', '🐱', '🐶'];
+        let currentEmojiIndex = 0;
+        let isAvatarAnimating = false;
+
+        function triggerAvatarChange() {
+          if (!avatarContainer || !avatarImage || isAvatarAnimating) return;
+          isAvatarAnimating = true;
+
+          // 创建emoji元素
+          const emoji = document.createElement('div');
+          emoji.textContent = emojis[currentEmojiIndex];
+          emoji.className = 'absolute inset-0 flex items-center justify-center text-[115px]';
+          emoji.style.transform = 'scale(0) rotate(-180deg)';
+          emoji.style.opacity = '0';
+          emoji.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+          avatarContainer.appendChild(emoji);
+
+          // 动画序列
+          setTimeout(() => {
+            emoji.style.transform = 'scale(1) rotate(0deg)';
+            emoji.style.opacity = '1';
+          }, 50);
+
+          setTimeout(() => {
+            avatarImage.style.transform = 'scale(0) rotate(180deg)';
+            avatarImage.style.opacity = '0';
+            avatarImage.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+          }, 100);
+
+          setTimeout(() => {
+            avatarImage.style.display = 'none';
+          }, 600);
+
+          setTimeout(() => {
+            emoji.style.transform = 'scale(0) rotate(180deg)';
+            emoji.style.opacity = '0';
+            avatarImage.style.display = 'block';
+            avatarImage.style.transform = 'scale(0) rotate(-180deg)';
+          }, 2000);
+
+          setTimeout(() => {
+            avatarImage.style.transform = 'scale(1) rotate(0deg)';
+            avatarImage.style.opacity = '1';
+            emoji.remove();
+            isAvatarAnimating = false;
+            currentEmojiIndex = (currentEmojiIndex + 1) % emojis.length;
+          }, 2300);
+        }
+
+        // 每5秒触发一次头像切换（第一次3秒后触发）
+        setTimeout(() => {
+          triggerAvatarChange();
+          const avatarInterval = setInterval(triggerAvatarChange, 5000);
+          
+          // 组件移除时清理定时器
+          matrixCard?.addEventListener('remove', () => {
+            clearInterval(avatarInterval);
+          });
+        }, 3000);
       });
     </script>
     
