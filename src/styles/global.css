@@ -1,6 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "../styles/markdown.css";
 
 /* --- 1. 定义更优雅的全局变量 --- */
 :root {
