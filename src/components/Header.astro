@@ -1,5 +1,4 @@
 ---
-import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import SearchModal from './SearchModal.astro';
@@ -40,7 +39,7 @@ import SearchModal from './SearchModal.astro';
         <div class="flex-1 flex justify-end items-center shrink-0">
             <button 
                 onclick="window.openSearchModal()" 
-                class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-4"
+                class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-2"
                 aria-label="搜索"
             >
                 <svg 
@@ -57,12 +56,12 @@ import SearchModal from './SearchModal.astro';
                     ></path>
                 </svg>
             </button>
-            <div id="theme-toggle-container" class="flex items-center mr-4">
+            <div id="theme-toggle-container" class="flex items-center mr-0 transition-all duration-300">
                 <ThemeToggle />
             </div>
             <div 
                 id="scroll-counter"
-                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden"
+                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden"
                 onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
             >
                 <span id="scroll-value">0</span>
@@ -80,86 +79,106 @@ import SearchModal from './SearchModal.astro';
 <SearchModal />
 
 <script>
-    const nav = document.getElementById('nav-container');
-    const navBg = document.getElementById('nav-bg');
-    const scrollCounter = document.getElementById('scroll-counter');
-    const scrollValue = document.getElementById('scroll-value');
-    const scrollArrow = document.getElementById('scroll-arrow');
-    const themeToggleContainer = document.getElementById('theme-toggle-container');
-    const navLinks = document.getElementById('nav-links');
-    const pageTitle = document.getElementById('page-title');
+    // 将所有逻辑封装在 init 函数中
+    function initHeader() {
+        const nav = document.getElementById('nav-container');
+        const navBg = document.getElementById('nav-bg');
+        const scrollCounter = document.getElementById('scroll-counter');
+        const scrollValue = document.getElementById('scroll-value');
+        const scrollArrow = document.getElementById('scroll-arrow');
+        const themeToggleContainer = document.getElementById('theme-toggle-container');
+        const navLinks = document.getElementById('nav-links');
+        const pageTitle = document.getElementById('page-title');
 
-    let lastScrollY = 0;
-    let isScrollingDown = false;
+        if (!nav) return; // 容错处理
 
-    function updateHeader() {
-        const scrollY = window.scrollY;
-        const scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
-        lastScrollY = scrollY;
-        
-        if (scrollY > 20) {
-            nav?.classList.remove('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-            nav?.classList.add('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
-            navBg?.classList.replace('opacity-0', 'opacity-100');
-            
-            if (scrollDirection === 'down') {
-                navLinks?.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
-                navLinks?.classList.remove('translate-y-0');
-                pageTitle?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
-                pageTitle?.classList.add('translate-y-0');
-            } else {
-                navLinks?.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
-                navLinks?.classList.add('translate-y-0');
-                pageTitle?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
-                pageTitle?.classList.remove('translate-y-0');
-            }
-        } else {
-            nav?.classList.add('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-            nav?.classList.remove('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
-            navBg?.classList.replace('opacity-100', 'opacity-0');
-            navLinks?.classList.remove('opacity-0', 'pointer-events-none');
-            pageTitle?.classList.add('opacity-0', 'pointer-events-none');
-        }
+        let lastScrollY = window.scrollY;
 
-        if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer) {
-            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
-            const displayValue = Math.floor(scrollPercent * 99);
+        function updateHeader() {
+            const scrollY = window.scrollY;
+            const scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
+            lastScrollY = scrollY;
             
             if (scrollY > 20) {
-                scrollCounter.classList.remove('opacity-0', 'w-0');
-                themeToggleContainer.classList.add('mr-4');
+                nav?.classList.remove('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
+                nav?.classList.add('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                navBg?.classList.replace('opacity-0', 'opacity-100');
                 
-                if (displayValue >= 90) {
-                    scrollValue.classList.add('hidden');
-                    scrollArrow.classList.remove('hidden');
-                    scrollCounter.classList.remove('w-7');
-                    scrollCounter.classList.add('w-20', 'px-2');
+                if (scrollDirection === 'down') {
+                    navLinks?.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+                    navLinks?.classList.remove('translate-y-0');
+                    pageTitle?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+                    pageTitle?.classList.add('translate-y-0');
                 } else {
-                    scrollValue.classList.remove('hidden');
-                    scrollArrow.classList.add('hidden');
-                    scrollCounter.classList.remove('w-20', 'px-2');
-                    scrollCounter.classList.add('w-7');
-                    scrollValue.textContent = displayValue.toString();
+                    navLinks?.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+                    navLinks?.classList.add('translate-y-0');
+                    pageTitle?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+                    pageTitle?.classList.remove('translate-y-0');
                 }
             } else {
-                scrollCounter.classList.add('opacity-0', 'w-0');
-                scrollCounter.classList.remove('w-7', 'w-20', 'px-2');
-                themeToggleContainer.classList.remove('mr-4');
+                nav?.classList.add('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
+                nav?.classList.remove('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                navBg?.classList.replace('opacity-100', 'opacity-0');
+                navLinks?.classList.remove('opacity-0', 'pointer-events-none');
+                pageTitle?.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer) {
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
+                const displayValue = Math.floor(scrollPercent * 99);
+                
+                if (scrollY > 20) {
+                    // 显示滚动计数器，同时调整主题切换按钮位置
+                    scrollCounter.classList.remove('opacity-0', 'w-0');
+                    scrollCounter.classList.add('opacity-100', 'w-7');
+                    themeToggleContainer.classList.remove('mr-0');
+                    themeToggleContainer.classList.add('mr-2');
+                    
+                    if (displayValue >= 90) {
+                        scrollValue.classList.add('hidden');
+                        scrollArrow.classList.remove('hidden');
+                        scrollCounter.classList.remove('w-7');
+                        scrollCounter.classList.add('w-20', 'px-2');
+                    } else {
+                        scrollValue.classList.remove('hidden');
+                        scrollArrow.classList.add('hidden');
+                        scrollCounter.classList.remove('w-20', 'px-2');
+                        scrollCounter.classList.add('w-7');
+                        scrollValue.textContent = displayValue.toString();
+                    }
+                } else {
+                    // 完全隐藏滚动计数器，让主题切换按钮占据其位置
+                    scrollCounter.classList.add('opacity-0', 'w-0');
+                    scrollCounter.classList.remove('opacity-100', 'w-7', 'w-20', 'px-2');
+                    themeToggleContainer.classList.remove('mr-2');
+                    themeToggleContainer.classList.add('mr-0');
+                }
             }
         }
-    }
 
-    function setPageTitle() {
-        const title = document.title;
-        if (pageTitle) {
-            pageTitle.textContent = title;
+        function setPageTitle() {
+            // 在 ClientRouter 下，document.title 需要一点时间同步，或者手动获取
+            if (pageTitle) {
+                pageTitle.textContent = document.title;
+            }
         }
-    }
 
-    window.addEventListener('scroll', updateHeader);
-    window.addEventListener('DOMContentLoaded', () => {
+        // 监听滚动
+        window.addEventListener('scroll', updateHeader);
+        
+        // 初始运行一次
         updateHeader();
         setPageTitle();
-    });
-</script>
+
+        // 【关键】由于 ClientRouter 不会刷新窗口，我们需要在离开页面时手动移除监听器
+        // 否则跳转多次后会有多个监听器在后台跑，导致内存泄漏和卡顿
+        document.addEventListener('astro:before-preparation', () => {
+            window.removeEventListener('scroll', updateHeader);
+        }, { once: true });
+    }
+
+    // 适配 ClientRouter：首次加载和后续每次跳转后都初始化
+    initHeader();
+    document.addEventListener('astro:page-load', initHeader);
+</script>	

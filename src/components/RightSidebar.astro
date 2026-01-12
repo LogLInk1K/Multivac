@@ -96,21 +96,28 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
     </div>
   </div>
 
-<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4 flex items-center gap-2">
       <svg class="w-5 h-5 text-[#f26522]" fill="currentColor" viewBox="0 0 24 24">
         <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248S0 22.546 0 20.752s1.456-3.248 3.252-3.248 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-8.18v4.831c10.555.062 19.121 8.614 19.184 19.17h4.817c-.063-13.215-10.782-23.93-24.001-24.001z"></path>
       </svg>
       RSS 订阅
     </h3>
-    <p class="text-sm text-text-light/70 dark:text-text-dark/70 mb-4">支持通过 RSS 客户端订阅本站更新，获取最直接的文章推送。</p>
-    <div class="flex mb-2">
-      <div class="relative flex-grow">
-        <input type="text" readonly value="https://log.1k.ink/rss.xml" id="rss-link" class="w-full pl-3 pr-3 py-2 text-xs font-mono border border-border-light rounded-l-md border-r-0 focus:outline-none dark:bg-card-dark dark:border-border-dark dark:text-text-dark">
+    <p class="text-sm text-text-light/70 dark:text-text-dark/70 mb-4 leading-relaxed">获取最直接的文章推送，支持主流阅读器。</p>
+    
+    <div class="flex items-center gap-0 overflow-hidden border border-border-light dark:border-border-dark rounded-xl bg-background-light dark:bg-background-dark group/rss">
+      <div class="flex-grow px-3 py-2 text-[11px] font-mono text-text-light/50 dark:text-text-dark/50 truncate select-all">
+        https://log.1k.ink/rss.xml
       </div>
-      <button onclick="const el = document.getElementById('rss-link'); el.select(); navigator.clipboard.writeText(el.value).then(() => alert('已复制订阅链接')).catch(() => alert('复制失败')); el.blur();" class="px-4 py-2 text-sm font-medium text-white bg-primary-light rounded-r-md hover:bg-primary-dark focus:outline-none whitespace-nowrap">复制</button>
+      <button 
+        onclick="navigator.clipboard.writeText('https://log.1k.ink/rss.xml').then(() => { this.textContent = '已复制'; setTimeout(() => this.textContent = '复制', 2000); })"
+        class="px-4 py-2 text-xs font-bold text-white bg-primary-light hover:bg-primary-dark transition-all whitespace-nowrap active:scale-95"
+      >
+        复制
+      </button>
     </div>
-    <p class="text-[10px] text-text-light dark:text-text-dark opacity-50 italic">将链接粘贴至您的阅读器（如 Feedly, NetNewsWire 或 Reeder）</p>
+    
+    <p class="mt-4 text-[10px] text-text-light dark:text-text-dark opacity-40 italic">支持 Feedly, NetNewsWire, Reeder 等</p>
   </div>
 </aside>
 

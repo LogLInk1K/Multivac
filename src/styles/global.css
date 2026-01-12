@@ -2,26 +2,93 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-html {
-  transition: color 0.5s ease, background-color 0.5s ease;
+/* --- 1. 定义更优雅的全局变量 --- */
+:root {
+  /* 苹果风格的柔和减速曲线 */
+  --ease-gentle: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* 略带弹性的进入曲线 */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-* {
-  transition: color 0.5s ease, background-color 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+/* --- 2. 视图过渡基础 --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
 }
 
+/* --- 3. 页面跳转动画：优化为异步感 --- */
+/* 让旧页面消失得快一点，新页面进入得稍微慢一点，产生层次感 */
+:root:not(.no-transitions)::view-transition-old(root) {
+  animation: 150ms ease-in both fade-out;
+}
+
+:root:not(.no-transitions)::view-transition-new(root) {
+  /* 使用自定义的柔和曲线，并稍微增加一点时长 */
+  animation: 550ms var(--ease-gentle) both slide-and-fade;
+}
+
+/* --- 4. 圆形扩散层级 --- */
+::view-transition-old(root) { z-index: 999; }
+::view-transition-new(root) { z-index: 1; }
+.dark::view-transition-new(root) { z-index: 999; }
+.dark::view-transition-old(root) { z-index: 1; }
+
+/* --- 5. 局部交互 transition：优化为更细腻的反馈 --- */
+.nav-link, .blog-card, button, a {
+  /* 时长改为 0.4s，使用更优雅的曲线 */
+  transition: 
+    color 0.4s var(--ease-gentle), 
+    background-color 0.4s var(--ease-gentle), 
+    transform 0.4s var(--ease-gentle), 
+    opacity 0.4s var(--ease-gentle),
+    box-shadow 0.4s var(--ease-gentle);
+}
+
+/* 按钮点击瞬间的反馈可以稍微快一点 */
+button:active {
+  transform: scale(0.96);
+  transition-duration: 0.1s;
+}
+
+/* 页面加载时的整体淡入类 */
 .page-transition {
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn 0.6s var(--ease-gentle) forwards;
+}
+
+/* --- 6. 拦截锁：保持极致纯净 --- */
+.no-transitions *,
+.no-transitions *:before,
+.no-transitions *:after {
+  transition: none !important;
+}
+
+/* --- 7. 动画关键帧优化 --- */
+@keyframes fade-out { 
+  from { opacity: 1; } 
+  to { opacity: 0; } 
+}
+
+@keyframes slide-and-fade {
+  from { 
+    opacity: 0; 
+    /* 初始位移稍微加大，配合贝塞尔曲线会更有“弹射”进入的感觉 */
+    transform: translateY(20px) scale(0.98); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  from { 
+    opacity: 0; 
+    transform: translateY(15px); 
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
   }
 }
-
