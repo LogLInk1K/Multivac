@@ -6,6 +6,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        'plus-jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+      },
       colors: {
         // 主色调 - 明亮的蓝色，与黑色背景形成鲜明对比
         primary: {
