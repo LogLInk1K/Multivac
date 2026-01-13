@@ -88,21 +88,18 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
         // 问候语列表，与emoji对应
         const greetings = [
-          '饿了，想吃鱼！',
-          '我是猫王！',
-          '酷毙了！',
-          '喵喵喵~',
-          '开心到飞起！',
-          '笑到打滚！',
-          '我是狐狸精！',
-          '猫咪日常~',
-          '汪汪汪！'
+          '传奇主唱井芹仁菜',
+          '磁场转动九十九万匹！',
+          '全款拿下疯狂星期四',
+          '咕咕嘎嘎！咕嘎？',
+          '感觉不如……原神',
+          '知识学爆'
         ];
 
         // 头像切换效果
         const avatarContainer = document.querySelector('.avatar-container') as HTMLElement;
         const avatarImage = document.querySelector('.avatar-image') as HTMLImageElement;
-        const emojis = ['😋', '😼', '😎', '😺', '😸', '😹', '🦊', '🐱', '🐶'];
+        const emojis = ['😎', '😼', '😋', '😭', '🤓', '🤣'];
         let currentEmojiIndex = 0;
         let isAvatarAnimating = false;
 
@@ -360,6 +357,8 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
             emoji.style.opacity = '0';
             emoji.style.filter = 'blur(4px) brightness(1.1)';
             emoji.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            emoji.style.userSelect = 'none'; // 防止文本选择
+            emoji.style.cursor = 'default'; // 设置默认鼠标指针
             // 将emoji添加到鼠标跟随wrapper中，这样也会跟随鼠标移动
             mouseWrapper?.appendChild(emoji);
 
