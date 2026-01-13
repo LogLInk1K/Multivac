@@ -17,7 +17,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 <aside class="hidden md:block w-[272px] space-y-6">
   <!-- 个人信息卡片 -->
   <div class="p-4 h-[300px] bg-primary-light dark:bg-primary-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 matrix-card relative overflow-hidden">
-    <!-- 顶部：1k.ink 文本 -->
+    <!-- 顶部：醉后不知天在水 文本 -->
     <div class="absolute top-4 left-0 right-0 flex justify-center">
       <div class="px-3 py-1 bg-white/20 dark:bg-black/50 rounded-full">
         <span class="text-sm font-medium text-white greeting-text">醉后不知天在水</span>
@@ -159,7 +159,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         animateMouseFollow();
         // ============ 鼠标跟随效果结束 ============
 
-        // 初始化时不修改问候语，保持默认的"1k.ink"显示
+        // 初始化时不修改问候语，保持默认的"醉后不知天在水"显示
         // 第一次动画时再显示第一个问候语
 
         // Matrix效果函数
@@ -272,7 +272,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               
               // 同时恢复问候语为默认值
                if (greetingText && greetingContainer) {
-                 greetingText.textContent = '1k.ink';
+                 greetingText.textContent = '醉后不知天在水';
                  greetingText.style.transform = 'scale(0.9)';
                  greetingText.style.opacity = '0';
                  greetingText.style.filter = 'blur(2px) brightness(1.1)';
