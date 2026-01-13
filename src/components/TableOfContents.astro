@@ -8,13 +8,11 @@
   function initTableOfContents() {
     const articleContent = document.querySelector('.prose');
     if (!articleContent) {
-      console.log('未找到 .prose 元素');
       return;
     }
 
     const tocContainer = document.getElementById('toc-list');
     if (!tocContainer) {
-      console.log('未找到 #toc-list 元素');
       return;
     }
 
@@ -22,7 +20,6 @@
     const headingElements = articleContent.querySelectorAll('h2');
 
     if (headingElements.length === 0) {
-      console.log('没有找到标题');
       return;
     }
 
@@ -130,8 +127,6 @@
       });
     });
 
-    console.log('找到的标题:', headings);
-
     // 渲染目录
     const createListItem = (item) => {
       const li = document.createElement('li');
@@ -170,7 +165,6 @@
     const tocWrapper = document.getElementById('table-of-contents-wrapper');
     if (tocWrapper) {
       tocWrapper.classList.remove('opacity-0');
-      console.log('目录已显示');
     }
 
     // 初始化时更新可见标题
