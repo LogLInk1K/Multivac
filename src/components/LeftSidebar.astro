@@ -19,18 +19,18 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
   <div class="p-4 h-[300px] bg-primary-light dark:bg-primary-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 matrix-card relative overflow-hidden">
     <!-- 顶部：醉后不知天在水 文本 -->
     <div class="absolute top-4 left-0 right-0 flex justify-center">
-      <div class="px-3 py-1 bg-white/20 dark:bg-black/50 rounded-full">
-        <span class="text-sm font-medium text-white greeting-text">醉后不知天在水</span>
+      <div class="px-3 py-1 bg-white/20 dark:bg-black/50 rounded-full greeting-container">
+        <span class="text-sm font-medium text-white greeting-text" style="will-change: transform, opacity; text-rendering: optimizeSpeed;">醉后不知天在水</span>
       </div>
     </div>
     <!-- 中间：头像 -->
     <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center pt-12 pb-16">
       <div class="relative avatar-container">
-        <div class="avatar-mouse-wrapper">
+        <div class="avatar-mouse-wrapper transform-gpu">
           <img
             src="https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755"
             alt="博主头像"
-            class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg avatar-image"
+            class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg avatar-image transform-gpu"
           />
         </div>
       </div>
@@ -245,12 +245,12 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
           // 同时开始问候语过渡动画
           if (greetingText && greetingContainer) {
-            greetingText.style.transform = 'scale(0.9)';
+            greetingText.style.transform = 'scale(0.9) translateZ(0)';
             greetingText.style.opacity = '0';
             greetingText.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             greetingText.style.filter = 'blur(2px) brightness(1.1)';
-            
-            greetingContainer.style.transform = 'scale(0.9)';
+
+            greetingContainer.style.transform = 'scale(0.9) translateZ(0)';
             greetingContainer.style.opacity = '0';
             greetingContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             greetingContainer.style.filter = 'blur(2px) brightness(1.1)';
@@ -273,11 +273,11 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               // 同时恢复问候语为默认值
                if (greetingText && greetingContainer) {
                  greetingText.textContent = '醉后不知天在水';
-                 greetingText.style.transform = 'scale(0.9)';
+                 greetingText.style.transform = 'scale(0.9) translateZ(0)';
                  greetingText.style.opacity = '0';
                  greetingText.style.filter = 'blur(2px) brightness(1.1)';
-                 
-                 greetingContainer.style.transform = 'scale(0.9)';
+
+                 greetingContainer.style.transform = 'scale(0.9) translateZ(0)';
                  greetingContainer.style.opacity = '0';
                  greetingContainer.style.filter = 'blur(2px) brightness(1.1)';
                }
@@ -290,12 +290,12 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                 
                 // 同时显示问候语
                  if (greetingText && greetingContainer) {
-                   greetingText.style.transform = 'scale(1.2)';
+                   greetingText.style.transform = 'scale(1.2) translateZ(0)';
                    greetingText.style.opacity = '1';
                    greetingText.style.filter = 'blur(0px) brightness(1)';
                    greetingText.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                   
-                   greetingContainer.style.transform = 'scale(1.2)';
+
+                   greetingContainer.style.transform = 'scale(1.2) translateZ(0)';
                    greetingContainer.style.opacity = '1';
                    greetingContainer.style.filter = 'blur(0px) brightness(1)';
                    greetingContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -307,10 +307,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                   
                   // 同时调整问候语
                    if (greetingText && greetingContainer) {
-                     greetingText.style.transform = 'scale(0.95)';
+                     greetingText.style.transform = 'scale(0.95) translateZ(0)';
                      greetingText.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                     
-                     greetingContainer.style.transform = 'scale(0.95)';
+
+                     greetingContainer.style.transform = 'scale(0.95) translateZ(0)';
                      greetingContainer.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
                    }
                   
@@ -320,10 +320,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                     
                     // 同时调整问候语
                      if (greetingText && greetingContainer) {
-                       greetingText.style.transform = 'scale(1)';
+                       greetingText.style.transform = 'scale(1) translateZ(0)';
                        greetingText.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                       
-                       greetingContainer.style.transform = 'scale(1)';
+
+                       greetingContainer.style.transform = 'scale(1) translateZ(0)';
                        greetingContainer.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                      }
                     
@@ -352,7 +352,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
             // 创建并显示当前emoji - 使用3D透视效果
             const emoji = document.createElement('div') as HTMLElement;
             emoji.textContent = emojis[(currentEmojiIndex + emojiIndex) % emojis.length];
-            emoji.className = 'absolute inset-0 flex items-center justify-center text-[115px]';
+            emoji.className = 'absolute inset-0 flex items-center justify-center text-[115px] transform-gpu';
             emoji.style.transform = 'perspective(1000px) rotateY(-25deg) scale(0.7)';
             emoji.style.opacity = '0';
             emoji.style.filter = 'blur(4px) brightness(1.1)';
@@ -366,12 +366,12 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
              const greetingIndex = (currentEmojiIndex + emojiIndex) % greetings.length;
              if (greetingText && greetingContainer) {
                greetingText.textContent = greetings[greetingIndex];
-               greetingText.style.transform = 'scale(0.7)';
+               greetingText.style.transform = 'scale(0.7) translateZ(0)';
                greetingText.style.opacity = '0';
                greetingText.style.filter = 'blur(2px) brightness(1.1)';
                greetingText.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-               
-               greetingContainer.style.transform = 'scale(0.7)';
+
+               greetingContainer.style.transform = 'scale(0.7) translateZ(0)';
                greetingContainer.style.opacity = '0';
                greetingContainer.style.filter = 'blur(2px) brightness(1.1)';
                greetingContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -386,12 +386,12 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               
               // 同时显示问候语
                if (greetingText && greetingContainer) {
-                 greetingText.style.transform = 'scale(1.2)';
+                 greetingText.style.transform = 'scale(1.2) translateZ(0)';
                  greetingText.style.opacity = '1';
                  greetingText.style.filter = 'blur(0px) brightness(1)';
                  greetingText.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                 
-                 greetingContainer.style.transform = 'scale(1.2)';
+
+                 greetingContainer.style.transform = 'scale(1.2) translateZ(0)';
                  greetingContainer.style.opacity = '1';
                  greetingContainer.style.filter = 'blur(0px) brightness(1)';
                  greetingContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -403,10 +403,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                 
                 // 同时调整问候语
                  if (greetingText && greetingContainer) {
-                   greetingText.style.transform = 'scale(0.95)';
+                   greetingText.style.transform = 'scale(0.95) translateZ(0)';
                    greetingText.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                   
-                   greetingContainer.style.transform = 'scale(0.95)';
+
+                   greetingContainer.style.transform = 'scale(0.95) translateZ(0)';
                    greetingContainer.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
                  }
                 
@@ -416,26 +416,19 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                   
                   // 同时调整问候语
                    if (greetingText && greetingContainer) {
-                     greetingText.style.transform = 'scale(1)';
+                     greetingText.style.transform = 'scale(1) translateZ(0)';
                      greetingText.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                     
-                     greetingContainer.style.transform = 'scale(1)';
+
+                     greetingContainer.style.transform = 'scale(1) translateZ(0)';
                      greetingContainer.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                    }
-                  
+
                   // 添加一个持续的轻微旋转动画
                   setTimeout(() => {
                     emoji.style.transform = 'perspective(1000px) rotateY(0deg) rotateZ(0deg) scale(1)';
                     emoji.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                    
-                    // 同时调整问候语
-                     if (greetingText && greetingContainer) {
-                       greetingText.style.transform = 'scale(1)';
-                       greetingText.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                       
-                       greetingContainer.style.transform = 'scale(1)';
-                       greetingContainer.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                     }
+
+                    // 问候语保持显示状态
                   }, 200);
                 }, 200);
               }, 300);
@@ -447,15 +440,15 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               emoji.style.opacity = '0';
               emoji.style.filter = 'blur(4px) brightness(1.1)';
               emoji.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-              
+
               // 同时隐藏问候语
                if (greetingText && greetingContainer) {
-                 greetingText.style.transform = 'scale(0.9)';
+                 greetingText.style.transform = 'scale(0.9) translateZ(0)';
                  greetingText.style.opacity = '0';
                  greetingText.style.filter = 'blur(2px) brightness(1.1)';
                  greetingText.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                 
-                 greetingContainer.style.transform = 'scale(0.9)';
+
+                 greetingContainer.style.transform = 'scale(0.9) translateZ(0)';
                  greetingContainer.style.opacity = '0';
                  greetingContainer.style.filter = 'blur(2px) brightness(1.1)';
                  greetingContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
