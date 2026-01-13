@@ -71,6 +71,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
     <!-- Matrix Effect Script -->
     <script>
       let matrixInterval: number | undefined, avatarInterval: number | undefined, matrixTimeout: number | undefined;
+      let animationFrameId: number | undefined;
 
       function initMatrixEffects() {
         const matrixCard = document.querySelector('.matrix-card');
@@ -83,6 +84,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         if (matrixInterval) clearInterval(matrixInterval);
         if (avatarInterval) clearInterval(avatarInterval);
         if (matrixTimeout) clearTimeout(matrixTimeout);
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
         // 问候语列表，与emoji对应
         const greetings = [
@@ -105,51 +107,59 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         let isAvatarAnimating = false;
 
         // ============ 鼠标跟随效果 ============
-        // 使用独立的transform层，不影响现有的动画transform
         const mouseWrapper = document.querySelector('.avatar-mouse-wrapper') as HTMLElement;
         let mouseX = 0, mouseY = 0;
         let currentX = 0, currentY = 0;
-        const mouseFollowStrength = 0.08; // 跟随强度
-        const maxMoveDistance = 8; // 最大移动距离(px)
+        const lerpFactor = 0.04; // 进一步降低插值因子以获得更平滑的效果
+        const maxMoveDistance = 6; // 减小移动距离避免抖动
+        let isHovering = false;
 
-        // 监听鼠标在卡片内的移动
-        if (matrixCard && mouseWrapper) {
-          matrixCard.addEventListener('mousemove', (e: Event) => {
-            const mouseEvent = e as MouseEvent;
-            const rect = matrixCard.getBoundingClientRect();
-            const cardCenterX = rect.left + rect.width / 2;
-            const cardCenterY = rect.top + rect.height / 2;
-
-            // 计算鼠标相对于卡片中心的偏移
-            const deltaX = (mouseEvent.clientX - cardCenterX) / (rect.width / 2);
-            const deltaY = (mouseEvent.clientY - cardCenterY) / (rect.height / 2);
-
-            // 限制移动范围
-            mouseX = Math.max(-1, Math.min(1, deltaX)) * maxMoveDistance;
-            mouseY = Math.max(-1, Math.min(1, deltaY)) * maxMoveDistance;
+        // 为头像和emoji容器添加鼠标跟踪
+        if (mouseWrapper) {
+          mouseWrapper.addEventListener('mouseenter', () => {
+            isHovering = true;
           });
 
-          // 鼠标离开卡片时复位
-          matrixCard.addEventListener('mouseleave', () => {
+          mouseWrapper.addEventListener('mousemove', (e: Event) => {
+            if (!isHovering) return;
+
+            const mouseEvent = e as MouseEvent;
+            const rect = mouseWrapper.getBoundingClientRect();
+
+            // 计算鼠标相对于元素中心的偏移
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // 简单的归一化偏移量 (-1 到 1)
+            const normalizedX = (mouseEvent.clientX - centerX) / (rect.width / 2);
+            const normalizedY = (mouseEvent.clientY - centerY) / (rect.height / 2);
+
+            // 限制范围并应用移动距离
+            mouseX = Math.max(-1, Math.min(1, normalizedX)) * maxMoveDistance;
+            mouseY = Math.max(-1, Math.min(1, normalizedY)) * maxMoveDistance;
+          });
+
+          mouseWrapper.addEventListener('mouseleave', () => {
+            isHovering = false;
             mouseX = 0;
             mouseY = 0;
           });
-
-          // 平滑跟随动画循环
-          function animateMouseFollow() {
-            // 使用线性插值实现平滑跟随
-            currentX += (mouseX - currentX) * mouseFollowStrength;
-            currentY += (mouseY - currentY) * mouseFollowStrength;
-
-            // 应用到wrapper上，使用translate，不影响现有的transform动画
-            mouseWrapper.style.transform = `translate(${currentX}px, ${currentY}px)`;
-
-            requestAnimationFrame(animateMouseFollow);
-          }
-
-          // 启动鼠标跟随动画
-          animateMouseFollow();
         }
+
+        // 平滑动画循环
+        function animateMouseFollow() {
+          // 线性插值实现平滑跟随
+          currentX += (mouseX - currentX) * lerpFactor;
+          currentY += (mouseY - currentY) * lerpFactor;
+
+          // 应用变换
+          mouseWrapper.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+          animationFrameId = requestAnimationFrame(animateMouseFollow);
+        }
+
+        // 启动动画
+        animateMouseFollow();
         // ============ 鼠标跟随效果结束 ============
 
         // 初始化时不修改问候语，保持默认的"1k.ink"显示
@@ -485,6 +495,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         if (matrixInterval) clearInterval(matrixInterval);
         if (avatarInterval) clearInterval(avatarInterval);
         if (matrixTimeout) clearTimeout(matrixTimeout);
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
       }
 
       // 初始化
