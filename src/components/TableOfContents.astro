@@ -72,16 +72,44 @@
         const headingId = link.dataset.headingId;
         if (!headingId) return;
 
-        if (isHovering || headingId === currentActiveId) {
+        // 获取对应的小横条
+        const bar = link.previousElementSibling;
+        if (!bar || !bar.classList.contains('rounded-full')) return;
+
+        if (isHovering) {
           link.style.visibility = 'visible';
           link.style.opacity = '1';
-          link.classList.add('text-primary-light', 'dark:text-primary-dark', 'font-bold');
-          link.classList.remove('text-text-light', 'dark:text-text-dark');
+          link.style.transform = 'translateX(0)';
+          link.classList.remove('text-text-light', 'dark:text-text-dark', 'text-text-light/80', 'dark:text-text-dark/80');
+          link.classList.add('text-text-light/60', 'dark:text-text-dark/60');
+
+          // 小横条保持低调色
+          bar.classList.remove('bg-text-light/50', 'dark:bg-text-dark/50', 'bg-primary-light', 'dark:bg-primary-dark');
+          bar.classList.add('bg-text-light/30', 'dark:bg-text-dark/30');
+        } else if (headingId === currentActiveId) {
+          link.style.visibility = 'visible';
+          link.style.opacity = '1';
+          link.style.transform = 'translateX(0)';
+          link.classList.remove('text-text-light', 'dark:text-text-dark', 'text-text-light/60', 'dark:text-text-dark/60');
+          link.classList.add('text-text-light/80', 'dark:text-text-dark/80', 'font-bold');
+
+          // 小横条保持低调色，但稍微亮一点
+          bar.classList.remove('bg-text-light/30', 'dark:bg-text-dark/30');
+          bar.classList.add('bg-text-light/50', 'dark:bg-text-dark/50');
         } else {
-          link.style.visibility = 'hidden';
           link.style.opacity = '0';
-          link.classList.remove('text-primary-light', 'dark:text-primary-dark', 'font-bold');
-          link.classList.add('text-text-light', 'dark:text-text-dark');
+          link.style.transform = 'translateX(-8px)';
+          setTimeout(() => {
+            if (link.style.opacity === '0') {
+              link.style.visibility = 'hidden';
+            }
+          }, 300);
+          link.classList.remove('text-text-light/60', 'dark:text-text-dark/60', 'text-text-light/80', 'dark:text-text-dark/80', 'font-bold');
+          link.classList.add('text-text-light/60', 'dark:text-text-dark/60');
+
+          // 小横条恢复最低调色
+          bar.classList.remove('bg-text-light/50', 'dark:bg-text-dark/50', 'bg-primary-light', 'dark:bg-primary-dark');
+          bar.classList.add('bg-text-light/30', 'dark:bg-text-dark/30');
         }
       });
     };
@@ -111,15 +139,15 @@
       li.style.overflow = 'hidden';
 
       const wrapper = document.createElement('div');
-      wrapper.className = 'flex items-center';
+      wrapper.className = 'flex items-center group/bar';
 
       const bar = document.createElement('span');
-      bar.className = 'w-4 h-1 rounded-full bg-primary-light dark:bg-primary-dark mr-2 flex-shrink-0';
+      bar.className = 'w-4 h-1 rounded-full bg-text-light/30 dark:bg-text-dark/30 mr-2 flex-shrink-0 transition-colors duration-300 group-hover/bar:bg-primary-light dark:group-hover/bar:bg-primary-dark';
 
       const a = document.createElement('a');
       a.href = `#${item.id}`;
       a.textContent = item.text;
-      a.className = 'block text-sm transition-colors duration-200 hover:text-primary-light dark:hover:text-primary-dark truncate text-text-light dark:text-text-dark font-medium';
+      a.className = 'block text-sm transition-all duration-300 ease-in-out truncate text-text-light/60 dark:text-text-dark/60 font-medium hover:text-primary-light dark:hover:text-primary-dark';
       a.dataset.headingId = item.id;
 
       wrapper.appendChild(bar);
