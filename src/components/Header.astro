@@ -19,10 +19,48 @@ import SearchModal from './SearchModal.astro';
           		   rounded-full shadow-lg backdrop-blur-md ring-1 ring-white/20
            		   top-2 bottom-2 left-0 right-0"
 		></div>
-        <div class="flex-1 shrink-0">
-            <h2 class="text-2xl font-plus-jakarta font-extrabold whitespace-nowrap">
-                <a href="/" class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors">
-                    LOG
+        <div class="flex-1 shrink-0 flex items-center">
+            <button 
+                onclick="window.openMenuModal()" 
+                class="group relative text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-4"
+                aria-label="菜单"
+            >
+                <svg 
+                    class="w-6 h-6 transition-all duration-300 group-hover:scale-75" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M4 6h16M4 12h16M4 18h16"
+                    ></path>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-75 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                    <div class="bg-primary-light dark:bg-primary-dark rounded-full px-1 py-1">
+                        <svg class="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2" 
+                                d="M4 6h16M4 12h16M4 18h16"
+                            ></path>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            <h2 class="text-[22px] font-plus-jakarta font-extrabold whitespace-nowrap">
+                <a href="/" class="group relative text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-all duration-300 inline-block">
+                    <span class="inline-block transition-all duration-300 group-hover:opacity-0 group-hover:scale-75">LOG</span>
+                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center opacity-0 scale-75 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                        <div class="bg-primary-light dark:bg-primary-dark rounded-full px-4 py-1">
+                            <svg class="w-6 h-6 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </a>
             </h2>
         </div>
@@ -39,11 +77,11 @@ import SearchModal from './SearchModal.astro';
         <div class="flex-1 flex justify-end items-center shrink-0">
             <button 
                 onclick="window.openSearchModal()" 
-                class="text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-2"
+                class="group relative text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-2"
                 aria-label="搜索"
             >
                 <svg 
-                    class="w-6 h-6" 
+                    class="w-6 h-6 transition-all duration-300 group-hover:scale-75" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -55,13 +93,26 @@ import SearchModal from './SearchModal.astro';
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     ></path>
                 </svg>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-75 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                    <div class="bg-primary-light dark:bg-primary-dark rounded-full px-1 py-1">
+                        <svg class="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2" 
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            ></path>
+                        </svg>
+                    </div>
+                </div>
             </button>
             <div id="theme-toggle-container" class="flex items-center mr-0 transition-all duration-300">
                 <ThemeToggle />
             </div>
             <div 
                 id="scroll-counter"
-                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden"
+                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden mr-0 transform-gpu px-1.5 py-1.5"
+                style="will-change: transform;"
                 onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
             >
                 <span id="scroll-value">0</span>
@@ -131,7 +182,7 @@ import SearchModal from './SearchModal.astro';
                 if (scrollY > 20) {
                     // 显示滚动计数器，同时调整主题切换按钮位置
                     scrollCounter.classList.remove('opacity-0', 'w-0');
-                    scrollCounter.classList.add('opacity-100', 'w-7');
+                    scrollCounter.classList.add('opacity-100', 'w-7', 'mr-1');
                     themeToggleContainer.classList.remove('mr-0');
                     themeToggleContainer.classList.add('mr-2');
                     
@@ -139,18 +190,18 @@ import SearchModal from './SearchModal.astro';
                         scrollValue.classList.add('hidden');
                         scrollArrow.classList.remove('hidden');
                         scrollCounter.classList.remove('w-7');
-                        scrollCounter.classList.add('w-20', 'px-2');
+                        scrollCounter.classList.add('w-20', 'px-3');
                     } else {
                         scrollValue.classList.remove('hidden');
                         scrollArrow.classList.add('hidden');
-                        scrollCounter.classList.remove('w-20', 'px-2');
+                        scrollCounter.classList.remove('w-20', 'px-3');
                         scrollCounter.classList.add('w-7');
                         scrollValue.textContent = displayValue.toString();
                     }
                 } else {
                     // 完全隐藏滚动计数器，让主题切换按钮占据其位置
                     scrollCounter.classList.add('opacity-0', 'w-0');
-                    scrollCounter.classList.remove('opacity-100', 'w-7', 'w-20', 'px-2');
+                    scrollCounter.classList.remove('opacity-100', 'w-7', 'w-20', 'px-3', 'mr-1');
                     themeToggleContainer.classList.remove('mr-2');
                     themeToggleContainer.classList.add('mr-0');
                 }
