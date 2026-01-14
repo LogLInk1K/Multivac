@@ -1,0 +1,56 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  heroImage?: string | { src: string };
+  heroImageWidth?: string;
+}
+
+const { title, description, heroImage, heroImageWidth } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <BaseHead title={title} description={description} />
+        
+        <ClientRouter />
+
+        <script is:inline>
+          (function() {
+            const theme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+          })();
+        </script>
+    </head>
+    <body class="min-h-screen flex flex-col bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
+        <Header />
+        <main class="flex-1 pt-2 page-transition">
+            <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                {heroImage && (
+                    <div class="mt-8 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark" style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1; max-width: 100%;'}>
+                        <div
+                            class="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
+                            style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
+                            aria-label="页面封面"
+                        ></div>
+                    </div>
+                )}
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-text-light dark:text-text-dark mb-4">{title}</h1>
+                    <p class="text-lg text-text-light/80 dark:text-text-dark/80 max-w-2xl mx-auto">{description}</p>
+                </div>
+                <div class="prose prose-lg !max-w-[1300px] text-text-light dark:prose-invert dark:text-text-dark prose-headings:font-bold prose-a:text-primary-light dark:prose-a:text-primary-dark prose-blockquote:border-l-primary-light dark:prose-blockquote:border-l-primary-dark prose-code:bg-badge-light dark:prose-code:bg-badge-dark">
+                    <slot />
+                </div>
+            </div>
+        </main>
+        <Footer />
+    </body>
+</html>
