@@ -1,0 +1,43 @@
+---
+interface Props {
+	envId: string;
+}
+
+const { envId } = Astro.props;
+---
+
+<div id="tcomment"></div>
+
+<script define:vars={{ envId }}>
+	// 等待页面加载完成
+	function initTwikoo() {
+		twikoo.init({
+			envId: envId,
+			el: '#tcomment',
+			lang: 'zh-CN',
+		});
+	}
+
+	// 动态加载 Twikoo 脚本
+	function loadTwikooScript() {
+		const script = document.createElement('script');
+		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.min.js';
+		script.onload = initTwikoo;
+		document.head.appendChild(script);
+	}
+
+	// 页面加载时执行
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', loadTwikooScript);
+	} else {
+		loadTwikooScript();
+	}
+</script>
+
+<style>
+	#tcomment {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid theme('colors.gray.200');
+	}
+</style>
