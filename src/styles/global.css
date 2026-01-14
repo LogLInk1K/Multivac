@@ -15,9 +15,11 @@
 /* --- 1. 定义更优雅的全局变量 --- */
 :root {
   /* 苹果风格的柔和减速曲线 */
-  --ease-gentle: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-gentle: cubic-bezier(0.2, 0.6, 0.2, 1);
   /* 略带弹性的进入曲线 */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 模糊淡入淡出的缓动曲线 */
+  --ease-blur: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- 2. 视图过渡基础 --- */
@@ -28,15 +30,15 @@
   display: block;
 }
 
-/* --- 3. 页面跳转动画：优化为异步感 --- */
-/* 让旧页面消失得快一点，新页面进入得稍微慢一点，产生层次感 */
+/* --- 3. 页面跳转动画：模糊淡入淡出 --- */
+/* 旧页面模糊淡出 */
 :root:not(.no-transitions)::view-transition-old(root) {
-  animation: 150ms ease-in both fade-out;
+  animation: 300ms var(--ease-blur) both blur-fade-out;
 }
 
+/* 新页面模糊淡入 */
 :root:not(.no-transitions)::view-transition-new(root) {
-  /* 使用自定义的柔和曲线，并稍微增加一点时长 */
-  animation: 550ms var(--ease-gentle) both slide-and-fade;
+  animation: 600ms var(--ease-blur) both blur-fade-in;
 }
 
 /* --- 4. 圆形扩散层级 --- */
@@ -64,7 +66,7 @@ button:active {
 
 /* 页面加载时的整体淡入类 */
 .page-transition {
-  animation: fadeIn 0.6s var(--ease-gentle) forwards;
+  animation: pageFadeIn 0.6s var(--ease-blur) forwards;
 }
 
 /* --- 6. 拦截锁：保持极致纯净 --- */
@@ -75,30 +77,50 @@ button:active {
 }
 
 /* --- 7. 动画关键帧优化 --- */
-@keyframes fade-out { 
-  from { opacity: 1; } 
-  to { opacity: 0; } 
+@keyframes blur-fade-out {
+  from {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  to {
+    opacity: 0;
+    filter: blur(8px);
+  }
 }
 
-@keyframes slide-and-fade {
-  from { 
-    opacity: 0; 
-    /* 初始位移稍微加大，配合贝塞尔曲线会更有“弹射”进入的感觉 */
-    transform: translateY(20px) scale(0.98); 
+@keyframes blur-fade-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(10px) scale(0.99);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  to {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(15px); 
+  from {
+    opacity: 0;
+    transform: translateY(15px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
