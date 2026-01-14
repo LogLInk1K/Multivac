@@ -8,7 +8,7 @@ const { envId } = Astro.props;
 
 <div id="tcomment"></div>
 
-<script define:vars={{ envId }}>
+<script is:inline define:vars={{ envId }}>
 	// 等待页面加载完成
 	function initTwikoo() {
 		twikoo.init({
