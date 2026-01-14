@@ -11,9 +11,11 @@ type Props = Partial<CollectionEntry<'post'>['data']> & {
   title: string;
   description: string;
   pubDate: Date;
+  heroImageWidth?: string;
+  showDate?: boolean;
 };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, showDate = true } = Astro.props;
 ---
 
 <html lang="zh-CN">
@@ -32,7 +34,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					<div></div>
 					<article class="px-4 sm:px-6 lg:px-8 py-16">
 						{heroImage && (
-							<div class="mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark" style="aspect-ratio: 2/1;">
+							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
 								<div
 									class="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
 									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
@@ -41,14 +43,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							</div>
 						)}
 						<div class="text-center mb-12">
-							<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">
-								<FormattedDate date={pubDate} />
-								{updatedDate && (
-									<div class="text-xs italic mt-1">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)}
-							</div>
+							{showDate && (
+								<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">
+									<FormattedDate date={pubDate} />
+									{updatedDate && (
+										<div class="text-xs italic mt-1">
+											Last updated on <FormattedDate date={updatedDate} />
+										</div>
+									)}
+								</div>
+							)}
 							<h1 class="text-4xl font-bold text-text-light dark:text-text-dark mb-4">{title}</h1>
 							<p class="text-lg text-text-light/80 dark:text-text-dark/80 max-w-xl mx-auto">{description}</p>
 						</div>
@@ -62,7 +66,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="xl:hidden">
 					<article class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 						{heroImage && (
-							<div class="mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark" style="aspect-ratio: 2/1;">
+							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
 								<div
 									class="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
 									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
@@ -71,14 +75,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							</div>
 						)}
 						<div class="text-center mb-12">
-							<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">
-								<FormattedDate date={pubDate} />
-								{updatedDate && (
-									<div class="text-xs italic mt-1">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)}
-							</div>
+							{showDate && (
+								<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">
+									<FormattedDate date={pubDate} />
+									{updatedDate && (
+										<div class="text-xs italic mt-1">
+											Last updated on <FormattedDate date={updatedDate} />
+										</div>
+									)}
+								</div>
+							)}
 							<h1 class="text-4xl font-bold text-text-light dark:text-text-dark mb-4">{title}</h1>
 							<p class="text-lg text-text-light/80 dark:text-text-dark/80 max-w-xl mx-auto">{description}</p>
 						</div>
