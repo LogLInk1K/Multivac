@@ -1,11 +1,11 @@
 ---
+import '../styles/twikoo.css';
 interface Props {
 	envId: string;
 }
 
 const { envId } = Astro.props;
 ---
-
 <div id="tcomment"></div>
 
 <script is:inline define:vars={{ envId }}>
@@ -21,7 +21,7 @@ const { envId } = Astro.props;
 	// 动态加载 Twikoo 脚本
 	function loadTwikooScript() {
 		const script = document.createElement('script');
-		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.min.js';
+		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.nocss.js';
 		script.onload = initTwikoo;
 		document.head.appendChild(script);
 	}
@@ -33,11 +33,3 @@ const { envId } = Astro.props;
 		loadTwikooScript();
 	}
 </script>
-
-<style>
-	#tcomment {
-		margin-top: 3rem;
-		padding-top: 2rem;
-		border-top: 1px solid theme('colors.gray.200');
-	}
-</style>
