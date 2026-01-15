@@ -219,11 +219,23 @@
       scrollTimeout = setTimeout(toggleScrollButtons, 50);
     });
 
+    // 直达评论区功能
+    const scrollToComments = () => {
+      const proseContent = document.querySelector('.prose');
+      if (proseContent) {
+        const proseRect = proseContent.getBoundingClientRect();
+        const scrollTop = window.pageYOffset + proseRect.bottom - window.innerHeight + 650;
+        window.scrollTo({
+          top: scrollTop,
+          behavior: 'smooth',
+        });
+      }
+    };
+
     // 监听点击事件
     backToTopButton.addEventListener('click', scrollToTop);
     jumpToBottomButton.addEventListener('click', scrollToBottom);
-    // 占位按钮功能待实现
-    jumpToCommentsButton.addEventListener('click', () => {});
+    jumpToCommentsButton.addEventListener('click', scrollToComments);
     shareButton.addEventListener('click', () => {});
     rewardButton.addEventListener('click', () => {});
     subscribeButton.addEventListener('click', () => {});
