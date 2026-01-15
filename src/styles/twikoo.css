@@ -178,3 +178,17 @@ html.dark .tk-row.actions .tk-preview:hover {
   background-color: #86868672 !important; /* 变亮一点 */
   /* 或者使用更亮的色值：background-color: #bbbbbb4a !important; */
 }
+
+
+.tk-avatar {
+  border-radius: 50% !important;
+  overflow: hidden !important; 
+
+  border:2px solid #8686864a !important;
+  transition: border-color 0.3s ease !important; /* 让颜色切换更平滑 */
+}
+
+.tk-avatar-img {
+  object-fit: cover !important; 
+  border-radius: 50% !important;
+}
