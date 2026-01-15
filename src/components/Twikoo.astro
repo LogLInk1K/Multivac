@@ -21,7 +21,7 @@ const { envId } = Astro.props;
 	// 动态加载 Twikoo 脚本
 	function loadTwikooScript() {
 		const script = document.createElement('script');
-		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.nocss.js';
+		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.min.js';
 		script.onload = initTwikoo;
 		document.head.appendChild(script);
 	}
