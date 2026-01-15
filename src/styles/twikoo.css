@@ -14,7 +14,7 @@
       @apply flex-col-reverse;
       .tk-input {
         textarea {
-          @apply rounded-2xl py-4 px-6 !min-h-[150px] focus:border-primary-light dark:focus:border-primary-dark;
+          @apply rounded-xl py-4 px-6 !min-h-[150px] focus:border-primary-light dark:focus:border-primary-dark;
         }
       }
     }
@@ -26,11 +26,11 @@
     div {
       @apply min-h-10;
       .el-input-group__prepend {
-        @apply !bg-inherit rounded-l-lg;
+        @apply !bg-inherit rounded-l-xl;
         min-height: inherit;
       }
       input {
-        @apply px-4 rounded-r-lg focus:border-primary-light dark:focus:border-primary-dark;
+        @apply px-4 rounded-r-xl focus:border-primary-light dark:focus:border-primary-dark;
         min-height: inherit;
       }
     }
@@ -127,7 +127,8 @@
 
   .tk-expand-wrap .tk-expand,
   .tk-collapse-wrap .tk-expand {
-    @apply hover:rounded-lg mt-1 hover:bg-hover-light dark:hover:bg-hover-dark transition-colors;
+    @apply rounded-xl mt-1 transition-all;
+    @apply hover:bg-hover-light dark:hover:bg-hover-dark;
   }
 
   /*让表情组件在表情包数量太多的时候正确显示*/
@@ -191,4 +192,33 @@ html.dark .tk-row.actions .tk-preview:hover {
 .tk-avatar-img {
   object-fit: cover !important; 
   border-radius: 50% !important;
+}
+
+.tk-expand-wrap .tk-expand{
+  margin-top: 1rem !important;
+}
+
+#twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand {
+    /* 1. 必须先把基础状态的宽度设为固定的 100% 或具体数值，动画才有参考系 */
+    width: 100% !important;
+    max-width: 100%;
+    
+    /* 2. 强制设为 flex 布局并居中，这是让文字和容器同步收缩最稳的方法 */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    
+    /* 3. 使用三次贝塞尔曲线 (Cubic Bezier) 代替 ease，这是丝滑的关键 */
+    /* 0.4, 0, 0.2, 1 是典型的 Material Design 缓动曲线 */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    margin: 10px auto !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+}
+
+#twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand:hover {
+    width: 25% !important;
+    /* 4. 稍微加一点字间距变化，能抵消宽度缩小带来的文字局促感 */
+    letter-spacing: 1px;
 }
