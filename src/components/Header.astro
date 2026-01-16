@@ -152,7 +152,7 @@ import SearchModal from './SearchModal.astro';
             
             if (scrollY > 20) {
                 nav?.classList.remove('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-                nav?.classList.add('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                nav?.classList.add('max-w-[calc(100%-150px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
                 navBg?.classList.replace('opacity-0', 'opacity-100');
                 
                 if (scrollDirection === 'down') {
@@ -168,7 +168,7 @@ import SearchModal from './SearchModal.astro';
                 }
             } else {
                 nav?.classList.add('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-                nav?.classList.remove('max-w-[calc(100%-80px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                nav?.classList.remove('max-w-[calc(100%-150px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
                 navBg?.classList.replace('opacity-100', 'opacity-0');
                 navLinks?.classList.remove('opacity-0', 'pointer-events-none');
                 pageTitle?.classList.add('opacity-0', 'pointer-events-none');
