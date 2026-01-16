@@ -111,14 +111,14 @@ import SearchModal from './SearchModal.astro';
             </div>
             <div
                 id="scroll-counter"
-                class="inline-flex items-center justify-center h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer hover:scale-110 active:scale-95 opacity-0 overflow-hidden mr-0"
-                style="width: 0; will-change: width, transform, opacity, margin-right;"
+                class="inline-flex items-center justify-center h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer hover:scale-105 active:scale-95 opacity-0 overflow-hidden mr-0"
+                style="width: 1.75rem; transform: scale(0); transform-origin: center center; will-change: transform, opacity, margin-right;"
                 onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
             >
-                <span id="scroll-value" class="px-1.5 whitespace-nowrap transition-opacity duration-150 opacity-0">0</span>
+                <span id="scroll-value" class="px-1.5 whitespace-nowrap">0</span>
                 <span
                     id="scroll-arrow"
-                    class="hidden px-2 text-sm font-sans whitespace-nowrap transition-opacity duration-150 opacity-0"
+                    class="hidden px-2 text-sm font-sans whitespace-nowrap"
                 >
                     返回顶部
                 </span>
@@ -183,36 +183,28 @@ import SearchModal from './SearchModal.astro';
                     // 显示滚动计数器
                     scrollCounter.classList.remove('opacity-0', 'mr-0');
                     scrollCounter.classList.add('opacity-100', 'mr-1');
-                    themeToggleContainer.classList.remove('mr-0');
+                    scrollCounter.style.transform = 'scale(1)';
+                    themeToggleContainer.classList.remove('mr-0', '-mr-2');
                     themeToggleContainer.classList.add('mr-2');
 
                     if (displayValue >= 90) {
-                        scrollValue.classList.add('hidden', 'opacity-0');
+                        scrollValue.classList.add('hidden');
                         scrollArrow.classList.remove('hidden');
-                        setTimeout(() => {
-                            scrollArrow.classList.remove('opacity-0');
-                        }, 100);
                         scrollCounter.style.width = '5rem';
-                        scrollCounter.style.transform = 'scaleX(1)';
                     } else {
                         scrollValue.classList.remove('hidden');
-                        scrollArrow.classList.add('hidden', 'opacity-0');
-                        scrollValue.textContent = displayValue.toString();
-                        setTimeout(() => {
-                            scrollValue.classList.remove('opacity-0');
-                        }, 100);
+                        scrollArrow.classList.add('hidden');
                         scrollCounter.style.width = '1.75rem';
-                        scrollCounter.style.transform = 'scaleX(1)';
+                        scrollValue.textContent = displayValue.toString();
                     }
                 } else {
                     // 隐藏滚动计数器
-                    scrollValue.classList.add('opacity-0');
-                    scrollArrow.classList.add('opacity-0');
                     scrollCounter.classList.add('opacity-0', 'mr-0');
                     scrollCounter.classList.remove('opacity-100', 'mr-1');
-                    scrollCounter.style.transform = 'scaleX(0)';
+                    scrollCounter.style.transform = 'scale(0) translateX(20px)';
+                    scrollCounter.style.width = '0';
                     themeToggleContainer.classList.remove('mr-2');
-                    themeToggleContainer.classList.add('mr-0');
+                    themeToggleContainer.classList.add('mr-0', '-mr-2');
                 }
             }
         }
