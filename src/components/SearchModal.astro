@@ -145,7 +145,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
 
     resultsContainer.innerHTML = results.map((post) => `
       <a 
-        href="/post/${post.id}" 
+        href="/p/${post.id}.html" 
         class="block p-4 rounded-2xl hover:bg-hover-light dark:hover:bg-hover-dark transition-colors group"
       >
         <h3 class="font-bold text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors mb-1">

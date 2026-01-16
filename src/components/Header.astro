@@ -22,7 +22,7 @@ import SearchModal from './SearchModal.astro';
         <div class="flex-1 shrink-0 flex items-center">
             <button
                 id="menu-trigger-btn"
-                onclick="window.openMenuModal()"
+                onclick="window.toggleMenuPanel()"
                 class="group relative text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none mr-4"
                 aria-label="菜单"
             >
@@ -213,9 +213,13 @@ import SearchModal from './SearchModal.astro';
 
         if (!nav) return; // 容错处理
 
-        // 菜单面板 hover 逻辑
+        // 菜单面板逻辑（基于设备交互能力：hover设备用hover触发，触控设备用点击触发）
         if (menuTriggerBtn && menuPanel) {
             let hideTimeout: ReturnType<typeof setTimeout> | undefined;
+            let isMenuOpen = false;
+
+            // 检测设备是否支持hover
+            const hasHover = window.matchMedia('(hover: hover)').matches;
 
             const showMenu = () => {
                 clearTimeout(hideTimeout);
@@ -228,19 +232,42 @@ import SearchModal from './SearchModal.astro';
                 menuPanel.style.marginTop = '70px';
                 menuPanel.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
                 menuPanel.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                isMenuOpen = true;
             };
 
             const hideMenu = () => {
                 menuPanel.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
                 menuPanel.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                isMenuOpen = false;
             };
 
-            menuTriggerBtn.addEventListener('mouseenter', showMenu);
-            menuPanel.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
-            menuTriggerBtn.addEventListener('mouseleave', () => {
-                hideTimeout = setTimeout(hideMenu, 100);
-            });
-            menuPanel.addEventListener('mouseleave', hideMenu);
+            if (hasHover) {
+                // 鼠标设备：hover触发
+                menuTriggerBtn.addEventListener('mouseenter', showMenu);
+                menuPanel.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+                menuTriggerBtn.addEventListener('mouseleave', () => {
+                    hideTimeout = setTimeout(hideMenu, 100);
+                });
+                menuPanel.addEventListener('mouseleave', hideMenu);
+            } else {
+                // 触控设备：点击触发
+                (window as any).toggleMenuPanel = () => {
+                    if (isMenuOpen) {
+                        hideMenu();
+                    } else {
+                        showMenu();
+                    }
+                };
+
+                // 点击外部关闭面板
+                document.addEventListener('click', (e) => {
+                    if (isMenuOpen) {
+                        if (!menuPanel.contains(e.target as Node) && !menuTriggerBtn.contains(e.target as Node)) {
+                            hideMenu();
+                        }
+                    }
+                });
+            }
         }
 
         let lastScrollY = window.scrollY;

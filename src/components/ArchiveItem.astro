@@ -18,7 +18,7 @@ const { id } = post;
   <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
     {/* 可选的封面图片 */}
     {heroImage && (
-      <a href={`/post/${id}`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
+      <a href={`/p/${id}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
         <div
           class="w-full h-full bg-cover bg-center"
           style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
@@ -30,7 +30,7 @@ const { id } = post;
     {/* 内容区域 */}
     <div class="flex-1 min-w-0 w-full">
       <h3 class="text-lg font-bold mb-2">
-        <a href={`/post/${id}`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
+        <a href={`/p/${id}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
           {title}
         </a>
       </h3>

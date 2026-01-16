@@ -62,7 +62,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
     <ul class="js-posts-list-container space-y-4 transition-opacity duration-200">
       {initialRandomPosts.map((post) => (
         <li>
-          <a href={`/post/${post.id}`} class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+          <a href={`/p/${post.id}.html`} class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
             <div class="flex gap-3 items-center">
               {post.data.heroImage && (
                 <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
@@ -203,7 +203,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 
             return `
               <li>
-                <a href="/post/${post.id}" class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+                <a href="/p/${post.id}.html" class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
                   <div class="flex gap-3 items-center">
                     ${heroImageHtml}
                     <div class="flex-1 min-w-0">
