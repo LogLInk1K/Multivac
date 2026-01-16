@@ -226,3 +226,49 @@ html.dark .tk-row.actions .tk-preview:hover {
 #twikoo > div.tk-comments > div.tk-submit.tk-fade-in > div.tk-row.actions > div.tk-row-actions-start > div:nth-child(2) {
     display: none !important;
 }
+
+html.dark .OwO-body {
+  background-color: #000000 !important;
+}
+
+html.dark .OwO-body li{
+  color: #ffffff !important;
+}
+
+html.dark .OwO-body span{
+  color: #ffffff !important;
+}
+
+/* 定义颜色变量 */
+:root {
+    --owo-scroll-thumb: #cccccc;
+    --owo-scroll-hover: #999999;
+}
+
+html.dark {
+    --owo-scroll-thumb: #333333;
+    --owo-scroll-hover: #555555;
+}
+
+/* 通用结构代码（只需写一套） */
+.OwO-body ::-webkit-scrollbar { width: 12px; }
+
+.OwO-body ::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    background-clip: padding-box;
+}
+
+.OwO-body ::-webkit-scrollbar-thumb {
+    background-color: var(--owo-scroll-thumb); /* 使用变量 */
+    border-radius: 10px !important;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+.OwO-body ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--owo-scroll-hover); /* 使用变量 */
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
