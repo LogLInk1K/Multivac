@@ -1,5 +1,9 @@
 ---
+const rawAvatarUrl = 'https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755';
+const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAvatarUrl)}`;
 ---
+
+<link rel="preload" as="image" href={proxyAvatarUrl} crossorigin="anonymous" />
 
 <!-- 侧边功能图标组 - 与目录水平对称 -->
 <div
@@ -486,39 +490,44 @@
         ctx.lineTo(posterWidth - 40, 800); // 到右边距40px结束，与标题对齐
         ctx.stroke();
 
-        // 加载并绘制圆形头像和作者信息
+                // 加载并绘制圆形头像和作者信息
         const avatarUrl = 'https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755';
-        const avatarSize = 110; // 进一步增大头像尺寸
-        const avatarX = 40; // 左对齐标题位置
-        const avatarY = 890; // 垂直居中于二维码区域
+        const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(avatarUrl)}`;
 
-        // 尝试加载头像（可选）
+        const avatarSize = 110; 
+        const avatarX = 40; 
+        const avatarY = 890; 
+
         try {
-          // 使用 fetch 通过 CORS 代理获取图片
-          const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(avatarUrl)}`);
-          const blob = await response.blob();
-          const objectUrl = URL.createObjectURL(blob);
-
           const avatarImg = new Image();
-          await new Promise((resolve, reject) => {
-            avatarImg.onload = resolve;
-            avatarImg.onerror = reject;
-            avatarImg.src = objectUrl;
-          });
+          
+          // 关键：必须与 preload 标签中的 crossorigin 对应
+          avatarImg.crossOrigin = 'anonymous'; 
+          
+          // 赋值 src，由于已经预加载，这里几乎不产生网络开销
+          avatarImg.src = proxyAvatarUrl;
 
-          // 绘制圆形头像（使用 clip）
+          // 使用更高级的 decode() 代替 Promise + onload
+          // 它专门用于确保图片像素已解码完成，且不阻塞主线程
+          await avatarImg.decode();
+
+          // 绘制圆形头像
           ctx.save();
           ctx.beginPath();
+          // 注意：arc 的中心点坐标计算
           ctx.arc(avatarX + avatarSize / 2, avatarY, avatarSize / 2, 0, Math.PI * 2);
           ctx.closePath();
           ctx.clip();
+          
+          // 绘制图片：Y 轴由于 arc 中心在 avatarY，绘图起点需向上偏移半径
           ctx.drawImage(avatarImg, avatarX, avatarY - avatarSize / 2, avatarSize, avatarSize);
+          
           ctx.restore();
+          console.log('⚡ 头像极速绘制完成');
 
-          // 清理 object URL
-          URL.revokeObjectURL(objectUrl);
         } catch (err) {
-          console.log('头像加载失败，将只显示文字', err);
+          // 如果预加载失败或网络超时，在这里处理降级
+          console.log('头像加载失败，可能由于预加载未命中或代理波动', err);
         }
 
         // 绘制作者名称 "波罗歌"（无论头像是否加载成功都绘制）
