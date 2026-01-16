@@ -116,8 +116,8 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
       <div class="flex-grow px-3 py-2 text-[11px] font-mono text-text-light/50 dark:text-text-dark/50 truncate select-all">
         https://log.1k.ink/rss.xml
       </div>
-      <button 
-        onclick="navigator.clipboard.writeText('https://log.1k.ink/rss.xml').then(() => { this.textContent = '已复制'; setTimeout(() => this.textContent = '复制', 2000); })"
+      <button
+        onclick="const self = this; navigator.clipboard.writeText('log.1k.ink/rss.xml').then(() => { self.textContent = '已复制'; setTimeout(() => { self.textContent = '复制'; }, 2000); });"
         class="px-4 py-2 text-xs font-bold text-white bg-primary-light hover:bg-primary-dark transition-all whitespace-nowrap active:scale-95"
       >
         复制

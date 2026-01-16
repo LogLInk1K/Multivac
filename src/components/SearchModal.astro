@@ -58,7 +58,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
   </div>
 </div>
 
-<script define:vars={{ allPosts }}>
+<script is:inline define:vars={{ allPosts }}>
   let modal;
   let backdrop;
   let content;
