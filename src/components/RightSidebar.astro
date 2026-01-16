@@ -121,9 +121,30 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 
   <button
     data-clipboard-text="https://log.1k.ink/rss.xml"
-    onclick="const self = this; navigator.clipboard.writeText(this.getAttribute('data-clipboard-text')).then(() => { self.textContent = '😋'; setTimeout(() => { self.textContent = '复制'; }, 2000); });"
-    class="w-12 flex items-center justify-center text-xs font-bold text-white dark:text-black bg-primary-light dark:bg-primary-dark hover:bg-primary-light/80 dark:hover:bg-[#e6ad26] transition-all duration-300 ease-in-out rounded-r-xl flex-shrink-0 ">
-    复制
+    onclick="
+      const self = this;
+      const icon = self.querySelector('.copy-icon');
+      const text = self.querySelector('.success-msg');
+      
+      // 切换状态
+      icon.classList.add('hidden');
+      text.classList.remove('hidden');
+      
+      navigator.clipboard.writeText(self.getAttribute('data-clipboard-text')).then(() => {
+        setTimeout(() => {
+          // 2秒后还原
+          icon.classList.remove('hidden');
+          text.classList.add('hidden');
+        }, 2000);
+      });
+    "
+    class="w-12 h-9 flex items-center justify-center bg-primary-light dark:bg-primary-dark hover:bg-primary-light/80 dark:hover:bg-[#e6ad26] transition-all duration-300 ease-in-out rounded-r-xl flex-shrink-0 group/btn"
+  >
+    <svg class="copy-icon w-4 h-4 text-white dark:text-black transition-transform duration-200 group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+    </svg>
+
+    <span class="success-msg hidden text-sm">😋</span>
   </button>
 </div>
     
