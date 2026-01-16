@@ -109,16 +109,16 @@ import SearchModal from './SearchModal.astro';
             <div id="theme-toggle-container" class="flex items-center mr-0 transition-all duration-300">
                 <ThemeToggle />
             </div>
-            <div 
+            <div
                 id="scroll-counter"
-                class="h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 opacity-0 w-0 overflow-hidden mr-0 transform-gpu px-1.5 py-1.5"
-                style="will-change: transform;"
+                class="inline-flex items-center justify-center h-7 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-mono transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer hover:scale-110 active:scale-95 opacity-0 overflow-hidden mr-0"
+                style="width: 0; will-change: width, transform, opacity, margin-right;"
                 onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
             >
-                <span id="scroll-value">0</span>
-                <span 
+                <span id="scroll-value" class="px-1.5 whitespace-nowrap transition-opacity duration-150 opacity-0">0</span>
+                <span
                     id="scroll-arrow"
-                    class="hidden text-sm font-sans whitespace-nowrap"
+                    class="hidden px-2 text-sm font-sans whitespace-nowrap transition-opacity duration-150 opacity-0"
                 >
                     返回顶部
                 </span>
@@ -178,30 +178,39 @@ import SearchModal from './SearchModal.astro';
                 const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
                 const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
                 const displayValue = Math.floor(scrollPercent * 99);
-                
+
                 if (scrollY > 20) {
-                    // 显示滚动计数器，同时调整主题切换按钮位置
-                    scrollCounter.classList.remove('opacity-0', 'w-0');
-                    scrollCounter.classList.add('opacity-100', 'w-7', 'mr-1');
+                    // 显示滚动计数器
+                    scrollCounter.classList.remove('opacity-0', 'mr-0');
+                    scrollCounter.classList.add('opacity-100', 'mr-1');
                     themeToggleContainer.classList.remove('mr-0');
                     themeToggleContainer.classList.add('mr-2');
-                    
+
                     if (displayValue >= 90) {
-                        scrollValue.classList.add('hidden');
+                        scrollValue.classList.add('hidden', 'opacity-0');
                         scrollArrow.classList.remove('hidden');
-                        scrollCounter.classList.remove('w-7');
-                        scrollCounter.classList.add('w-20', 'px-3');
+                        setTimeout(() => {
+                            scrollArrow.classList.remove('opacity-0');
+                        }, 100);
+                        scrollCounter.style.width = '5rem';
+                        scrollCounter.style.transform = 'scaleX(1)';
                     } else {
                         scrollValue.classList.remove('hidden');
-                        scrollArrow.classList.add('hidden');
-                        scrollCounter.classList.remove('w-20', 'px-3');
-                        scrollCounter.classList.add('w-7');
+                        scrollArrow.classList.add('hidden', 'opacity-0');
                         scrollValue.textContent = displayValue.toString();
+                        setTimeout(() => {
+                            scrollValue.classList.remove('opacity-0');
+                        }, 100);
+                        scrollCounter.style.width = '1.75rem';
+                        scrollCounter.style.transform = 'scaleX(1)';
                     }
                 } else {
-                    // 完全隐藏滚动计数器，让主题切换按钮占据其位置
-                    scrollCounter.classList.add('opacity-0', 'w-0');
-                    scrollCounter.classList.remove('opacity-100', 'w-7', 'w-20', 'px-3', 'mr-1');
+                    // 隐藏滚动计数器
+                    scrollValue.classList.add('opacity-0');
+                    scrollArrow.classList.add('opacity-0');
+                    scrollCounter.classList.add('opacity-0', 'mr-0');
+                    scrollCounter.classList.remove('opacity-100', 'mr-1');
+                    scrollCounter.style.transform = 'scaleX(0)';
                     themeToggleContainer.classList.remove('mr-2');
                     themeToggleContainer.classList.add('mr-0');
                 }
