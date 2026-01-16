@@ -154,21 +154,48 @@
     aria-label="订阅"
   >
     <!-- 订阅面板 - hover时直接显示 -->
-    <div id="subscribe-panel" class="absolute right-12 w-[280px] p-4 rounded-xl bg-card-light dark:bg-card-dark backdrop-blur-md border border-border-light dark:border-border-dark shadow-2xl opacity-0 scale-95 pointer-events-none group-hover/bar:opacity-100 group-hover/bar:scale-100 group-hover/bar:pointer-events-auto transition-all duration-300 origin-right z-10">
-      <div class="flex flex-col gap-3">
-        <h3 class="text-base font-semibold text-text-light dark:text-text-dark">RSS订阅</h3>
-        <p class="text-sm text-text-light/70 dark:text-text-dark/70">通过RSS阅读器订阅本站更新</p>
-        <!-- RSS图标 -->
-        <div class="flex items-center justify-center py-3">
-          <div class="w-16 h-16 rounded-full bg-orange-500/10 dark:bg-orange-400/10 flex items-center justify-center">
-            <svg class="w-8 h-8 text-orange-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+    <div id="subscribe-panel" class="absolute right-12 w-[300px] p-5 rounded-xl bg-card-light dark:bg-card-dark backdrop-blur-md border border-border-light dark:border-border-dark shadow-2xl opacity-0 scale-95 pointer-events-none group-hover/bar:opacity-100 group-hover/bar:scale-100 group-hover/bar:pointer-events-auto transition-all duration-300 origin-right z-10">
+      <div class="flex flex-col gap-4">
+        <!-- 标题区域 -->
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#f26522]/20 to-[#f26522]/5 flex items-center justify-center">
+            <svg class="w-5 h-5 text-[#f26522]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248S0 22.546 0 20.752s1.456-3.248 3.252-3.248 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-8.18v4.831c10.555.062 19.121 8.614 19.184 19.17h4.817c-.063-13.215-10.782-23.93-24.001-24.001z"></path>
             </svg>
           </div>
+          <div class="flex-1">
+            <h3 class="text-sm font-bold text-text-light dark:text-text-dark">RSS 订阅</h3>
+            <p class="text-[11px] text-text-light/50 dark:text-text-dark/50">获取最新文章推送</p>
+          </div>
         </div>
-        <button class="w-full px-3 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-lg hover:opacity-80 transition-opacity text-sm font-medium">
-          复制RSS链接
+
+        <!-- RSS链接显示区域 -->
+        <div class="relative group/link">
+          <div class="px-3 py-2.5 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg transition-all duration-200 group-hover/link:border-[#f26522]/30">
+            <code class="text-[10px] font-mono text-text-light/60 dark:text-text-dark/60 select-all break-all leading-relaxed">https://log.1k.ink/rss.xml</code>
+          </div>
+          <!-- 装饰性渐变边框效果 -->
+          <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-[#f26522]/0 via-[#f26522]/5 to-[#f26522]/0 opacity-0 group-hover/link:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        </div>
+
+        <!-- 复制按钮 -->
+        <button
+          id="rss-copy-btn"
+          data-rss-url="https://log.1k.ink/rss.xml"
+          class="w-full px-3 py-2.5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-lg hover:opacity-90 active:scale-[0.98] transition-all duration-200 text-xs font-semibold shadow-sm hover:shadow-md flex items-center justify-center gap-2 group/btn"
+        >
+          <svg class="w-4 h-4 transition-transform duration-200 group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span id="rss-copy-text">复制链接</span>
         </button>
+
+        <!-- 支持的阅读器提示 -->
+        <div class="pt-2 border-t border-border-light/50 dark:border-border-dark/50">
+          <p class="text-[10px] text-text-light/40 dark:text-text-dark/40 text-center leading-relaxed">
+            支持 Feedly、Inoreader、Reeder 等
+          </p>
+        </div>
       </div>
       <!-- 小三角形指示器 - 指向右侧按钮 -->
       <div class="absolute right-[-6px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[6px] border-l-border-light dark:border-l-border-dark"></div>
@@ -672,6 +699,37 @@
     const copyLinkBtn = document.getElementById('copy-link-btn');
     if (copyLinkBtn) {
       copyLinkBtn.addEventListener('click', copyLink);
+    }
+
+    // RSS复制功能
+    const copyRssLink = () => {
+      const rssCopyBtn = document.getElementById('rss-copy-btn') as HTMLButtonElement | null;
+      const rssTextSpan = document.getElementById('rss-copy-text') as HTMLSpanElement | null;
+      if (!rssCopyBtn || !rssTextSpan) return;
+
+      const rssUrl = rssCopyBtn.getAttribute('data-rss-url') || 'https://log.1k.ink/rss.xml';
+      const originalText = rssTextSpan.textContent;
+
+      navigator.clipboard.writeText(rssUrl).then(() => {
+        // 复制成功反馈
+        rssTextSpan.textContent = '已复制 😋';
+
+        setTimeout(() => {
+          rssTextSpan.textContent = originalText || '复制链接';
+        }, 2000);
+      }).catch((err) => {
+        console.error('RSS链接复制失败:', err);
+        rssTextSpan.textContent = '❌ 复制失败';
+        setTimeout(() => {
+          rssTextSpan.textContent = originalText || '复制链接';
+        }, 2000);
+      });
+    };
+
+    // RSS复制按钮
+    const rssCopyBtn = document.getElementById('rss-copy-btn');
+    if (rssCopyBtn) {
+      rssCopyBtn.addEventListener('click', copyRssLink);
     }
 
     // 自动生成海报
