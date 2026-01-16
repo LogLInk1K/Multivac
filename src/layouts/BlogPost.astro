@@ -61,7 +61,24 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 						<div class="prose prose-lg max-w-none text-text-light dark:prose-invert dark:text-text-dark prose-headings:font-bold prose-a:text-primary-light dark:prose-a:text-primary-dark prose-blockquote:border-l-primary-light dark:prose-blockquote:border-l-primary-dark prose-code:bg-badge-light dark:prose-code:bg-badge-dark">
 							<slot />
 						</div>
-						{twikooEnvId && <Twikoo envId={twikooEnvId} />}
+						{twikooEnvId && (
+							<>
+								{/* 评论区分隔区域 */}
+								<div class="mt-16 mb-8 flex flex-col items-center gap-4">
+									<div class="flex items-center gap-3">
+										<div class="h-px w-16 bg-gradient-to-r from-transparent to-text-light/20 dark:to-text-dark/40"></div>
+										<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60">
+											<svg class="w-5 h-5 text-primary-light dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+											</svg>
+											<span class="text-sm font-medium text-text-light dark:text-text-dark">评论区</span>
+										</div>
+										<div class="h-px w-16 bg-gradient-to-l from-transparent to-text-light/20 dark:to-text-dark/40"></div>
+									</div>
+								</div>
+								<Twikoo envId={twikooEnvId} />
+							</>
+						)}
 					</article>
 					<div></div>
 				</div>
@@ -94,7 +111,24 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 						<div class="prose prose-lg max-w-none text-text-light dark:prose-invert dark:text-text-dark prose-headings:font-bold prose-a:text-primary-light dark:prose-a:text-primary-dark prose-blockquote:border-l-primary-light dark:prose-blockquote:border-l-primary-dark prose-code:bg-badge-light dark:prose-code:bg-badge-dark">
 							<slot />
 						</div>
-						{twikooEnvId && <Twikoo envId={twikooEnvId} />}
+						{twikooEnvId && (
+							<>
+								{/* 评论区分隔区域 */}
+								<div class="mt-16 mb-8 flex flex-col items-center gap-4">
+									<div class="flex items-center gap-3">
+										<div class="h-px w-16 bg-gradient-to-r from-transparent to-text-light/20 dark:to-text-dark/40"></div>
+										<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60">
+											<svg class="w-5 h-5 text-primary-light dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+											</svg>
+											<span class="text-sm font-medium text-text-light dark:text-text-dark">评论区</span>
+										</div>
+										<div class="h-px w-16 bg-gradient-to-l from-transparent to-text-light/20 dark:to-text-dark/40"></div>
+									</div>
+								</div>
+								<Twikoo envId={twikooEnvId} />
+							</>
+						)}
 					</article>
 				</div>
 			</div>
