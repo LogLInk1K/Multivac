@@ -112,17 +112,20 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
     </h3>
     <p class="text-sm text-text-light/70 dark:text-text-dark/70 mb-4 leading-relaxed">获取最直接的文章推送，支持主流阅读器。</p>
     
-    <div class="flex items-center gap-0 overflow-hidden border border-border-light dark:border-border-dark rounded-xl bg-background-light dark:bg-background-dark group/rss">
-      <div class="flex-grow px-3 py-2 text-[11px] font-mono text-text-light/50 dark:text-text-dark/50 truncate select-all">
-        https://log.1k.ink/rss.xml
-      </div>
-      <button
-        onclick="const self = this; navigator.clipboard.writeText('log.1k.ink/rss.xml').then(() => { self.textContent = '已复制'; setTimeout(() => { self.textContent = '复制'; }, 2000); });"
-        class="px-4 py-2 text-xs font-bold text-white bg-primary-light hover:bg-primary-dark transition-all whitespace-nowrap active:scale-95"
-      >
-        复制
-      </button>
-    </div>
+<div class="flex items-stretch h-9 group/rss">
+  <div class="flex-grow flex items-center px-3 border-y border-l border-border-light dark:border-border-dark rounded-l-xl bg-background-light dark:bg-background-dark min-w-0">
+    <span class="text-[11px] font-mono text-text-light/50 dark:text-text-dark/50 truncate select-all">
+      https://log.1k.ink/rss.xml
+    </span>
+  </div>
+
+  <button
+    data-clipboard-text="https://log.1k.ink/rss.xml"
+    onclick="const self = this; navigator.clipboard.writeText(this.getAttribute('data-clipboard-text')).then(() => { self.textContent = '😋'; setTimeout(() => { self.textContent = '复制'; }, 2000); });"
+    class="w-12 flex items-center justify-center text-xs font-bold text-white dark:text-black bg-primary-light dark:bg-primary-dark hover:bg-primary-light/80 dark:hover:bg-[#e6ad26] transition-all duration-300 ease-in-out rounded-r-xl flex-shrink-0 ">
+    复制
+  </button>
+</div>
     
     <p class="mt-4 text-[10px] text-text-light dark:text-text-dark opacity-40 italic">支持 Feedly, NetNewsWire, Reeder 等</p>
   </div>
