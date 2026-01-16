@@ -303,6 +303,45 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
       return;
     }
 
+    // 预加载 HeroImage
+    const preloadHeroImage = () => {
+      // 尝试多种选择器提取 HeroImage URL
+      const selectors = [
+        'article div.bg-cover.bg-center',
+        'article div[class*="bg-cover"]',
+        'div.bg-cover.bg-center',
+        'article > div > div.bg-cover'
+      ];
+
+      for (const selector of selectors) {
+        const heroImageDiv = document.querySelector(selector);
+        if (heroImageDiv) {
+          const bgImage = window.getComputedStyle(heroImageDiv).backgroundImage;
+
+          if (bgImage && bgImage !== 'none') {
+            const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+            if (urlMatch) {
+              const heroImageSrc = urlMatch[1];
+              console.log('⚡ 找到 HeroImage，开始预加载:', heroImageSrc);
+
+              // 动态创建 preload 标签并插入到 head
+              const preloadLink = document.createElement('link');
+              preloadLink.rel = 'preload';
+              preloadLink.as = 'image';
+              preloadLink.href = heroImageSrc;
+              preloadLink.crossOrigin = 'anonymous';
+              document.head.appendChild(preloadLink);
+              console.log('✅ HeroImage preload 标签已创建');
+              break;
+            }
+          }
+        }
+      }
+    };
+
+    // 页面加载时立即预加载 HeroImage
+    preloadHeroImage();
+
     // 创建一个仅包含返回顶部和直达底部的容器用于显示/隐藏
     const scrollButtons = [backToTopButton, jumpToBottomButton];
 
@@ -429,12 +468,18 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
         if (heroImageSrc) {
           try {
             const img = new Image();
+
+            // 关键：必须与 preload 标签中的 crossorigin 对应
             img.crossOrigin = 'anonymous';
-            await new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-              img.src = heroImageSrc;
-            });
+
+            // 赋值 src，由于已经预加载，这里几乎不产生网络开销
+            img.src = heroImageSrc;
+
+            // 使用 decode() 代替 Promise + onload
+            // 它专门用于确保图片像素已解码完成，且不阻塞主线程
+            await img.decode();
+
+            console.log('⚡ HeroImage 从缓存极速提取');
 
             // 目标区域 - 占据45%的高度
             const targetWidth = posterWidth;
@@ -462,7 +507,7 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
             // 使用 drawImage 的 9 参数版本：源矩形 + 目标矩形
             ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
           } catch (err) {
-            console.log('无法加载图片，跳过');
+            console.log('HeroImage 加载失败，可能由于预加载未命中', err);
           }
         }
 
