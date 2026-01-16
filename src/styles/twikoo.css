@@ -222,3 +222,7 @@ html.dark .tk-row.actions .tk-preview:hover {
     /* 4. 稍微加一点字间距变化，能抵消宽度缩小带来的文字局促感 */
     letter-spacing: 1px;
 }
+
+#twikoo > div.tk-comments > div.tk-submit.tk-fade-in > div.tk-row.actions > div.tk-row-actions-start > div:nth-child(2) {
+    display: none !important;
+}
