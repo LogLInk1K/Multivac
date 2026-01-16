@@ -305,7 +305,24 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
 
     // 预加载 HeroImage
     const preloadHeroImage = () => {
-      // 尝试多种选择器提取 HeroImage URL
+      // 检查是否是 about 页面
+      const isAboutPage = window.location.pathname === '/about' || window.location.pathname === '/about/';
+
+      if (isAboutPage) {
+        // about 页面使用本地图片
+        const heroImageSrc = '/assets/df-about.webp';
+        console.log('⚡ 关于我页面，预加载本地图片:', heroImageSrc);
+
+        const preloadLink = document.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.as = 'image';
+        preloadLink.href = heroImageSrc;
+        document.head.appendChild(preloadLink);
+        console.log('✅ about页面 HeroImage preload 标签已创建');
+        return;
+      }
+
+      // 其他页面：尝试多种选择器提取 HeroImage URL
       const selectors = [
         'article div.bg-cover.bg-center',
         'article div[class*="bg-cover"]',
@@ -420,26 +437,34 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
         // 获取 heroImage（从 background-image 样式中提取）
         let heroImageSrc = '';
 
-        // 尝试多种选择器
-        const selectors = [
-          'article div.bg-cover.bg-center',
-          'article div[class*="bg-cover"]',
-          'div.bg-cover.bg-center',
-          'article > div > div.bg-cover'
-        ];
+        // 检查是否是 about 页面，如果是则使用本地图片
+        const isAboutPage = window.location.pathname === '/about' || window.location.pathname === '/about/';
 
-        for (const selector of selectors) {
-          const heroImageDiv = document.querySelector(selector);
-          if (heroImageDiv) {
-            const bgImage = window.getComputedStyle(heroImageDiv).backgroundImage;
-            console.log(`选择器 "${selector}" 找到元素，backgroundImage:`, bgImage);
+        if (isAboutPage) {
+          heroImageSrc = '/assets/df-about.webp';
+          console.log('检测到关于我页面，使用本地图片:', heroImageSrc);
+        } else {
+          // 尝试多种选择器
+          const selectors = [
+            'article div.bg-cover.bg-center',
+            'article div[class*="bg-cover"]',
+            'div.bg-cover.bg-center',
+            'article > div > div.bg-cover'
+          ];
 
-            if (bgImage && bgImage !== 'none') {
-              const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
-              if (urlMatch) {
-                heroImageSrc = urlMatch[1];
-                console.log('成功提取 heroImage:', heroImageSrc);
-                break;
+          for (const selector of selectors) {
+            const heroImageDiv = document.querySelector(selector);
+            if (heroImageDiv) {
+              const bgImage = window.getComputedStyle(heroImageDiv).backgroundImage;
+              console.log(`选择器 "${selector}" 找到元素，backgroundImage:`, bgImage);
+
+              if (bgImage && bgImage !== 'none') {
+                const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+                if (urlMatch) {
+                  heroImageSrc = urlMatch[1];
+                  console.log('成功提取 heroImage:', heroImageSrc);
+                  break;
+                }
               }
             }
           }
