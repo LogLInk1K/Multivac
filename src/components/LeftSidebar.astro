@@ -30,7 +30,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
           <img
             src="https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755"
             alt="博主头像"
-            class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg avatar-image transform-gpu"
+            class="w-[115px] rounded-full object-cover border-4 border-white dark:border-white shadow-lg avatar-image transform-gpu cursor-pointer"
           />
         </div>
       </div>
@@ -358,7 +358,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
             emoji.style.filter = 'blur(4px) brightness(1.1)';
             emoji.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             emoji.style.userSelect = 'none'; // 防止文本选择
-            emoji.style.cursor = 'default'; // 设置默认鼠标指针
+            emoji.style.cursor = 'pointer'; // 设置指针样式
             // 将emoji添加到鼠标跟随wrapper中，这样也会跟随鼠标移动
             mouseWrapper?.appendChild(emoji);
 

@@ -36,9 +36,9 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 					<div></div>
 					<article class="px-4 sm:px-6 lg:px-8 py-16">
 						{heroImage && (
-							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
+							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
 								<div
-									class="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
+									class="w-full h-full bg-cover bg-center"
 									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
 									aria-label="文章封面"
 								></div>
@@ -69,9 +69,9 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 				<div class="xl:hidden">
 					<article class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 						{heroImage && (
-							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
+							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
 								<div
-									class="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
+									class="w-full h-full bg-cover bg-center"
 									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
 									aria-label="文章封面"
 								></div>
