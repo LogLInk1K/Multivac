@@ -27,7 +27,7 @@ const defaultContent = `欢迎交换友链！请确保您的网站符合以下�
 - 最好是原创内容为主的博客
 如需申请友链，请在评论区留言或通过邮件联系我。`;
 
-// 尝试从 markdown 文件读取数据
+// 尝试从内容文件读取数据（md/yml 均可）
 let friends = defaultFriends;
 let content = defaultContent;
 let pageTitle = '友情链接';
@@ -39,10 +39,9 @@ try {
 		friends = friendsData.data.friends;
 		pageTitle = friendsData.data.title || pageTitle;
 		pageDescription = friendsData.data.description || pageDescription;
-		// 如果有 markdown 内容，使用它
-		if (friendsData.body) {
-			content = friendsData.body;
-		}
+		// yml: 用 data.content；md: 用 body
+		if (friendsData.data.content) content = friendsData.data.content;
+		else if (friendsData.body) content = friendsData.body;
 	}
 } catch (error) {
 	// 文件不存在，使用默认数据

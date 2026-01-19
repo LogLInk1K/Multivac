@@ -2,11 +2,12 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const post = defineCollection({
-	loader: glob({ base: './post', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './post', pattern: '**/*.{md,mdx,yml,yaml}' }),
 	schema: ({ image }) =>
 		z.object({
 			title: z.string().min(1, { message: '标题不能为空' }),
 			description: z.string().min(10, { message: '描述至少需要10个字符' }),
+			content: z.string().optional(),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: image().optional(),

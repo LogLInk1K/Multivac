@@ -5,7 +5,7 @@ import PasswordProtect from '../../components/PasswordProtect.astro';
 import { getOriginalFileName } from '../../utils/getOriginalFileName';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('post');
+	const posts = await getCollection('post', ({ data, body }) => !data.draft && typeof body === 'string');
 
 	return posts.map((post) => {
 		// 使用工具函数获取原始文件名（保持大小写）
