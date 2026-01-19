@@ -15,6 +15,7 @@ type Props = Partial<CollectionEntry<'post'>['data']> & {
   heroImageWidth?: string;
   showDate?: boolean;
   twikooEnvId?: string;
+  isEncrypted?: boolean;
 };
 
 const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, showDate = true, twikooEnvId } = Astro.props;

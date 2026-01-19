@@ -1,20 +1,48 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import PasswordProtect from '../../components/PasswordProtect.astro';
+import { getOriginalFileName } from '../../utils/getOriginalFileName';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('post');
-	return posts.map((post) => ({
-		params: { slug: post.id + '.html' },
-		props: post,
-	}));
+
+	return posts.map((post) => {
+		// 使用工具函数获取原始文件名（保持大小写）
+		const originalFileName = getOriginalFileName(post.id);
+		return {
+			params: { slug: originalFileName + '.html' },
+			props: post,
+		};
+	});
 }
 type Props = CollectionEntry<'post'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// 检查文章是否需要加密
+const isEncrypted = !!post.data.password;
+let encryptedContent = '';
+
+if (isEncrypted && post.data.password && post.body) {
+	// 使用文章的原始 body 内容进行加密
+	const { encryptContent } = await import('../../scripts/crypto');
+
+	// 加密原始的 markdown 内容
+	encryptedContent = await encryptContent(post.body, post.data.password);
+}
 ---
 
-<BlogPost {...post.data} twikooEnvId="https://twikoo.1k.ink">
-	<Content />
+<BlogPost {...post.data} twikooEnvId="https://twikoo.1k.ink" isEncrypted={isEncrypted}>
+	{isEncrypted ? (
+		<>
+			<PasswordProtect passwordHint={post.data.passwordHint} />
+			<script is:inline define:vars={{ encryptedContent }}>
+				window.__ENCRYPTED_CONTENT__ = encryptedContent;
+			</script>
+		</>
+	) : (
+		<Content />
+	)}
 </BlogPost>

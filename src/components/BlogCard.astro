@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { getOriginalFileName } from '../utils/getOriginalFileName';
 
 interface Props {
   post: CollectionEntry<'post'>;
@@ -9,14 +10,14 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = post.data;
-const { id } = post;
+const originalFileName = getOriginalFileName(post.id);
 ---
 
 <article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden">
   {/* 使用Grid布局实现自适应高度 */}
   <div class="grid grid-rows-[auto_1fr]">
     {/* 封面图片区域：设置最小高度确保美观 */}
-    <a href={`/p/${id}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105 block" style="min-height: 180px;">
+    <a href={`/p/${originalFileName}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105 block" style="min-height: 180px;">
       {heroImage && (
         <div
           class="absolute inset-0 bg-cover bg-center"
@@ -37,7 +38,7 @@ const { id } = post;
           <span>{Math.ceil((post.body?.length || 0) / 500)} 分钟阅读</span>
         </div>
         <h3 class="text-lg font-bold mb-2 line-clamp-1">
-          <a href={`/p/${id}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors flex items-center">
+          <a href={`/p/${originalFileName}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors flex items-center">
             {title}
           </a>
         </h3>

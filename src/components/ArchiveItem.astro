@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { getOriginalFileName } from '../utils/getOriginalFileName';
 
 interface Props {
   post: CollectionEntry<'post'>;
@@ -9,7 +10,7 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = post.data;
-const { id } = post;
+const originalFileName = getOriginalFileName(post.id);
 ---
 
 <article class="py-4 border-b border-border-light dark:border-border-dark last:border-b-0">
@@ -18,7 +19,7 @@ const { id } = post;
   <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
     {/* 可选的封面图片 */}
     {heroImage && (
-      <a href={`/p/${id}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
+      <a href={`/p/${originalFileName}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
         <div
           class="w-full h-full bg-cover bg-center"
           style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
@@ -30,7 +31,7 @@ const { id } = post;
     {/* 内容区域 */}
     <div class="flex-1 min-w-0 w-full">
       <h3 class="text-lg font-bold mb-2">
-        <a href={`/p/${id}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
+        <a href={`/p/${originalFileName}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
           {title}
         </a>
       </h3>

@@ -15,6 +15,8 @@ const post = defineCollection({
 			draft: z.boolean().default(false),
 			author: z.string().default('Anonymous'),
 			readingTime: z.number().optional(),
+			password: z.string().optional(),
+			passwordHint: z.string().optional(),
 		}),
 });
 

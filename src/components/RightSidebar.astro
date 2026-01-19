@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { getOriginalFileName } from '../utils/getOriginalFileName';
 
 const posts = await getCollection('post');
 
@@ -19,6 +20,7 @@ const randomTags = [...sortedTags].sort(() => Math.random() - 0.5).slice(0, 10);
 // 2. 准备所有文章的精简数据供前端随机抽取
 interface PostSummary {
   id: string;
+  originalFileName: string;
   title: string;
   pubDate: string;
   heroImage?: string | { src: string };
@@ -27,6 +29,7 @@ interface PostSummary {
 
 const postSummaries: PostSummary[] = posts.map(post => ({
   id: post.id,
+  originalFileName: getOriginalFileName(post.id),
   title: post.data.title,
   pubDate: post.data.pubDate.toISOString(),
   heroImage: post.data.heroImage,
@@ -60,34 +63,37 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
       </button>
     </div>
     <ul class="js-posts-list-container space-y-4 transition-opacity duration-200">
-      {initialRandomPosts.map((post) => (
-        <li>
-          <a href={`/p/${post.id}.html`} class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
-            <div class="flex gap-3 items-center">
-              {post.data.heroImage && (
-                <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
-                  <div
-                    class="w-full h-full bg-cover bg-center"
-                    style={`background-image: url('${typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src}');`}
-                    aria-label={post.data.title}
-                  ></div>
+      {initialRandomPosts.map((post) => {
+        const originalFileName = getOriginalFileName(post.id);
+        return (
+          <li>
+            <a href={`/p/${originalFileName}.html`} class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+              <div class="flex gap-3 items-center">
+                {post.data.heroImage && (
+                  <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
+                    <div
+                      class="w-full h-full bg-cover bg-center"
+                      style={`background-image: url('${typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src}');`}
+                      aria-label={post.data.title}
+                    ></div>
+                  </div>
+                )}
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs text-text-light dark:text-text-dark opacity-50">
+                    <FormattedDate date={post.data.pubDate} />
+                    {post.data.category && (
+                      <>
+                        <span class="mx-1.5">{post.data.category}</span>
+                      </>
+                    )}
+                  </p>
+                  <p class="text-sm font-medium text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors line-clamp-2 mt-1">{post.data.title}</p>
                 </div>
-              )}
-              <div class="flex-1 min-w-0">
-                <p class="text-xs text-text-light dark:text-text-dark opacity-50">
-                  <FormattedDate date={post.data.pubDate} />
-                  {post.data.category && (
-                    <>
-                      <span class="mx-1.5">{post.data.category}</span>
-                    </>
-                  )}
-                </p>
-                <p class="text-sm font-medium text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors line-clamp-2 mt-1">{post.data.title}</p>
               </div>
-            </div>
-          </a>
-        </li>
-      ))}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </div>
 
@@ -203,7 +209,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 
             return `
               <li>
-                <a href="/p/${post.id}.html" class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
+                <a href="/p/${post.originalFileName}.html" class="block group py-2 rounded-3xl hover:scale-105 transition-all duration-200">
                   <div class="flex gap-3 items-center">
                     ${heroImageHtml}
                     <div class="flex-1 min-w-0">
