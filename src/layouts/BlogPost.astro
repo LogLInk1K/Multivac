@@ -7,6 +7,7 @@ import Header from '../components/Header.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import SidebarOfContents from '../components/SidebarOfContents.astro';
 import Twikoo from '../components/Twikoo.astro';
+import defaultCover from '../assets/df-cover.webp';
 
 type Props = Partial<CollectionEntry<'post'>['data']> & {
   title: string;
@@ -19,6 +20,7 @@ type Props = Partial<CollectionEntry<'post'>['data']> & {
 };
 
 const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, showDate = true, twikooEnvId } = Astro.props;
+const displayImage = heroImage || defaultCover;
 ---
 
 <html lang="zh-CN">
@@ -36,15 +38,13 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 				<div class="hidden xl:grid grid-cols-[272px_1fr_272px] gap-8">
 					<div></div>
 					<article class="px-4 sm:px-6 lg:px-8 py-16">
-						{heroImage && (
-							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
-								<div
-									class="w-full h-full bg-cover bg-center"
-									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
-									aria-label="文章封面"
-								></div>
-							</div>
-						)}
+						<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
+							<div
+								class="w-full h-full bg-cover bg-center"
+								style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+								aria-label="文章封面"
+							></div>
+						</div>
 						<div class="text-center mb-12">
 							{showDate && (
 								<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">
@@ -86,15 +86,13 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, sho
 				<!-- 中等屏幕和小屏幕布局 -->
 				<div class="xl:hidden">
 					<article class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-						{heroImage && (
-							<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
-								<div
-									class="w-full h-full bg-cover bg-center"
-									style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
-									aria-label="文章封面"
-								></div>
-							</div>
-						)}
+						<div class={heroImageWidth ? "mt-12 mb-12 mx-auto overflow-hidden rounded-full shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-110 cursor-pointer" : "mb-12 overflow-hidden rounded-3xl shadow-lg bg-hero-light dark:bg-hero-dark transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-105 cursor-pointer"} style={heroImageWidth ? `width: ${heroImageWidth}px; aspect-ratio: 1/1;` : 'aspect-ratio: 2/1;'}>
+							<div
+								class="w-full h-full bg-cover bg-center"
+								style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+								aria-label="文章封面"
+							></div>
+						</div>
 						<div class="text-center mb-12">
 							{showDate && (
 								<div class="text-text-light/80 dark:text-text-dark/80 text-sm mb-4">

@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { getOriginalFileName } from '../utils/getOriginalFileName';
+import defaultCover from '../assets/df-cover.webp';
 
 interface Props {
   post: CollectionEntry<'post'>;
@@ -11,6 +12,7 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = post.data;
 const originalFileName = getOriginalFileName(post.id);
+const displayImage = heroImage || defaultCover;
 ---
 
 <article class="py-4 border-b border-border-light dark:border-border-dark last:border-b-0">
@@ -18,15 +20,13 @@ const originalFileName = getOriginalFileName(post.id);
   {/* 中大屏幕：水平布局 */}
   <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
     {/* 可选的封面图片 */}
-    {heroImage && (
-      <a href={`/p/${originalFileName}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
-        <div
-          class="w-full h-full bg-cover bg-center"
-          style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
-          aria-label={typeof heroImage === 'string' ? title : title}
-        ></div>
-      </a>
-    )}
+    <a href={`/p/${originalFileName}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
+      <div
+        class="w-full h-full bg-cover bg-center"
+        style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+        aria-label={title}
+      ></div>
+    </a>
     
     {/* 内容区域 */}
     <div class="flex-1 min-w-0 w-full">

@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { getOriginalFileName } from '../utils/getOriginalFileName';
+import defaultCover from '../assets/df-cover.webp';
 
 interface Props {
   post: CollectionEntry<'post'>;
@@ -11,6 +12,7 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = post.data;
 const originalFileName = getOriginalFileName(post.id);
+const displayImage = heroImage || defaultCover;
 ---
 
 <article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden">
@@ -18,13 +20,11 @@ const originalFileName = getOriginalFileName(post.id);
   <div class="grid grid-rows-[auto_1fr]">
     {/* 封面图片区域：设置最小高度确保美观 */}
     <a href={`/p/${originalFileName}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105 block" style="min-height: 180px;">
-      {heroImage && (
-        <div
-          class="absolute inset-0 bg-cover bg-center"
-          style={`background-image: url('${typeof heroImage === 'string' ? heroImage : heroImage.src}');`}
-          aria-label={typeof heroImage === 'string' ? title : title}
-        ></div>
-      )}
+      <div
+        class="absolute inset-0 bg-cover bg-center"
+        style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+        aria-label={title}
+      ></div>
     </a>
     
     {/* 内容区域：使用flex布局实现内部元素的垂直排列 */}
