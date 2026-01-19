@@ -8,6 +8,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import SidebarOfContents from '../components/SidebarOfContents.astro';
 import Twikoo from '../components/Twikoo.astro';
 import defaultCover from '../assets/df-cover.webp';
+import { ClientRouter } from 'astro:transitions';
 
 type Props = Partial<CollectionEntry<'post'>['data']> & {
   title: string;
@@ -26,6 +27,14 @@ const displayImage = heroImage || defaultCover;
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
+		<ClientRouter />
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme') ||
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				document.documentElement.classList.toggle('dark', theme === 'dark');
+			})();
+		</script>
 	</head>
 
 	<body class="min-h-screen flex flex-col bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">

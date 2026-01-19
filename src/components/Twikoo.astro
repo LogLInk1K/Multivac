@@ -1,35 +1,229 @@
 ---
-import '../styles/twikoo.css';
 interface Props {
 	envId: string;
+	elId?: string;
 }
 
-const { envId } = Astro.props;
----
-<div id="tcomment"></div>
+const { envId, elId: customElId } = Astro.props;
 
-<script is:inline define:vars={{ envId }}>
-	// 等待页面加载完成
-	function initTwikoo() {
-		twikoo.init({
-			envId: envId,
-			el: '#tcomment',
-			lang: 'zh-CN',
+const pageKey = (() => {
+	try {
+		return Astro.url.pathname || '/';
+	} catch {
+		return '/';
+	}
+})();
+
+const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'root'}`;
+---
+<div id={elId} class="twikoo" data-twikoo-env-id={envId}></div>
+
+<script is:inline data-astro-rerun>
+	const TWIKOO_SRC = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.nocss.js';
+
+	function getTwikooMounts() {
+		return Array.from(document.querySelectorAll('.twikoo[data-twikoo-env-id]'));
+	}
+
+	function hasTwikooBaseStyle() {
+		const styles = document.head.querySelectorAll('style');
+		for (const s of styles) {
+			const text = s.textContent || '';
+			if (text.includes('.tk-comments') || text.includes('.tk-comment') || text.includes('.tk-submit')) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function waitForTwikooGlobal(timeoutMs = 3000) {
+		const start = performance.now();
+		return new Promise((resolve, reject) => {
+			const tick = () => {
+				if (window.twikoo && typeof window.twikoo.init === 'function') return resolve();
+				if (performance.now() - start > timeoutMs) return reject(new Error('twikoo global timeout'));
+				requestAnimationFrame(tick);
+			};
+			tick();
 		});
 	}
 
-	// 动态加载 Twikoo 脚本
-	function loadTwikooScript() {
-		const script = document.createElement('script');
-		script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.min.js';
-		script.onload = initTwikoo;
-		document.head.appendChild(script);
+	function waitForTwikooBaseStyle(timeoutMs = 3000) {
+		const start = performance.now();
+		return new Promise((resolve, reject) => {
+			const tick = () => {
+				if (hasTwikooBaseStyle()) return resolve();
+				if (performance.now() - start > timeoutMs) return reject(new Error('twikoo base style timeout'));
+				requestAnimationFrame(tick);
+			};
+			tick();
+		});
 	}
 
-	// 页面加载时执行
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', loadTwikooScript);
+	function waitForTwikooCssLink(timeoutMs = 3000) {
+		const link = document.head.querySelector('link[rel="stylesheet"][href*="twikoo"]');
+		if (!link) return Promise.resolve();
+		if (link.sheet) return Promise.resolve();
+
+		return new Promise((resolve) => {
+			const timer = setTimeout(resolve, timeoutMs);
+			const done = () => {
+				clearTimeout(timer);
+				resolve();
+			};
+			link.addEventListener('load', done, { once: true });
+			link.addEventListener('error', done, { once: true });
+		});
+	}
+
+	function persistTwikooBaseStyles() {
+		const nodes = document.head.querySelectorAll('style,link[rel="stylesheet"]');
+		for (const node of nodes) {
+			const text = node.tagName === 'STYLE' ? (node.textContent || '') : (node.getAttribute('href') || '');
+			if (!text) continue;
+			if (text.includes('.tk-comments') || text.includes('.tk-comment') || text.includes('.tk-submit') || text.includes('twikoo')) {
+				node.setAttribute('data-astro-transition-persist', '');
+			}
+		}
+	}
+
+	function observeTwikooStyles() {
+		window.__twikooAstro = window.__twikooAstro || { listeners: false, styleObserver: null };
+		if (window.__twikooAstro.styleObserver) return;
+
+		const obs = new MutationObserver(() => persistTwikooBaseStyles());
+		obs.observe(document.head, { childList: true, subtree: true });
+		window.__twikooAstro.styleObserver = obs;
+	}
+
+	function reloadTwikooScript() {
+		try {
+			const existing = document.getElementById('twikoo-script');
+			if (existing) existing.remove();
+		} catch {}
+
+		try {
+			delete window.twikoo;
+		} catch {
+			window.twikoo = undefined;
+		}
+
+		if (window.__twikooLoader) {
+			window.__twikooLoader.promise = null;
+		}
+
+		return ensureTwikooLoaded(true);
+	}
+
+	function ensureTwikooLoaded(forceReload = false) {
+		if (!forceReload && window.twikoo && typeof window.twikoo.init === 'function') return Promise.resolve();
+
+		window.__twikooLoader = window.__twikooLoader || { promise: null };
+		if (!forceReload && window.__twikooLoader.promise) return window.__twikooLoader.promise;
+
+		window.__twikooLoader.promise = new Promise((resolve, reject) => {
+			const existing = document.getElementById('twikoo-script');
+			if (existing) {
+				existing.setAttribute('data-astro-transition-persist', '');
+				if (existing.dataset.loaded === '1') return resolve();
+				if (window.twikoo && typeof window.twikoo.init === 'function') return resolve();
+
+				existing.addEventListener(
+					'load',
+					() => {
+						existing.dataset.loaded = '1';
+						resolve();
+					},
+					{ once: true },
+				);
+				existing.addEventListener('error', reject, { once: true });
+				setTimeout(() => resolve(), 1500);
+				return;
+			}
+
+			const script = document.createElement('script');
+			script.id = 'twikoo-script';
+			script.src = TWIKOO_SRC;
+			script.async = true;
+			script.setAttribute('data-astro-transition-persist', '');
+			script.onload = () => {
+				script.dataset.loaded = '1';
+				resolve();
+			};
+			script.onerror = (e) => {
+				window.__twikooLoader.promise = null;
+				reject(e);
+			};
+			document.head.appendChild(script);
+		});
+
+		return window.__twikooLoader.promise.then(() => waitForTwikooGlobal());
+	}
+
+	function safeSelectorById(id) {
+		if (!id) return '';
+		if (window.CSS && typeof window.CSS.escape === 'function') return `#${window.CSS.escape(id)}`;
+		return `#${id.replace(/[^a-zA-Z0-9_-]/g, '\\\\$&')}`;
+	}
+
+	function initTwikooForMount(mountEl) {
+		if (!window.twikoo || typeof window.twikoo.init !== 'function') return;
+
+		if (!mountEl || !(mountEl instanceof Element)) return;
+		const envId = mountEl.getAttribute('data-twikoo-env-id');
+		if (!envId) return;
+		if (!mountEl.id) return;
+
+		mountEl.innerHTML = '';
+
+		window.twikoo.init({
+			envId,
+			el: safeSelectorById(mountEl.id),
+			lang: 'zh-CN',
+			path: window.location.pathname,
+		});
+
+		requestAnimationFrame(() => requestAnimationFrame(persistTwikooBaseStyles));
+	}
+
+	function boot() {
+		const mounts = getTwikooMounts();
+		if (!mounts.length) return;
+
+		observeTwikooStyles();
+		persistTwikooBaseStyles();
+
+		waitForTwikooCssLink()
+			.then(() => ensureTwikooLoaded())
+			.then(() => {
+				if (hasTwikooBaseStyle()) return null;
+				return waitForTwikooBaseStyle(500).catch(() => reloadTwikooScript());
+			})
+			.then(() => waitForTwikooBaseStyle().catch(() => null))
+			.then(() => {
+				persistTwikooBaseStyles();
+				requestAnimationFrame(() =>
+					requestAnimationFrame(() => {
+						for (const m of mounts) initTwikooForMount(m);
+					}),
+				);
+			})
+			.catch(() => {
+				// ignore
+			});
+	}
+
+	window.__twikooAstro = window.__twikooAstro || { listeners: false };
+	if (!window.__twikooAstro.listeners) {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', boot, { once: true });
+		} else {
+			boot();
+		}
+		document.addEventListener('astro:page-load', boot);
+		document.addEventListener('astro:after-swap', boot);
+		window.__twikooAstro.listeners = true;
 	} else {
-		loadTwikooScript();
+		boot();
 	}
 </script>

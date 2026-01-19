@@ -147,9 +147,7 @@
   border-radius: 12px !important;
 }
 
-.tk-comments-title{
-  display: none !important;
-}
+
 
 .OwO-body{
   border-radius: 12px !important;
@@ -198,7 +196,7 @@ html.dark .tk-row.actions .tk-preview:hover {
   margin-top: 1rem !important;
 }
 
-#twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand {
+.twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand {
     /* 1. 必须先把基础状态的宽度设为固定的 100% 或具体数值，动画才有参考系 */
     width: 100% !important;
     max-width: 100%;
@@ -217,13 +215,13 @@ html.dark .tk-row.actions .tk-preview:hover {
     white-space: nowrap !important;
 }
 
-#twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand:hover {
+.twikoo > .tk-comments > .tk-comments-container > .tk-expand-wrap > .tk-expand:hover {
     width: 25% !important;
     /* 4. 稍微加一点字间距变化，能抵消宽度缩小带来的文字局促感 */
     letter-spacing: 1px;
 }
 
-#twikoo > div.tk-comments > div.tk-submit.tk-fade-in > div.tk-row.actions > div.tk-row-actions-start > div:nth-child(2) {
+.twikoo > div.tk-comments > div.tk-submit.tk-fade-in > div.tk-row.actions > div.tk-row-actions-start > div:nth-child(2) {
     display: none !important;
 }
 
