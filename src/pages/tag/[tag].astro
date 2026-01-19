@@ -47,7 +47,7 @@ const posts = allPosts.filter(post => {
 
 				<!-- 中间内容区：所有屏幕显示 -->
 				<div>
-					<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+					<div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
 						{posts.map((post) => (
 							<ArchiveItem key={post.id} post={post} />
 						))}

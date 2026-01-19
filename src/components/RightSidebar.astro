@@ -42,7 +42,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 ---
 
 <aside class="hidden md:block w-[272px] space-y-6">
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">随机推荐</h3>
       <button
@@ -97,7 +97,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
     </ul>
   </div>
 
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">标签</h3>
     <div class="flex flex-wrap gap-2">
       {randomTags.map(([tag, count]) => (

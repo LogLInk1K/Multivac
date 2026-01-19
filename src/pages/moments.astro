@@ -1,0 +1,124 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import LeftSidebar from '../components/LeftSidebar.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { getEntry } from 'astro:content';
+
+// 默认动态数据
+const defaultMoments = [
+	{
+		id: 1,
+		content: '今天天气真好，适合写代码！☀️',
+		date: new Date('2026-01-19'),
+		images: [],
+	},
+	{
+		id: 2,
+		content: '刚刚完成了一个新功能，感觉很有成就感！',
+		date: new Date('2026-01-18'),
+		images: [],
+	},
+	{
+		id: 3,
+		content: '分享一张美图',
+		date: new Date('2026-01-17'),
+		images: ['https://picsum.photos/600/400?random=1'],
+	},
+];
+
+// 尝试从 markdown 文件读取数据
+let moments = defaultMoments;
+let pageTitle = '动态说说';
+let pageDescription = '记录生活的点点滴滴';
+
+try {
+	const momentsData = await getEntry('post', 'moments');
+	if (momentsData && momentsData.data.moments) {
+		moments = momentsData.data.moments.map((m: any, index: number) => ({
+			id: index + 1,
+			content: m.content,
+			date: new Date(m.date),
+			images: m.images || [],
+		}));
+		pageTitle = momentsData.data.title || pageTitle;
+		pageDescription = momentsData.data.description || pageDescription;
+	}
+} catch (error) {
+	// 文件不存在，使用默认数据
+	console.log('Using default moments data');
+}
+---
+
+<MainLayout title={pageTitle} description={pageDescription}>
+	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+		<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] gap-6">
+			<!-- 左侧边栏 -->
+			<div class="hidden md:block">
+				<div class="space-y-6">
+					<LeftSidebar />
+					<div class="md:block">
+						<RightSidebar />
+					</div>
+				</div>
+			</div>
+
+			<!-- 主内容区 -->
+			<div>
+				<div class="p-8 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 mb-6 border border-transparent hover:border-border-light dark:hover:border-border-dark">
+					<h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-2">{pageTitle}</h1>
+					<p class="text-text-light/70 dark:text-text-dark/70">
+						{pageDescription}
+					</p>
+				</div>
+
+				<!-- 动态列表 -->
+				<div class="space-y-4">
+					{moments.map((moment) => (
+						<article class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
+							<!-- 动态内容 -->
+							<div class="mb-4">
+								<p class="text-text-light dark:text-text-dark text-lg leading-relaxed whitespace-pre-wrap">
+									{moment.content}
+								</p>
+							</div>
+
+							<!-- 图片展示 -->
+							{moment.images && moment.images.length > 0 && (
+								<div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+									{moment.images.map((image) => (
+										<img
+											src={image}
+											alt="动态图片"
+											class="w-full h-48 object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
+										/>
+									))}
+								</div>
+							)}
+
+							<!-- 时间戳 -->
+							<div class="flex items-center gap-2 text-sm text-text-light/60 dark:text-text-dark/60">
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								</svg>
+								<FormattedDate date={moment.date} />
+							</div>
+						</article>
+					))}
+				</div>
+
+				<!-- 空状态提示 -->
+				{moments.length === 0 && (
+					<div class="p-12 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm text-center">
+						<svg class="w-16 h-16 mx-auto mb-4 text-text-light/40 dark:text-text-dark/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+						</svg>
+						<p class="text-text-light/60 dark:text-text-dark/60">
+							还没有发布任何动态
+						</p>
+					</div>
+				)}
+			</div>
+		</div>
+	</section>
+</MainLayout>

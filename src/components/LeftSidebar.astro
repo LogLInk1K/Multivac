@@ -16,7 +16,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
 <aside class="hidden md:block w-[272px] space-y-6">
   <!-- 个人信息卡片 -->
-  <div class="p-4 h-[300px] bg-primary-light dark:bg-primary-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 matrix-card relative overflow-hidden">
+  <div class="p-4 h-[300px] bg-primary-light dark:bg-primary-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 matrix-card relative overflow-hidden border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <!-- 顶部：醉后不知天在水 文本 -->
     <div class="absolute top-4 left-0 right-0 flex justify-center">
       <div class="px-3 py-1 bg-white/20 dark:bg-black/50 rounded-full greeting-container">
@@ -501,7 +501,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
   </div>
 
   <!-- 公告卡片 -->
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">公告</h3>
     <div class="space-y-4">
       <!-- 第一段：虫洞图片 -->
@@ -543,7 +543,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
   </div>
 
   <!-- 分类卡片 -->
-  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">分类</h3>
     <ul class="space-y-2">
       {sortedCategories.map(([category, count]) => (

@@ -1,0 +1,116 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import LeftSidebar from '../components/LeftSidebar.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import { getEntry } from 'astro:content';
+
+// 默认友链数据
+const defaultFriends = [
+	{
+		name: '示例友链1',
+		url: 'https://example.com',
+		avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1',
+		description: '这是一个示例友链描述',
+	},
+	{
+		name: '示例友链2',
+		url: 'https://example.com',
+		avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=2',
+		description: '这是另一个示例友链描述',
+	},
+];
+
+// 默认说明文本
+const defaultContent = `欢迎交换友链！请确保您的网站符合以下要求：
+- 内容积极向上，无违法违规内容
+- 网站可以正常访问
+- 最好是原创内容为主的博客
+如需申请友链，请在评论区留言或通过邮件联系我。`;
+
+// 尝试从 markdown 文件读取数据
+let friends = defaultFriends;
+let content = defaultContent;
+let pageTitle = '友情链接';
+let pageDescription = '我的朋友们';
+
+try {
+	const friendsData = await getEntry('post', 'friends');
+	if (friendsData && friendsData.data.friends) {
+		friends = friendsData.data.friends;
+		pageTitle = friendsData.data.title || pageTitle;
+		pageDescription = friendsData.data.description || pageDescription;
+		// 如果有 markdown 内容，使用它
+		if (friendsData.body) {
+			content = friendsData.body;
+		}
+	}
+} catch (error) {
+	// 文件不存在，使用默认数据
+	console.log('Using default friends data');
+}
+---
+
+<MainLayout title={pageTitle} description={pageDescription}>
+	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+		<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] gap-6">
+			<!-- 左侧边栏 -->
+			<div class="hidden md:block">
+				<div class="space-y-6">
+					<LeftSidebar />
+					<div class="md:block">
+						<RightSidebar />
+					</div>
+				</div>
+			</div>
+
+			<!-- 主内容区 -->
+			<div>
+				<div class="p-8 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 mb-6 border border-transparent hover:border-border-light dark:hover:border-border-dark">
+					<h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-6">{pageTitle}</h1>
+					<p class="text-text-light/70 dark:text-text-dark/70 mb-8">
+						{pageDescription}
+					</p>
+
+					<!-- 友链卡片网格 -->
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						{friends.map((friend) => (
+							<a
+								href={friend.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="group flex items-center gap-4 p-4 bg-background-light dark:bg-background-dark rounded-2xl hover:bg-hover-light dark:hover:bg-hover-dark transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+							>
+								<img
+									src={friend.avatar}
+									alt={friend.name}
+									class="w-16 h-16 rounded-full bg-hero-light dark:bg-hero-dark"
+								/>
+								<div class="flex-1 min-w-0">
+									<h3 class="text-lg font-bold text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors truncate">
+										{friend.name}
+									</h3>
+									<p class="text-sm text-text-light/70 dark:text-text-dark/70 line-clamp-2">
+										{friend.description}
+									</p>
+								</div>
+								<svg class="w-5 h-5 text-text-light/40 dark:text-text-dark/40 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+								</svg>
+							</a>
+						))}
+					</div>
+
+					<!-- 申请友链说明 -->
+					<div class="mt-8 p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">
+						<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">申请友链</h2>
+						<div class="text-text-light/70 dark:text-text-dark/70 prose prose-sm dark:prose-invert max-w-none">
+							{content.split('\n').map((line: string) => (
+								line.trim() ? <p>{line}</p> : <br />
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</MainLayout>

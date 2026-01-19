@@ -15,7 +15,7 @@ const originalFileName = getOriginalFileName(post.id);
 const displayImage = heroImage || defaultCover;
 ---
 
-<article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden">
+<article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden border border-transparent hover:border-border-light dark:hover:border-border-dark">
   {/* 使用Grid布局实现自适应高度 */}
   <div class="grid grid-rows-[auto_1fr]">
     {/* 封面图片区域：设置最小高度确保美观 */}

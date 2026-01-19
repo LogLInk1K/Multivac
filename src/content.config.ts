@@ -17,6 +17,19 @@ const post = defineCollection({
 			readingTime: z.number().optional(),
 			password: z.string().optional(),
 			passwordHint: z.string().optional(),
+			// Friends page data
+			friends: z.array(z.object({
+				name: z.string(),
+				url: z.string(),
+				avatar: z.string(),
+				description: z.string(),
+			})).optional(),
+			// Moments page data
+			moments: z.array(z.object({
+				content: z.string(),
+				date: z.coerce.date(),
+				images: z.array(z.string()).optional(),
+			})).optional(),
 		}),
 });
 
