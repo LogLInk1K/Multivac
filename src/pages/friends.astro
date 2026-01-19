@@ -144,10 +144,8 @@ try {
 					<!-- 申请友链说明 -->
 					<div class="mt-8 p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">
 						<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">申请友链</h2>
-						<div class="text-text-light/70 dark:text-text-dark/70 prose prose-sm dark:prose-invert max-w-none">
-							{content.split('\n').map((line: string) => (
-								line.trim() ? <p>{line}</p> : <br />
-							))}
+						<div class="text-text-light/70 dark:text-text-dark/70 whitespace-pre-line leading-relaxed">
+							{content}
 						</div>
 					</div>
 
