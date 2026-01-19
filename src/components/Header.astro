@@ -302,20 +302,26 @@ import SearchModal from './SearchModal.astro';
         }
 
         let lastScrollY = window.scrollY;
+        let lastScrollDirection: 'up' | 'down' = 'up';
 
         function updateHeader() {
             const scrollY = window.scrollY;
-            const scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
-            lastScrollY = scrollY;
+            const deltaY = scrollY - lastScrollY;
+            if (Math.abs(deltaY) >= 2) {
+                lastScrollDirection = deltaY > 0 ? 'down' : 'up';
+                lastScrollY = scrollY;
+            }
+            const scrollDirection = lastScrollDirection;
             
             if (scrollY > 20) {
                 nav?.classList.remove('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-                nav?.classList.add('max-w-[calc(100%-150px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                nav?.classList.add('max-w-[calc(100%-80px)]', 'md:max-w-[720px]', 'xl:max-w-[900px]', 'px-4');
                 navBg?.classList.replace('opacity-0', 'opacity-100');
                 
                 if (scrollDirection === 'down') {
-                    navLinks?.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
-                    navLinks?.classList.remove('translate-y-0');
+                    navLinks?.classList.add('opacity-0', 'pointer-events-none');
+                    navLinks?.classList.remove('-translate-y-2');
+                    navLinks?.classList.add('translate-y-0');
                     pageTitle?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
                     pageTitle?.classList.add('translate-y-0');
                 } else {
@@ -326,9 +332,10 @@ import SearchModal from './SearchModal.astro';
                 }
             } else {
                 nav?.classList.add('max-w-[calc(100%-40px)]', 'md:max-w-[calc(100%-40px)]', 'xl:max-w-[1300px]', 'px-4', 'sm:px-6', 'lg:px-8');
-                nav?.classList.remove('max-w-[calc(100%-150px)]', 'md:max-w-[500px]', 'xl:max-w-[600px]', 'px-4');
+                nav?.classList.remove('max-w-[calc(100%-80px)]', 'md:max-w-[720px]', 'xl:max-w-[900px]', 'px-4');
                 navBg?.classList.replace('opacity-100', 'opacity-0');
-                navLinks?.classList.remove('opacity-0', 'pointer-events-none');
+                navLinks?.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+                navLinks?.classList.add('translate-y-0');
                 pageTitle?.classList.add('opacity-0', 'pointer-events-none');
             }
 
