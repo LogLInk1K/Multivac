@@ -25,17 +25,6 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		return Array.from(document.querySelectorAll('.twikoo[data-twikoo-env-id]'));
 	}
 
-	function hasTwikooBaseStyle() {
-		const styles = document.head.querySelectorAll('style');
-		for (const s of styles) {
-			const text = s.textContent || '';
-			if (text.includes('.tk-comments') || text.includes('.tk-comment') || text.includes('.tk-submit')) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	function waitForTwikooGlobal(timeoutMs = 3000) {
 		const start = performance.now();
 		return new Promise((resolve, reject) => {
@@ -48,20 +37,8 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		});
 	}
 
-	function waitForTwikooBaseStyle(timeoutMs = 3000) {
-		const start = performance.now();
-		return new Promise((resolve, reject) => {
-			const tick = () => {
-				if (hasTwikooBaseStyle()) return resolve();
-				if (performance.now() - start > timeoutMs) return reject(new Error('twikoo base style timeout'));
-				requestAnimationFrame(tick);
-			};
-			tick();
-		});
-	}
-
 	function waitForTwikooCssLink(timeoutMs = 3000) {
-		const link = document.head.querySelector('link[rel="stylesheet"][href*="twikoo"]');
+		const link = document.head.querySelector('link[rel="stylesheet"][href*="twikoo-base.css"]');
 		if (!link) return Promise.resolve();
 		if (link.sheet) return Promise.resolve();
 
@@ -74,45 +51,6 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 			link.addEventListener('load', done, { once: true });
 			link.addEventListener('error', done, { once: true });
 		});
-	}
-
-	function persistTwikooBaseStyles() {
-		const nodes = document.head.querySelectorAll('style,link[rel="stylesheet"]');
-		for (const node of nodes) {
-			const text = node.tagName === 'STYLE' ? (node.textContent || '') : (node.getAttribute('href') || '');
-			if (!text) continue;
-			if (text.includes('.tk-comments') || text.includes('.tk-comment') || text.includes('.tk-submit') || text.includes('twikoo')) {
-				node.setAttribute('data-astro-transition-persist', '');
-			}
-		}
-	}
-
-	function observeTwikooStyles() {
-		window.__twikooAstro = window.__twikooAstro || { listeners: false, styleObserver: null };
-		if (window.__twikooAstro.styleObserver) return;
-
-		const obs = new MutationObserver(() => persistTwikooBaseStyles());
-		obs.observe(document.head, { childList: true, subtree: true });
-		window.__twikooAstro.styleObserver = obs;
-	}
-
-	function reloadTwikooScript() {
-		try {
-			const existing = document.getElementById('twikoo-script');
-			if (existing) existing.remove();
-		} catch {}
-
-		try {
-			delete window.twikoo;
-		} catch {
-			window.twikoo = undefined;
-		}
-
-		if (window.__twikooLoader) {
-			window.__twikooLoader.promise = null;
-		}
-
-		return ensureTwikooLoaded(true);
 	}
 
 	function ensureTwikooLoaded(forceReload = false) {
@@ -182,26 +120,15 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 			lang: 'zh-CN',
 			path: window.location.pathname,
 		});
-
-		requestAnimationFrame(() => requestAnimationFrame(persistTwikooBaseStyles));
 	}
 
 	function boot() {
 		const mounts = getTwikooMounts();
 		if (!mounts.length) return;
 
-		observeTwikooStyles();
-		persistTwikooBaseStyles();
-
 		waitForTwikooCssLink()
 			.then(() => ensureTwikooLoaded())
 			.then(() => {
-				if (hasTwikooBaseStyle()) return null;
-				return waitForTwikooBaseStyle(500).catch(() => reloadTwikooScript());
-			})
-			.then(() => waitForTwikooBaseStyle().catch(() => null))
-			.then(() => {
-				persistTwikooBaseStyles();
 				requestAnimationFrame(() =>
 					requestAnimationFrame(() => {
 						for (const m of mounts) initTwikooForMount(m);
