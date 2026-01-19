@@ -1,9 +1,8 @@
 ---
-const rawAvatarUrl = 'https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755';
-const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAvatarUrl)}`;
+const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
 ---
 
-<link rel="preload" as="image" href={proxyAvatarUrl} crossorigin="anonymous" />
+<link rel="preload" as="image" href={avatarUrl} crossorigin="anonymous" />
 
 <!-- 侧边功能图标组 - 与目录水平对称 -->
 <div
@@ -561,8 +560,7 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
         ctx.stroke();
 
                 // 加载并绘制圆形头像和作者信息
-        const avatarUrl = 'https://thirdqq.qlogo.cn/g?b=sdk&k=h55tiaaAAKPaziaDJ8NNkIzA&s=640&t=1627665755';
-        const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(avatarUrl)}`;
+        const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
 
         const avatarSize = 110; 
         const avatarX = 40; 
@@ -575,7 +573,7 @@ const proxyAvatarUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawAv
           avatarImg.crossOrigin = 'anonymous'; 
           
           // 赋值 src，由于已经预加载，这里几乎不产生网络开销
-          avatarImg.src = proxyAvatarUrl;
+          avatarImg.src = avatarUrl;
 
           // 使用更高级的 decode() 代替 Promise + onload
           // 它专门用于确保图片像素已解码完成，且不阻塞主线程
