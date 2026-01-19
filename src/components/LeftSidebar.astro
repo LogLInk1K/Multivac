@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
-const posts = await getCollection('post');
+const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.moments);
 
 const categories = posts.reduce((acc, post) => {
   const category = post.data.category;

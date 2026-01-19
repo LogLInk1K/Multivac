@@ -6,7 +6,7 @@ import RightSidebar from '../../components/RightSidebar.astro';
 import ArchiveItem from '../../components/ArchiveItem.astro';
 import { SITE_DESCRIPTION} from '../../consts';
 
-const posts = (await getCollection('post')).sort(
+const posts = (await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.moments)).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 

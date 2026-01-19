@@ -4,7 +4,7 @@ import FormattedDate from './FormattedDate.astro';
 import { getOriginalFileName } from '../utils/getOriginalFileName';
 import defaultCover from '../assets/df-cover.webp';
 
-const posts = await getCollection('post');
+const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.moments);
 
 // 1. 标签逻辑处理
 const allTags = posts.reduce((acc, post) => {
