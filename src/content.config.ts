@@ -19,6 +19,14 @@ const post = defineCollection({
 			password: z.string().optional(),
 			passwordHint: z.string().optional(),
 			// Friends page data
+			sections: z
+				.array(
+					z.object({
+						title: z.string(),
+						content: z.string(),
+					}),
+				)
+				.optional(),
 			friends: z.array(z.object({
 				name: z.string(),
 				url: z.string(),

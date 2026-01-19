@@ -18,6 +18,11 @@ type FriendGroup = {
 	friends: Friend[];
 };
 
+type ContentSection = {
+	title: string;
+	content: string;
+};
+
 // 默认友链数据
 const defaultFriends: Friend[] = [
 	{
@@ -49,9 +54,11 @@ const defaultContent = `欢迎交换友链！请确保您的网站符合以下�
 - 最好是原创内容为主的博客
 如需申请友链，请在评论区留言或通过邮件联系我。`;
 
+const defaultSections: ContentSection[] = [{ title: '申请友链', content: defaultContent }];
+
 // 尝试从内容文件读取数据（md/yml 均可）
 let friendGroups = defaultFriendGroups;
-let content = defaultContent;
+let sections = defaultSections;
 let pageTitle = '友情链接';
 let pageDescription = '我的朋友们';
 
@@ -60,9 +67,17 @@ try {
 	if (friendsData) {
 		pageTitle = friendsData.data.title || pageTitle;
 		pageDescription = friendsData.data.description || pageDescription;
-		// yml: 用 data.content；md: 用 body
-		if (friendsData.data.content) content = friendsData.data.content;
-		else if (friendsData.body) content = friendsData.body;
+		// sections (recommended): [{ title, content }]
+		if (Array.isArray(friendsData.data.sections) && friendsData.data.sections.length) {
+			sections = friendsData.data.sections;
+		} else {
+			// backward-compatible single content
+			let singleContent = defaultContent;
+			// yml: 用 data.content；md: 用 body
+			if (friendsData.data.content) singleContent = friendsData.data.content;
+			else if (friendsData.body) singleContent = friendsData.body;
+			sections = [{ title: '申请友链', content: singleContent }];
+		}
 
 		if (friendsData.data.friendGroups?.length) {
 			friendGroups = friendsData.data.friendGroups;
@@ -141,13 +156,18 @@ try {
 						</div>
 					))}
 
-					<!-- 申请友链说明 -->
-					<div class="mt-8 p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">
-						<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">申请友链</h2>
-						<div class="text-text-light/70 dark:text-text-dark/70 whitespace-pre-line leading-relaxed">
-							{content}
+					{sections.length > 0 && (
+						<div class="mt-8 space-y-6">
+							{sections.map((section) => (
+								<div class="p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">
+									<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">{section.title}</h2>
+									<div class="text-text-light/70 dark:text-text-dark/70 whitespace-pre-line leading-relaxed">
+										{section.content}
+									</div>
+								</div>
+							))}
 						</div>
-					</div>
+					)}
 
 					<!-- 评论区 -->
 					<div class="mt-12">
