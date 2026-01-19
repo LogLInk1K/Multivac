@@ -1,10 +1,10 @@
 ---
 interface Props {
-	envId: string;
 	elId?: string;
 }
 
-const { envId, elId: customElId } = Astro.props;
+const { elId: customElId } = Astro.props;
+const envId = 'https://twikoo.1k.ink';
 
 const pageKey = (() => {
 	try {
@@ -53,29 +53,25 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		});
 	}
 
-	function ensureTwikooLoaded(forceReload = false) {
-		if (!forceReload && window.twikoo && typeof window.twikoo.init === 'function') return Promise.resolve();
-
+	function ensureTwikooLoaded() {
+		if (window.twikoo && typeof window.twikoo.init === 'function') return Promise.resolve();
 		window.__twikooLoader = window.__twikooLoader || { promise: null };
-		if (!forceReload && window.__twikooLoader.promise) return window.__twikooLoader.promise;
+		if (window.__twikooLoader.promise) return window.__twikooLoader.promise;
 
 		window.__twikooLoader.promise = new Promise((resolve, reject) => {
 			const existing = document.getElementById('twikoo-script');
 			if (existing) {
 				existing.setAttribute('data-astro-transition-persist', '');
-				if (existing.dataset.loaded === '1') return resolve();
 				if (window.twikoo && typeof window.twikoo.init === 'function') return resolve();
 
 				existing.addEventListener(
 					'load',
 					() => {
-						existing.dataset.loaded = '1';
 						resolve();
 					},
 					{ once: true },
 				);
 				existing.addEventListener('error', reject, { once: true });
-				setTimeout(() => resolve(), 1500);
 				return;
 			}
 
@@ -84,10 +80,7 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 			script.src = TWIKOO_SRC;
 			script.async = true;
 			script.setAttribute('data-astro-transition-persist', '');
-			script.onload = () => {
-				script.dataset.loaded = '1';
-				resolve();
-			};
+			script.onload = () => resolve();
 			script.onerror = (e) => {
 				window.__twikooLoader.promise = null;
 				reject(e);
@@ -96,12 +89,6 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		});
 
 		return window.__twikooLoader.promise.then(() => waitForTwikooGlobal());
-	}
-
-	function safeSelectorById(id) {
-		if (!id) return '';
-		if (window.CSS && typeof window.CSS.escape === 'function') return `#${window.CSS.escape(id)}`;
-		return `#${id.replace(/[^a-zA-Z0-9_-]/g, '\\\\$&')}`;
 	}
 
 	function initTwikooForMount(mountEl) {
@@ -116,7 +103,7 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 
 		window.twikoo.init({
 			envId,
-			el: safeSelectorById(mountEl.id),
+			el: `#${mountEl.id}`,
 			lang: 'zh-CN',
 			path: window.location.pathname,
 		});

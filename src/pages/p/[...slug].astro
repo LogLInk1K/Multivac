@@ -34,7 +34,7 @@ if (isEncrypted && post.data.password && post.body) {
 }
 ---
 
-<BlogPost {...post.data} twikooEnvId="https://twikoo.1k.ink" isEncrypted={isEncrypted}>
+<BlogPost {...post.data} isEncrypted={isEncrypted}>
 	{isEncrypted ? (
 		<>
 			<PasswordProtect passwordHint={post.data.passwordHint} />
