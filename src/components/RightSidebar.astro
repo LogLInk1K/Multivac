@@ -51,14 +51,18 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
         data-posts={JSON.stringify(postSummaries)}
         aria-label="刷新推荐"
       >
-        <svg class="w-6 h-6 transition-all duration-300 group-hover:scale-75 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-        </svg>
+        <span class="js-refresh-icon inline-flex transition-transform duration-300 transform-gpu group-hover:rotate-180">
+          <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-75 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </span>
         <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-75 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
-          <div class="bg-primary-light dark:bg-primary-dark rounded-full px-1 py-1">
-            <svg class="w-6 h-6 text-white dark:text-black pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
+          <div class="bg-primary-light dark:bg-primary-dark rounded-full w-8 h-8 flex items-center justify-center">
+            <span class="js-refresh-icon inline-flex transition-transform duration-300 transform-gpu group-hover:rotate-180">
+              <svg class="w-6 h-6 text-white dark:text-black transition-transform duration-300 group-hover:scale-75 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+            </span>
           </div>
         </div>
       </button>
@@ -160,11 +164,23 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 
 <script is:inline>
   (function() {
+    function spinRefreshIcon(btn) {
+      const icons = btn.querySelectorAll('.js-refresh-icon');
+      icons.forEach((el) => {
+        el.classList.remove('is-spinning');
+        // 触发 reflow，保证重复点击也能重新触发动画
+        void el.offsetWidth;
+        el.classList.add('is-spinning');
+        el.addEventListener('animationend', () => el.classList.remove('is-spinning'), { once: true });
+      });
+    }
+
     /**
      * 执行刷新逻辑
      * @param {HTMLElement} btn 按钮元素
      */
     function refresh(btn) {
+      spinRefreshIcon(btn);
       const cardContainer = btn.closest('div').parentElement;
       const listContainer = cardContainer.querySelector('.js-posts-list-container');
       const rawData = btn.getAttribute('data-posts');
@@ -255,3 +271,14 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
     });
   })();
 </script>
+
+<style>
+  @keyframes refresh-spin-once {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .js-refresh-icon.is-spinning {
+    animation: refresh-spin-once 600ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+</style>
