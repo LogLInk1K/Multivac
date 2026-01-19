@@ -7,7 +7,7 @@ import ArchiveItem from '../../components/ArchiveItem.astro';
 import { SITE_DESCRIPTION } from '../../consts';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.moments);
+  const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
   const categories = new Set(posts.map(post => post.data.category).filter(Boolean));
   
   return Array.from(categories).map(category => ({
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { category } = Astro.params;
-const allPosts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.moments);
+const allPosts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
 const posts = allPosts.filter(post => post.data.category === category).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );

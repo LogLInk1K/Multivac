@@ -4,8 +4,21 @@ import LeftSidebar from '../components/LeftSidebar.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import { getEntry } from 'astro:content';
 
+type Friend = {
+	name: string;
+	url: string;
+	avatar: string;
+	description: string;
+};
+
+type FriendGroup = {
+	title: string;
+	description?: string;
+	friends: Friend[];
+};
+
 // 默认友链数据
-const defaultFriends = [
+const defaultFriends: Friend[] = [
 	{
 		name: '示例友链1',
 		url: 'https://example.com',
@@ -20,6 +33,14 @@ const defaultFriends = [
 	},
 ];
 
+const defaultFriendGroups: FriendGroup[] = [
+	{
+		title: '友链',
+		description: '',
+		friends: defaultFriends,
+	},
+];
+
 // 默认说明文本
 const defaultContent = `欢迎交换友链！请确保您的网站符合以下要求：
 - 内容积极向上，无违法违规内容
@@ -28,20 +49,27 @@ const defaultContent = `欢迎交换友链！请确保您的网站符合以下�
 如需申请友链，请在评论区留言或通过邮件联系我。`;
 
 // 尝试从内容文件读取数据（md/yml 均可）
-let friends = defaultFriends;
+let friendGroups = defaultFriendGroups;
 let content = defaultContent;
 let pageTitle = '友情链接';
 let pageDescription = '我的朋友们';
 
 try {
 	const friendsData = await getEntry('post', 'friends');
-	if (friendsData && friendsData.data.friends) {
-		friends = friendsData.data.friends;
+	if (friendsData) {
 		pageTitle = friendsData.data.title || pageTitle;
 		pageDescription = friendsData.data.description || pageDescription;
 		// yml: 用 data.content；md: 用 body
 		if (friendsData.data.content) content = friendsData.data.content;
 		else if (friendsData.body) content = friendsData.body;
+
+		if (friendsData.data.friendGroups?.length) {
+			friendGroups = friendsData.data.friendGroups;
+		} else if (friendsData.data.friends?.length) {
+			friendGroups = [
+				{ title: '友链', description: '', friends: friendsData.data.friends },
+			];
+		}
 	}
 } catch (error) {
 	// 文件不存在，使用默认数据
@@ -70,34 +98,47 @@ try {
 						{pageDescription}
 					</p>
 
-					<!-- 友链卡片网格 -->
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						{friends.map((friend) => (
-							<a
-								href={friend.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="group flex items-center gap-4 p-4 bg-background-light dark:bg-background-dark rounded-2xl hover:bg-hover-light dark:hover:bg-hover-dark transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-							>
-								<img
-									src={friend.avatar}
-									alt={friend.name}
-									class="w-16 h-16 rounded-full bg-hero-light dark:bg-hero-dark"
-								/>
-								<div class="flex-1 min-w-0">
-									<h3 class="text-lg font-bold text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors truncate">
-										{friend.name}
-									</h3>
-									<p class="text-sm text-text-light/70 dark:text-text-dark/70 line-clamp-2">
-										{friend.description}
+					{friendGroups.map((group) => (
+						<div class="mb-10 last:mb-0">
+							<div class="mb-4">
+								<h2 class="text-xl font-bold text-text-light dark:text-text-dark">{group.title}</h2>
+								{group.description && (
+									<p class="text-text-light/60 dark:text-text-dark/60 mt-1">
+										{group.description}
 									</p>
-								</div>
-								<svg class="w-5 h-5 text-text-light/40 dark:text-text-dark/40 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-								</svg>
-							</a>
-						))}
-					</div>
+								)}
+							</div>
+
+							<!-- 友链卡片网格 -->
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+								{group.friends.map((friend) => (
+									<a
+										href={friend.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="group flex items-center gap-4 p-4 bg-background-light dark:bg-background-dark rounded-2xl hover:bg-hover-light dark:hover:bg-hover-dark transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+									>
+										<img
+											src={friend.avatar}
+											alt={friend.name}
+											class="w-16 h-16 rounded-full bg-hero-light dark:bg-hero-dark"
+										/>
+										<div class="flex-1 min-w-0">
+											<h3 class="text-lg font-bold text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors truncate">
+												{friend.name}
+											</h3>
+											<p class="text-sm text-text-light/70 dark:text-text-dark/70 line-clamp-2">
+												{friend.description}
+											</p>
+										</div>
+										<svg class="w-5 h-5 text-text-light/40 dark:text-text-dark/40 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+										</svg>
+									</a>
+								))}
+							</div>
+						</div>
+					))}
 
 					<!-- 申请友链说明 -->
 					<div class="mt-8 p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">

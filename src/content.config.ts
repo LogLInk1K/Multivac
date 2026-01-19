@@ -25,6 +25,16 @@ const post = defineCollection({
 				avatar: z.string(),
 				description: z.string(),
 			})).optional(),
+			friendGroups: z.array(z.object({
+				title: z.string(),
+				description: z.string().optional(),
+				friends: z.array(z.object({
+					name: z.string(),
+					url: z.string(),
+					avatar: z.string(),
+					description: z.string(),
+				})),
+			})).optional(),
 			// Moments page data
 			moments: z.array(z.object({
 				content: z.string(),
