@@ -272,6 +272,15 @@ import SearchModal from './SearchModal.astro';
                 isMenuOpen = false;
             };
 
+            // 始终定义 toggleMenuPanel，供 onclick 使用
+            (window as any).toggleMenuPanel = () => {
+                if (isMenuOpen) {
+                    hideMenu();
+                } else {
+                    showMenu();
+                }
+            };
+
             if (hasHover) {
                 // 鼠标设备：hover触发
                 menuTriggerBtn.addEventListener('mouseenter', showMenu);
@@ -281,14 +290,7 @@ import SearchModal from './SearchModal.astro';
                 });
                 menuPanel.addEventListener('mouseleave', hideMenu);
             } else {
-                // 触控设备：点击触发
-                (window as any).toggleMenuPanel = () => {
-                    if (isMenuOpen) {
-                        hideMenu();
-                    } else {
-                        showMenu();
-                    }
-                };
+                // 触控设备：点击触发（toggleMenuPanel 已在上面定义）
 
                 // 点击外部关闭面板
                 document.addEventListener('click', (e) => {

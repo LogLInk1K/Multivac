@@ -113,12 +113,25 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		const mounts = getTwikooMounts();
 		if (!mounts.length) return;
 
+		// 检查是否已经初始化过，避免重复初始化
+		const initializedMounts = new Set();
+		document.querySelectorAll('.twikoo[data-twikoo-env-id]').forEach(el => {
+			if (el.children.length > 0) { // 已经初始化过（有内容）
+				initializedMounts.add(el.id);
+			}
+		});
+
 		waitForTwikooCssLink()
 			.then(() => ensureTwikooLoaded())
 			.then(() => {
 				requestAnimationFrame(() =>
 					requestAnimationFrame(() => {
-						for (const m of mounts) initTwikooForMount(m);
+						for (const m of mounts) {
+							// 只初始化未初始化的实例
+							if (!initializedMounts.has(m.id)) {
+								initTwikooForMount(m);
+							}
+						}
 					}),
 				);
 			})
@@ -127,8 +140,10 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 			});
 	}
 
-	window.__twikooAstro = window.__twikooAstro || { listeners: false };
-	if (!window.__twikooAstro.listeners) {
+	// 防止重复监听
+	if (!window.__twikooAstro) {
+		window.__twikooAstro = { listeners: false };
+
 		if (document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', boot, { once: true });
 		} else {
@@ -137,7 +152,5 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 		document.addEventListener('astro:page-load', boot);
 		document.addEventListener('astro:after-swap', boot);
 		window.__twikooAstro.listeners = true;
-	} else {
-		boot();
 	}
 </script>
