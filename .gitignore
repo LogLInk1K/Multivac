@@ -53,8 +53,3 @@ coverage/
 # ignore private posts
 post/*
 !post/example/
-!post/example/first-post.md
-!post/example/second-post.md
-!post/example/third-post.md
-!post/example/using-mdx.mdx
-!post/example/markdown-style-guide.md
