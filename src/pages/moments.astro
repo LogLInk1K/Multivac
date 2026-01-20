@@ -4,7 +4,7 @@ import LeftSidebar from '../components/LeftSidebar.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { getEntry } from 'astro:content';
-
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 // 默认动态数据
 const defaultMoments = [
 	{
@@ -88,11 +88,17 @@ try {
 								<div class="mb-4">
 									{moment.images.length === 1 ? (
 										// 单张图片
-										<img
-											src={moment.images[0]}
-											alt="动态图片"
-											class="w-auto max-h-[120px] object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
-										/>
+										<a
+											data-fancybox={`gallery-${moment.id}`}
+											data-src={moment.images[0]}
+											href={moment.images[0]}
+										>
+											<img
+												src={moment.images[0]}
+												alt="动态图片"
+												class="w-auto max-h-[120px] object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
+											/>
+										</a>
 									) : (
 										// 多张图片九宫格
 										<div class="grid gap-3 max-w-[500px]" class:list={[
@@ -101,11 +107,17 @@ try {
 											moment.images.length === 4 && "grid-cols-2"
 										]}>
 											{moment.images.map((image) => (
-												<img
-													src={image}
-													alt="动态图片"
-													class="w-full aspect-square object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
-												/>
+												<a
+													data-fancybox={`gallery-${moment.id}`}
+													data-src={image}
+													href={image}
+												>
+													<img
+														src={image}
+														alt="动态图片"
+														class="w-full aspect-square object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
+													/>
+												</a>
 											))}
 										</div>
 									)}
@@ -138,3 +150,22 @@ try {
 		</div>
 	</section>
 </MainLayout>
+
+<script>
+  import { Fancybox } from "@fancyapps/ui";
+
+  function bindFancybox() {
+    // 销毁并重新绑定，确保在 Astro 路由切换后依然有效
+    Fancybox.unbind("[data-fancybox]");
+    Fancybox.close();
+
+    Fancybox.bind("[data-fancybox]", {
+      Hash: false,          // 核心：防止关闭时 URL 变化导致的页面闪烁
+      hideScrollbar: false, // 核心：防止页面左右抖动
+      // 其他所有默认动效（缩放、滑动、淡入淡出）v6 已经自带且非常完美
+    });
+  }
+
+  // 监听 Astro 生命周期
+  document.addEventListener("astro:page-load", bindFancybox);
+</script>
