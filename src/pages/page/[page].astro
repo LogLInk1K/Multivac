@@ -3,6 +3,7 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import LeftSidebar from '../../components/LeftSidebar.astro';
 import RightSidebar from '../../components/RightSidebar.astro';
+import Pagination from '../../components/Pagination.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -64,44 +65,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 					</div>
 
 					<!-- 分页控件 -->
-					{totalPages > 1 && (
-						<div class="flex justify-center mt-12">
-							<nav class="inline-flex items-center space-x-2">
-								<!-- 上一页按钮 -->
-								{currentPage > 1 && (
-									<a 
-										href={currentPage === 2 ? '/' : `/page/${currentPage - 1}/`} 
-										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
-									>
-										上一页
-									</a>
-								)}
-
-								<!-- 页码按钮 -->
-								{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-									<a
-										href={pageNum === 1 ? '/' : `/page/${pageNum}/`}
-										class={`px-4 py-2 border rounded-3xl transition-all duration-300 ${currentPage === pageNum 
-											? 'bg-primary-light text-white border-primary-light dark:bg-primary-dark dark:border-primary-dark' 
-											: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg'}
-										`}
-									>
-										{pageNum}
-									</a>
-								))}
-
-								<!-- 下一页按钮 -->
-								{currentPage < totalPages && (
-									<a
-										href={`/page/${currentPage + 1}/`}
-										class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
-									>
-										下一页
-									</a>
-								)}
-							</nav>
-						</div>
-					)}
+					<Pagination currentPage={currentPage} totalPages={totalPages} />
 				</div>
 
 				<!-- 右侧边栏：大屏幕显示 -->

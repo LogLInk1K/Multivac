@@ -1,0 +1,63 @@
+---
+/**
+ * 分页组件
+ * @param currentPage - 当前页码
+ * @param totalPages - 总页数
+ * @param basePath - 基础路径，用于生成分页链接
+ */
+interface Props {
+	currentPage: number;
+	totalPages: number;
+	basePath?: string;
+}
+
+const { currentPage, totalPages, basePath = '' } = Astro.props;
+
+// 生成页码链接
+const getPageLink = (pageNum: number) => {
+	if (pageNum === 1) {
+		return basePath || '/';
+	}
+	return `${basePath}/page/${pageNum}/`;
+};
+---
+
+{totalPages > 1 && (
+	<div class="flex justify-center mt-12">
+		<nav class="inline-flex items-center space-x-2">
+			<!-- 上一页按钮 -->
+			{currentPage > 1 && (
+				<a
+					href={getPageLink(currentPage - 1)}
+					class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
+				>
+					上一页
+				</a>
+			)}
+
+			<!-- 页码按钮 -->
+			{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+				<a
+					href={getPageLink(pageNum)}
+					class={`px-4 py-2 border rounded-3xl transition-all duration-300 ${
+						currentPage === pageNum
+							? 'bg-primary-light text-white border-primary-light dark:bg-primary-dark dark:border-primary-dark'
+							: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg'
+					}`}
+				>
+					{pageNum}
+				</a>
+			))}
+
+			<!-- 下一页按钮 -->
+			{currentPage < totalPages && (
+				<a
+					href={getPageLink(currentPage + 1)}
+					class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
+				>
+					下一页
+				</a>
+			)}
+		</nav>
+	</div>
+)}
