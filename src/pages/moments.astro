@@ -85,14 +85,30 @@ try {
 
 							<!-- 图片展示 -->
 							{moment.images && moment.images.length > 0 && (
-								<div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-									{moment.images.map((image) => (
+								<div class="mb-4">
+									{moment.images.length === 1 ? (
+										// 单张图片
 										<img
-											src={image}
+											src={moment.images[0]}
 											alt="动态图片"
-											class="w-full h-48 object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
+											class="w-auto max-h-[120px] object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
 										/>
-									))}
+									) : (
+										// 多张图片九宫格
+										<div class="grid gap-3 max-w-[500px]" class:list={[
+											"grid-cols-2",
+											moment.images.length >= 4 && "grid-cols-3",
+											moment.images.length === 4 && "grid-cols-2"
+										]}>
+											{moment.images.map((image) => (
+												<img
+													src={image}
+													alt="动态图片"
+													class="w-full aspect-square object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300"
+												/>
+											))}
+										</div>
+									)}
 								</div>
 							)}
 
