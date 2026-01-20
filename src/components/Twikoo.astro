@@ -19,7 +19,7 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 <div id={elId} class="twikoo" data-twikoo-env-id={envId}></div>
 
 <script is:inline data-astro-rerun>
-	const TWIKOO_SRC = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.nocss.js';
+	var TWIKOO_SRC = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.nocss.js';
 
 	function getTwikooMounts() {
 		return Array.from(document.querySelectorAll('.twikoo[data-twikoo-env-id]'));

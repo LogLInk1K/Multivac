@@ -145,6 +145,9 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
         // 平滑动画循环
         function animateMouseFollow() {
+          // 检查 mouseWrapper 是否存在
+          if (!mouseWrapper) return;
+
           // 线性插值实现平滑跟随
           currentX += (mouseX - currentX) * lerpFactor;
           currentY += (mouseY - currentY) * lerpFactor;
@@ -155,8 +158,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
           animationFrameId = requestAnimationFrame(animateMouseFollow);
         }
 
-        // 启动动画
-        animateMouseFollow();
+        // 只有当 mouseWrapper 存在时才启动动画
+        if (mouseWrapper) {
+          animateMouseFollow();
+        }
         // ============ 鼠标跟随效果结束 ============
 
         // 初始化时不修改问候语，保持默认的"醉后不知天在水"显示

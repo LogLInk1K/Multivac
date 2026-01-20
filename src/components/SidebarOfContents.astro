@@ -317,7 +317,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
       preloadLink.href = avatarUrl;
       preloadLink.crossOrigin = 'anonymous';
       document.head.appendChild(preloadLink);
-      console.log('✅ 头像 preload 标签已创建');
     };
 
     // 预加载 HeroImage
@@ -328,7 +327,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
       if (isAboutPage) {
         // about 页面使用本地图片
         const heroImageSrc = localCoverImage;
-        console.log('⚡ 关于我页面，预加载本地图片:', heroImageSrc);
 
         const preloadLink = document.createElement('link');
         preloadLink.rel = 'preload';
@@ -336,7 +334,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
         preloadLink.href = heroImageSrc;
         preloadLink.crossOrigin = 'anonymous';
         document.head.appendChild(preloadLink);
-        console.log('✅ about页面 HeroImage preload 标签已创建');
         return;
       }
 
@@ -357,7 +354,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
             const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
             if (urlMatch) {
               const heroImageSrc = urlMatch[1];
-              console.log('⚡ 找到 HeroImage，开始预加载:', heroImageSrc);
 
               // 动态创建 preload 标签并插入到 head
               const preloadLink = document.createElement('link');
@@ -366,7 +362,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
               preloadLink.href = heroImageSrc;
               preloadLink.crossOrigin = 'anonymous';
               document.head.appendChild(preloadLink);
-              console.log('✅ HeroImage preload 标签已创建');
               break;
             }
           }
@@ -461,7 +456,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
 
         if (isAboutPage) {
           heroImageSrc = localCoverImage;
-          console.log('检测到关于我页面，使用本地图片:', heroImageSrc);
         } else {
           // 尝试多种选择器
           const selectors = [
@@ -475,22 +469,16 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
             const heroImageDiv = document.querySelector(selector);
             if (heroImageDiv) {
               const bgImage = window.getComputedStyle(heroImageDiv).backgroundImage;
-              console.log(`选择器 "${selector}" 找到元素，backgroundImage:`, bgImage);
 
               if (bgImage && bgImage !== 'none') {
                 const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
                 if (urlMatch) {
                   heroImageSrc = urlMatch[1];
-                  console.log('成功提取 heroImage:', heroImageSrc);
                   break;
                 }
               }
             }
           }
-        }
-
-        if (!heroImageSrc) {
-          console.log('未找到 heroImage，将生成无图片版本海报');
         }
 
         // 创建 Canvas - 固定尺寸 750x1000
@@ -523,8 +511,6 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
             // 它专门用于确保图片像素已解码完成，且不阻塞主线程
             await img.decode();
 
-            console.log('⚡ HeroImage 从缓存极速提取');
-
             // 目标区域 - 占据45%的高度
             const targetWidth = posterWidth;
             const targetHeight = 450; // 45% of 1000px
@@ -551,7 +537,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
             // 使用 drawImage 的 9 参数版本：源矩形 + 目标矩形
             ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
           } catch (err) {
-            console.log('HeroImage 加载失败，可能由于预加载未命中', err);
+            // HeroImage 加载失败
           }
         }
 
@@ -609,13 +595,10 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           
           // 绘制图片：Y 轴由于 arc 中心在 avatarY，绘图起点需向上偏移半径
           ctx.drawImage(avatarImg, avatarX, avatarY - avatarSize / 2, avatarSize, avatarSize);
-          
-          ctx.restore();
-          console.log('⚡ 头像极速绘制完成');
 
+          ctx.restore();
         } catch (err) {
-          // 如果预加载失败或网络超时，在这里处理降级
-          console.log('头像加载失败，可能由于预加载未命中或代理波动', err);
+          // 头像加载失败
         }
 
         // 绘制作者名称 "波罗歌"（无论头像是否加载成功都绘制）
@@ -664,7 +647,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           ctx.textAlign = 'center';
           ctx.fillText('扫码查看原文', qrX + qrSize / 2, 960); // 文字位置相应调整
         } catch (err) {
-          console.log('二维码生成失败', err);
+          // 二维码生成失败
         }
 
         // 将 Canvas 转换为图片
@@ -674,7 +657,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
         // 保存 dataUrl 供下载使用
         downloadBtn.dataset.posterUrl = dataUrl;
       } catch (error) {
-        console.error('生成海报失败:', error);
+        // 生成海报失败
       }
     };
 
@@ -746,14 +729,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           downloadBtn.textContent = originalText || '下载海报';
         }, 2000);
       } catch (error) {
-        console.error('下载失败:', error);
-
-        // 下载失败反馈
-        downloadBtn.textContent = '❌下载失败';
-
-        setTimeout(() => {
-          downloadBtn.textContent = originalText || '下载海报';
-        }, 2000);
+        // 下载失败
       }
     };
 
@@ -778,8 +754,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           copyLinkBtn.textContent = originalText || '复制链接';
         }, 2000);
       }).catch((err) => {
-        console.error('复制失败:', err);
-        copyLinkBtn.textContent = '复制失败';
+        // 复制失败
         setTimeout(() => {
           copyLinkBtn.textContent = originalText || '复制链接';
         }, 2000);
@@ -815,8 +790,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           rssTextSpan.textContent = originalText || '复制链接';
         }, 2000);
       }).catch((err) => {
-        console.error('RSS链接复制失败:', err);
-        rssTextSpan.textContent = '❌ 复制失败';
+        // RSS链接复制失败
         setTimeout(() => {
           rssTextSpan.textContent = originalText || '复制链接';
         }, 2000);
