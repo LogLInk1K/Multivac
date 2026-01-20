@@ -1,63 +1,135 @@
 ---
 /**
  * 分页组件
- * @param currentPage - 当前页码
- * @param totalPages - 总页数
- * @param basePath - 基础路径，用于生成分页链接
+ * 整合了省略号算法与现有样式
  */
 interface Props {
-	currentPage: number;
-	totalPages: number;
-	basePath?: string;
+    currentPage: number;
+    totalPages: number;
+    basePath?: string;
 }
 
 const { currentPage, totalPages, basePath = '' } = Astro.props;
 
-// 生成页码链接
+// 1. 规范化路径逻辑
 const getPageLink = (pageNum: number) => {
-	if (pageNum === 1) {
-		return basePath || '/';
-	}
-	return `${basePath}/page/${pageNum}/`;
+    const normalizedPath = basePath.replace(/\/$/, '');
+    if (pageNum === 1) return normalizedPath || '/';
+    // 确保路径中不会出现双斜杠
+    return `${normalizedPath}/page/${pageNum}/`.replace(/\/+/g, '/');
 };
+
+// 2. 分页算法逻辑
+const ELLIPSIS = '···';
+
+const getVisiblePages = () => {
+    const total = totalPages;
+    const current = currentPage;
+
+    // 如果总页数较少，直接全显
+    if (total <= 4) {
+        return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    let pages: (number | string)[] = [];
+
+    // 核心数字生成
+    if (current <= 3) {
+        // 靠近开头
+        pages = [1, 2, 3, 4];
+    } else if (current >= total - 2) {
+        // 靠近结尾
+        return [1, ELLIPSIS, total - 3, total - 2, total - 1, total];
+    } else {
+        // 居中：显示当前页及其前后部分
+        const start = current - 1;
+        pages = [start, start + 1, start + 2, start + 3];
+    }
+
+    // 补全首位和省略号
+    let finalPages: (number | string)[] = [];
+    
+    if (pages[0] !== 1) {
+        finalPages.push(1);
+        if ((pages[0] as number) > 2) finalPages.push(ELLIPSIS);
+    }
+    
+    finalPages.push(...pages);
+
+    // 处理末尾
+    const lastPageInSequence = pages[pages.length - 1] as number;
+    if (lastPageInSequence < total - 1) {
+        finalPages.push(ELLIPSIS);
+        finalPages.push(total);
+    } else if (lastPageInSequence === total - 1) {
+        finalPages.push(total);
+    }
+
+    return finalPages;
+};
+
+const visiblePages = getVisiblePages();
 ---
 
 {totalPages > 1 && (
-	<div class="flex justify-center mt-12">
-		<nav class="inline-flex items-center space-x-2">
-			<!-- 上一页按钮 -->
-			{currentPage > 1 && (
-				<a
-					href={getPageLink(currentPage - 1)}
-					class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
-				>
-					上一页
-				</a>
-			)}
+<div class="flex justify-center items-center mt-12 mb-8 px-4">
+    <nav class="flex items-center gap-1 md:gap-2" aria-label="分页导航">
+        {currentPage > 1 && (
+            <a
+                href={getPageLink(currentPage - 1)}
+                class="group flex items-center justify-center w-10 h-10 md:w-auto md:px-4 rounded-full border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-primary-light/5 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-300"
+                title="上一页"
+            >
+                <svg class="w-5 h-5 md:-ml-1 md:mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span class="hidden md:inline font-medium text-sm">上一页</span>
+            </a>
+        )}
 
-			<!-- 页码按钮 -->
-			{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-				<a
-					href={getPageLink(pageNum)}
-					class={`px-4 py-2 border rounded-3xl transition-all duration-300 ${
-						currentPage === pageNum
-							? 'bg-primary-light text-white border-primary-light dark:bg-primary-dark dark:border-primary-dark'
-							: 'bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark border-border-light dark:border-border-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg'
-					}`}
-				>
-					{pageNum}
-				</a>
-			))}
+        <div class="flex items-center gap-1 md:gap-2">
+            {visiblePages.map((page) => {
+                if (page === ELLIPSIS) {
+                    return (
+                        <span class="w-8 text-center text-text-light/40 dark:text-text-dark/40">
+                            {ELLIPSIS}
+                        </span>
+                    );
+                }
+                
+                const pageNum = page as number;
+                const isActive = currentPage === pageNum;
 
-			<!-- 下一页按钮 -->
-			{currentPage < totalPages && (
-				<a
-					href={getPageLink(currentPage + 1)}
-					class="px-4 py-2 border border-border-light dark:border-border-dark rounded-3xl text-text-light dark:text-text-dark hover:bg-hover-light dark:hover:bg-hover-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
-				>
-					下一页
-				</a>
-			)}
-		</nav>
-	</div>
+                return (
+                    <a
+                        href={getPageLink(pageNum)}
+                        class={`
+                            relative flex items-center justify-center min-w-[2.5rem] h-10 px-2 rounded-full text-sm font-medium transition-all duration-300
+                            ${isActive 
+                                ? 'bg-primary-light dark:bg-primary-dark text-white shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 scale-105 z-10' 
+                                : 'text-text-light/70 dark:text-text-dark/70 hover:bg-hover-light dark:hover:bg-hover-dark hover:text-text-light dark:hover:text-text-dark'
+                            }
+                            ${!(pageNum === 1 || pageNum === totalPages || Math.abs(pageNum - currentPage) <= 1) ? 'hidden sm:flex' : 'flex'}
+                        `}
+                    >
+                        {pageNum}
+                    </a>
+                );
+            })}
+        </div>
+
+        {currentPage < totalPages && (
+            <a
+                href={getPageLink(currentPage + 1)}
+                class="group flex items-center justify-center w-10 h-10 md:w-auto md:px-4 rounded-full border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-primary-light/5 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-300"
+                title="下一页"
+            >
+                <span class="hidden md:inline font-medium text-sm">下一页</span>
+                <svg class="w-5 h-5 md:-mr-1 md:ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        )}
+    </nav>
+</div>
 )}
