@@ -303,10 +303,22 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
     // 获取本地图片路径
     const sidebarData = document.getElementById('sidebar-data');
     const localCoverImage = sidebarData?.getAttribute('data-df-about') || '';
+    const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
 
     if (!sidebarContainer || !backToTopButton || !jumpToBottomButton || !jumpToCommentsButton) {
       return;
     }
+
+    // 预加载头像
+    const preloadAvatar = () => {
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'image';
+      preloadLink.href = avatarUrl;
+      preloadLink.crossOrigin = 'anonymous';
+      document.head.appendChild(preloadLink);
+      console.log('✅ 头像 preload 标签已创建');
+    };
 
     // 预加载 HeroImage
     const preloadHeroImage = () => {
@@ -362,7 +374,8 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
       }
     };
 
-    // 页面加载时立即预加载 HeroImage
+    // 页面加载时立即预加载头像和 HeroImage
+    preloadAvatar();
     preloadHeroImage();
 
     // 创建一个仅包含返回顶部和直达底部的容器用于显示/隐藏
