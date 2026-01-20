@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { getOriginalFileName } from '../utils/getOriginalFileName';
-import defaultCover from '../assets/df-cover.webp';
+const defaultCover = '/img/df-cover.webp';
 
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
 
@@ -78,7 +78,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
                 <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
                   <div
                     class="w-full h-full bg-cover bg-center"
-                    style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+                    style={`background-image: url('${displayImage}');`}
                     aria-label={post.data.title}
                   ></div>
                 </div>
@@ -218,7 +218,7 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
               <div class="w-16 h-16 flex-shrink-0 bg-hero-light dark:bg-hero-dark rounded-xl overflow-hidden">
                 <div
                   class="w-full h-full bg-cover bg-center"
-                  style="background-image: url('${typeof post.heroImage === 'string' ? post.heroImage : post.heroImage.src}');"
+                  style="background-image: url('${post.heroImage}');"
                   aria-label="${post.title}"
                 ></div>
               </div>

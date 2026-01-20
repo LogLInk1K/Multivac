@@ -2,7 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { getOriginalFileName } from '../utils/getOriginalFileName';
-import defaultCover from '../assets/df-cover.webp';
+const defaultCover = '/img/df-cover.webp';
 
 interface Props {
   post: CollectionEntry<'post'>;
@@ -23,7 +23,7 @@ const displayImage = heroImage || defaultCover;
     <a href={`/p/${originalFileName}.html`} class="md:w-40 w-full h-[140px] bg-hero-light dark:bg-hero-dark rounded-3xl overflow-hidden flex-shrink-0 mx-auto md:mx-2 block">
       <div
         class="w-full h-full bg-cover bg-center"
-        style={`background-image: url('${typeof displayImage === 'string' ? displayImage : displayImage.src}');`}
+        style={`background-image: url('${displayImage}');`}
         aria-label={title}
       ></div>
     </a>

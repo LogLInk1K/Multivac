@@ -1,10 +1,9 @@
 ---
-import dfAbout from '../assets/df-about.webp';
-const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
+const dfAbout = '/img/df-about.webp';
 ---
 
 <!-- 隐藏的数据存储：传递 dfCover 给客户端脚本 -->
-<div id="sidebar-data" data-df-about={dfAbout.src} class="hidden"></div>
+<div id="sidebar-data" data-df-about={dfAbout} class="hidden"></div>
 
 <!-- 侧边功能图标组 - 与目录水平对称 -->
 <div
@@ -107,7 +106,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           <div class="flex flex-col items-center gap-2">
             <div class="w-32 h-32 rounded-lg overflow-hidden bg-bg-light dark:bg-bg-dark border border-border-light dark:border-border-dark">
               <img
-                src="/src/assets/wechatGood.webp"
+                src="/img/wechatGood.webp"
                 alt="微信赞赏码"
                 class="w-full h-full object-cover"
               />
@@ -118,7 +117,7 @@ const avatarUrl = 'https://qlogo.1k.ink/avatar.webp';
           <div class="flex flex-col items-center gap-2">
             <div class="w-32 h-32 rounded-lg overflow-hidden bg-bg-light dark:bg-bg-dark border border-border-light dark:border-border-dark">
               <img
-                src="/src/assets/alipayGood.webp"
+                src="/img/alipayGood.webp"
                 alt="支付宝赞赏码"
                 class="w-full h-full object-cover"
               />

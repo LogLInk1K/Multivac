@@ -9,14 +9,13 @@ const post = defineCollection({
 			? ['**/*.{md,mdx,yml,yaml}', '!example/**/*']
 			: '**/*.{md,mdx,yml,yaml}'
 	}),
-	schema: ({ image }) =>
-		z.object({
+	schema: z.object({
 			title: z.string().min(1, { message: '标题不能为空' }),
 			description: z.string().min(10, { message: '描述至少需要10个字符' }),
 			content: z.string().optional(),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
+			heroImage: z.string().optional(),
 			tags: z.array(z.string()).default([]),
 			category: z.string().optional(),
 			draft: z.boolean().default(false),
