@@ -1,8 +1,14 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+const isProd = import.meta.env.PROD;
 
 const post = defineCollection({
-	loader: glob({ base: './post', pattern: '**/*.{md,mdx,yml,yaml}' }),
+	loader: glob({
+		base: './post', 
+		pattern: isProd 
+			? ['**/*.{md,mdx,yml,yaml}', '!example/**/*']
+			: '**/*.{md,mdx,yml,yaml}'
+	}),
 	schema: ({ image }) =>
 		z.object({
 			title: z.string().min(1, { message: '标题不能为空' }),
