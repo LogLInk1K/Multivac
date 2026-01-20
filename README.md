@@ -323,7 +323,7 @@ vercel
 ```bash
 # 使用 Wrangler CLI
 npm install -g wrangler
-wrangler pages publish dist
+wrangler pages deploy dist
 ```
 
 ## ⚖️ 许可与说明
