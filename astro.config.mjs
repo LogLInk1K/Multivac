@@ -1,21 +1,34 @@
 // @ts-check
-
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import cloudflare from '@astrojs/cloudflare';
+import { defineConfig} from 'astro/config';
 
-// https://astro.build/config
 export default defineConfig({
   site: 'https://log.1k.ink',
+  trailingSlash: 'never', 
   integrations: [mdx(), sitemap(), tailwind()],
   build: {
     inlineStylesheets: 'auto',
+    format: 'file', 
   },
+
+  adapter: cloudflare({
+    imageService: 'compile',
+  }),
+
   vite: {
+    ssr: {
+      external: ['node:fs', 'node:path'],
+    },
     build: {
       minify: 'esbuild',
     },
   },
-  prefetch: true,
+
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  }
 });
