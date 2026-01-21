@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import cloudflare from '@astrojs/cloudflare';
+import vercel from '@astrojs/vercel';
 import { defineConfig} from 'astro/config';
 
 export default defineConfig({
@@ -14,8 +15,8 @@ export default defineConfig({
     format: 'file', 
   },
 
-  adapter: cloudflare({
-    imageService: 'compile',
+  adapter: vercel({
+    webAnalytics: { enabled: true },
   }),
 
   vite: {

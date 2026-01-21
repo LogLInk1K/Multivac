@@ -54,3 +54,4 @@ coverage/
 # ignore private posts
 post/*
 !post/example/
+.vercel
