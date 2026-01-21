@@ -304,19 +304,9 @@ friendGroups:
 ```bash
 # 安装 Vercel CLI
 npm i -g vercel
-
 # 部署
 vercel
 ```
-
-### Netlify
-
-将构建命令设置为 `npm run build`，发布目录为 `dist/`。
-
-### GitHub Pages
-
-1. 在 `.github/workflows/` 创建部署配置
-2. 推送代码自动触发部署
 
 ### Cloudflare Pages
 

@@ -6,6 +6,8 @@ import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel';
 import { defineConfig} from 'astro/config';
 
+const isVercel = process.env.VERCEL === '1' || process.env.DEPLOY_PLATFORM === 'vercel';
+
 export default defineConfig({
   site: 'https://log.1k.ink',
   trailingSlash: 'never', 
@@ -15,9 +17,9 @@ export default defineConfig({
     format: 'file', 
   },
 
-  adapter: vercel({
-    webAnalytics: { enabled: true },
-  }),
+  adapter: isVercel 
+    ? vercel({ webAnalytics: { enabled: true } }) 
+    : cloudflare({ imageService: 'compile' }),
 
   vite: {
     ssr: {
