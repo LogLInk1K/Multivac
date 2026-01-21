@@ -121,23 +121,33 @@ const elId = customElId ?? `tcomment-${pageKey.replace(/[^a-zA-Z0-9]+/g, '-').re
 			}
 		});
 
-		waitForTwikooCssLink()
-			.then(() => ensureTwikooLoaded())
-			.then(() => {
-				requestAnimationFrame(() =>
-					requestAnimationFrame(() => {
-						for (const m of mounts) {
-							// 只初始化未初始化的实例
-							if (!initializedMounts.has(m.id)) {
-								initTwikooForMount(m);
+		const init = () => {
+			waitForTwikooCssLink()
+				.then(() => ensureTwikooLoaded())
+				.then(() => {
+					requestAnimationFrame(() =>
+						requestAnimationFrame(() => {
+							for (const m of mounts) {
+								// 只初始化未初始化的实例
+								if (!initializedMounts.has(m.id)) {
+									initTwikooForMount(m);
+								}
 							}
-						}
-					}),
-				);
-			})
-			.catch(() => {
-				// ignore
-			});
+						}),
+					);
+				})
+				.catch(() => {
+					// ignore
+				});
+		};
+
+		// 使用 requestIdleCallback 延迟初始化（如果浏览器支持）
+		if ('requestIdleCallback' in window) {
+			window.requestIdleCallback(() => init(), { timeout: 2000 });
+		} else {
+			// 降级方案：使用延迟的 setTimeout
+			setTimeout(init, 100);
+		}
 	}
 
 	// 防止重复监听

@@ -1,18 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
-import { getOriginalFileName } from '../utils/getOriginalFileName';
-
-const allPosts = (await getCollection('post', (post) => !post.data.draft))
-  .filter((post) => !post.data.friends && !post.data.friendGroups && !post.data.moments)
-  .map((post) => ({
-    id: post.id,
-    originalFileName: getOriginalFileName(post.id),
-    title: post.data.title,
-    description: post.data.description,
-    pubDate: post.data.pubDate,
-    tags: post.data.tags,
-    category: post.data.category,
-  }));
+let searchModalLoaded = false;
 ---
 
 <div id="search-modal" class="fixed inset-0 z-[100] hidden">
@@ -61,12 +48,30 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
   </div>
 </div>
 
-<script is:inline define:vars={{ allPosts }}>
+<script is:inline>
   let modal;
   let backdrop;
   let content;
   let input;
   let resultsContainer;
+  let allPosts = null;
+  let isLoadingData = false;
+
+  async function loadSearchData() {
+    if (allPosts !== null || isLoadingData) return;
+    isLoadingData = true;
+
+    try {
+      const response = await fetch('/search-data.json');
+      if (!response.ok) throw new Error('Failed to load search data');
+      allPosts = await response.json();
+    } catch (error) {
+      console.error('Failed to load search data:', error);
+      allPosts = [];
+    } finally {
+      isLoadingData = false;
+    }
+  }
 
   function initElements() {
     modal = document.getElementById('search-modal');
@@ -86,6 +91,9 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
       input?.focus();
     }, 10);
     document.body.style.overflow = 'hidden';
+
+    // 预加载搜索数据
+    loadSearchData();
   }
 
   function closeModal() {
@@ -103,9 +111,13 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
 
   function searchPosts(query) {
     const lowerQuery = query.toLowerCase().trim();
-    
+
     if (!lowerQuery) {
       return null;
+    }
+
+    if (!allPosts || allPosts.length === 0) {
+      return [];
     }
 
     return allPosts.filter((post) => {
@@ -113,7 +125,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
       const description = post.description.toLowerCase();
       const tags = post.tags?.map((tag) => tag.toLowerCase()) || [];
       const category = post.category?.toLowerCase() || '';
-      
+
       return (
         title.includes(lowerQuery) ||
         description.includes(lowerQuery) ||
@@ -184,12 +196,43 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
     inputListener = async (e) => {
       clearTimeout(searchTimeout);
       const query = e.target.value;
-      
+
       if (!query.trim()) {
         resetResults();
         return;
       }
-      
+
+      // 等待数据加载完成
+      if (isLoadingData) {
+        if (resultsContainer) {
+          resultsContainer.innerHTML = `
+            <div class="text-center py-8 text-text-light dark:text-text-dark opacity-60">
+              正在加载搜索数据...
+            </div>
+          `;
+        }
+        // 等待数据加载
+        await new Promise(resolve => {
+          const checkData = setInterval(() => {
+            if (!isLoadingData) {
+              clearInterval(checkData);
+              resolve();
+            }
+          }, 50);
+        });
+      }
+
+      if (!allPosts || allPosts.length === 0) {
+        if (resultsContainer) {
+          resultsContainer.innerHTML = `
+            <div class="text-center py-8 text-text-light dark:text-text-dark opacity-60">
+              搜索数据加载失败，请刷新页面重试
+            </div>
+          `;
+        }
+        return;
+      }
+
       if (resultsContainer) {
         resultsContainer.innerHTML = `
           <div class="text-center py-8 text-text-light dark:text-text-dark opacity-60">
@@ -197,7 +240,7 @@ const allPosts = (await getCollection('post', (post) => !post.data.draft))
           </div>
         `;
       }
-      
+
       searchTimeout = setTimeout(() => {
         const results = searchPosts(query);
         renderResults(results);

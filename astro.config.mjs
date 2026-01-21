@@ -9,4 +9,13 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   site: 'https://log.1k.ink',
   integrations: [mdx(), sitemap(), tailwind()],
+  build: {
+    inlineStylesheets: 'auto',
+  },
+  vite: {
+    build: {
+      minify: 'esbuild',
+    },
+  },
+  prefetch: true,
 });

@@ -35,6 +35,10 @@ const imageUrl = typeof image === 'string' ? image : image.src;
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/PlusJakartaSans-ExtraBold.woff2" as="font" type="font/woff2" crossorigin />
 
+<!-- Preconnect to third-party origins for faster loading -->
+<link rel="preconnect" href="https://registry.npmmirror.com" />
+<link rel="preconnect" href="https://twikoo.1k.ink" />
+
 <!-- Twikoo base styles (keep persistent under ViewTransitions) -->
 <link rel="stylesheet" href="/css/twikoo-base.css" data-astro-transition-persist />
 
