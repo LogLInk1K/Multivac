@@ -324,18 +324,18 @@ wrangler pages deploy dist
 
 ## 📮 联系方式
 
+- 主页: [https://1k.ink](https://1k.ink)
 - 博客: [https://log.1k.ink](https://log.1k.ink)
 - GitHub: [@LogLInk1K](https://github.com/LogLInk1K)
 
 ## ⭐ 鸣谢
 
-本博客参考了以下优秀项目：
+本博客参考以下诸位博主的设计，特此鸣谢：
 
-- [Astro](https://astro.build) - 核心框架
-- [张洪Heo](https://blog.zhheo.com) - 设计灵感
-- [安子璠](https://www.anzifan.com) - UI 参考
-- [安和鱼](https://blog.anheyu.com) - 交互设计
-- [Hsinyau](https://hsinyau.com) - 布局创意
+- [张洪Heo](https://blog.zhheo.com)
+- [安和鱼](https://blog.anheyu.com)
+- [安子璠](https://www.anzifan.com)
+- [Hsinyau](https://hsinyau.com)
 
 ---
 
