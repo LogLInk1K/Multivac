@@ -16,9 +16,6 @@ const displayImage = heroImage || defaultCover;
 ---
 
 <article class="group relative bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden">
-  {/* 装饰性渐变背景 */}
-  <div class="absolute inset-0 bg-gradient-to-br from-primary-light/5 via-transparent to-primary-dark/5 dark:from-primary-dark/5 dark:to-primary-light/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   <div class="relative grid grid-rows-[auto_1fr]">
     {/* 封面图片区域 */}
     <a href={`/p/${originalFileName}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark block" style="min-height: 220px;">
