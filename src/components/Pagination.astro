@@ -15,8 +15,8 @@ const { currentPage, totalPages, basePath = '' } = Astro.props;
 const getPageLink = (pageNum: number) => {
     const normalizedPath = basePath.replace(/\/$/, '');
     if (pageNum === 1) return normalizedPath || '/';
-    // 确保路径中不会出现双斜杠
-    return `${normalizedPath}/page/${pageNum}/`.replace(/\/+/g, '/');
+    // 确保路径中不会出现双斜杠，且不添加尾部斜杠以匹配 trailingSlash: 'never' 配置
+    return `${normalizedPath}/page/${pageNum}`.replace(/\/+/g, '/');
 };
 
 // 2. 分页算法逻辑
