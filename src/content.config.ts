@@ -4,10 +4,10 @@ const isProd = import.meta.env.PROD;
 
 const post = defineCollection({
 	loader: glob({
-		base: './post', 
-		pattern: isProd 
-			? ['**/*.{md,mdx,yml,yaml}', '!example/**/*']
-			: '**/*.{md,mdx,yml,yaml}'
+		base: './post',
+		pattern: isProd
+			? ['**/*.md', '**/*.mdx', '**/*.yml', '**/*.yaml', '!example/**/*']
+			: ['**/*.md', '**/*.mdx', '**/*.yml', '**/*.yaml']
 	}),
 	schema: z.object({
 			title: z.string().min(1, { message: '标题不能为空' }),
