@@ -12,7 +12,7 @@ const allPosts = (await getCollection('post', (post: CollectionEntry<'post'>) =>
   .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
 
 // 分页设置
-const postsPerPage = 5;
+const postsPerPage = 4;
 const currentPage = Number(Astro.params.page) || 1;
 const totalPages = Math.ceil(allPosts.length / postsPerPage);
 

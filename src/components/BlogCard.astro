@@ -15,56 +15,64 @@ const originalFileName = getOriginalFileName(post.id);
 const displayImage = heroImage || defaultCover;
 ---
 
-<article class="bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden border border-transparent hover:border-border-light dark:hover:border-border-dark">
-  {/* 使用Grid布局实现自适应高度 */}
-  <div class="grid grid-rows-[auto_1fr]">
-    {/* 封面图片区域：设置最小高度确保美观 */}
-    <a href={`/p/${originalFileName}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark transition-transform duration-500 hover:scale-105 block" style="min-height: 180px;">
+<article class="group relative bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden">
+  {/* 装饰性渐变背景 */}
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-light/5 via-transparent to-primary-dark/5 dark:from-primary-dark/5 dark:to-primary-light/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+  <div class="relative grid grid-rows-[auto_1fr]">
+    {/* 封面图片区域 */}
+    <a href={`/p/${originalFileName}.html`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark block" style="min-height: 220px;">
       <div
-        class="absolute inset-0 bg-cover bg-center"
+        class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
         style={`background-image: url('${displayImage}');`}
         aria-label={title}
       ></div>
     </a>
-    
-    {/* 内容区域：使用flex布局实现内部元素的垂直排列 */}
-    <div class="p-6 flex flex-col justify-between">
-      <div>
-        <div class="flex flex-row items-center gap-2 text-xs text-text-light dark:text-text-dark opacity-80 mb-2">
-          <time>
-            <FormattedDate date={pubDate} />
-          </time>
-          <span class="text-gray-400">•</span>
-          <span>{Math.ceil((post.body?.length || 0) / 500)} 分钟阅读</span>
-        </div>
-        <h3 class="text-lg font-bold mb-2 line-clamp-1">
-          <a href={`/p/${originalFileName}.html`} class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors flex items-center">
-            {title}
-          </a>
-        </h3>
+
+    {/* 内容区域 */}
+    <div class="relative p-7 flex flex-col items-start">
+      {/* 元信息行 */}
+      <div class="flex flex-row items-center gap-3 text-xs text-text-light dark:text-text-dark opacity-70 mb-4">
+        <time class="flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <FormattedDate date={pubDate} />
+        </time>
+        {category && (
+          <span class="flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            {category}
+          </span>
+        )}
+        <span class="flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          {Math.ceil((post.body?.length || 0) / 500)} 分钟阅读
+        </span>
       </div>
-      <div>
-        <p class="text-sm text-text-light dark:text-text-dark line-clamp-1 opacity-80 mb-3">
-          {description}
-        </p>
-        <div class="flex flex-wrap items-center gap-2">
-          {category && (
-            <span class="px-2 py-1 text-xs font-medium bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark rounded-full">
-              {category}
-            </span>
-          )}
-          {tags && tags.length > 0 && tags.slice(0, 3).map((tag) => (
-            <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark bg-hover-light dark:bg-hover-dark rounded-full">
-              {tag}
-            </span>
-          ))}
-          {tags && tags.length > 3 && (
-            <span class="px-2 py-1 text-xs text-text-light dark:text-text-dark opacity-60">
-              +{tags.length - 3}
-            </span>
-          )}
-        </div>
-      </div>
+
+      {/* 标题 - 现代排版 */}
+      <h3 class="text-2xl font-bold mb-3 line-clamp-1">
+        <a
+          href={`/p/${originalFileName}.html`}
+          class="text-text-light dark:text-text-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-300"
+        >
+          {title}
+        </a>
+      </h3>
+
+      {/* 描述文字 */}
+      <p class="text-sm text-text-light dark:text-text-dark line-clamp-1 opacity-75">
+        {description}
+      </p>
     </div>
   </div>
 </article>
