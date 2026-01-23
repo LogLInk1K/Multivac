@@ -61,7 +61,8 @@ const post = defineCollection({
 				cover: z.string(),
 				rating: z.number(),
 				comment: z.string(),
-				type: z.enum(['movie', 'anime', 'book']),
+				type: z.string(),
+				link: z.string().optional(),
 			})).optional(),
 		}),
 });

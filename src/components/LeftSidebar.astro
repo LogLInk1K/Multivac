@@ -1,10 +1,21 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 
+// 定义最近在看项目的类型
+interface WatchingItem {
+  title: string;
+  year: number;
+  cover: string;
+  rating: number;
+  comment: string;
+  type: string;
+  link?: string;
+}
+
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
 
 // 默认最近在看数据
-const defaultWatching = [
+const defaultWatching: WatchingItem[] = [
   {
     title: '虫师',
     year: 2005,
@@ -12,6 +23,7 @@ const defaultWatching = [
     rating: 9.4,
     comment: '远山如雾',
     type: 'anime',
+    link: 'https://movie.douban.com/subject/1800597/',
   },
   {
     title: '无头骑士异闻录',
@@ -20,15 +32,16 @@ const defaultWatching = [
     rating: 8.8,
     comment: '这里是池袋',
     type: 'anime',
+    link: 'https://movie.douban.com/subject/4291876/',
   },
 ];
 
 // 读取最近在看的数据
-let watchingList = defaultWatching;
+let watchingList: WatchingItem[] = defaultWatching;
 try {
   const watchingData = await getEntry('post', 'watching');
   if (watchingData && watchingData.data.watching) {
-    watchingList = watchingData.data.watching;
+    watchingList = watchingData.data.watching as WatchingItem[];
   }
 } catch (error) {
   // 文件不存在，使用默认数据
@@ -639,11 +652,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       background: #050505;
       overflow: hidden;
 
-      /* ======================================================
-        【浅色模式适配 (针对白色背景特调)】
-        ====================================================== */
-      /* 1. 投影加重：让它在强白光下“浮起来”，防止看起来像黑洞 */
-      /* 2. 反光对比度调至 0.2，确保光泽清晰可见 */
+
       --vinyl-shadow: 0 3px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.9);
       --vinyl-rim: inset 0 0 1.5px 1px rgba(255, 255, 255, 0.2);
       --vinyl-gloss-opacity: 0.2; 
@@ -651,13 +660,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       box-shadow: var(--vinyl-shadow), var(--vinyl-rim);
     }
 
-    /* ======================================================
-      【深色模式适配 (完全套用你提供的完美模板数值)】
-      ====================================================== */
     .dark .vinyl-record {
       --vinyl-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.8);
       --vinyl-rim: inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
-      --vinyl-gloss-opacity: 0.12; /* 恢复为你原本的 0.12 */
+      --vinyl-gloss-opacity: 0.12;
     }
 
     .vinyl-record::before {
@@ -742,7 +748,12 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
   <!-- 最近在看卡片 -->
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
-    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">最近在看</h3>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">最近在看</h3>
+      <a href="https://www.douban.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-70 hover:opacity-100 transition-opacity">
+        <img src="/img/douban.ico" alt="豆瓣" class="w-4 h-4" />
+      </a>
+    </div>
     <div class="space-y-4">
       {watchingList.slice(0, 3).map((item) => (
         <div class="flex gap-3 group items-center">
@@ -756,11 +767,15 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-text-light dark:text-text-dark mb-1 line-clamp-1 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
-              {item.title}
+              {item.link ? (
+                <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
+              ) : (
+                <span>{item.title}</span>
+              )}
             </h4>
             <div class="flex items-center gap-2 mb-1.5">
               <span class="text-xs px-1.5 py-0.5 rounded bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark">
-                {item.type === 'movie' ? '电影' : item.type === 'anime' ? '动画' : '书籍'}
+                {item.type}
               </span>
               <span class="text-xs text-text-light dark:text-text-dark opacity-50">{item.year}</span>
               <div class="flex items-center gap-1">
