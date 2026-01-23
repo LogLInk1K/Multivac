@@ -51,7 +51,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 						<LeftSidebar />
 						<!-- 中等屏幕：右侧边栏显示在左侧边栏下方 -->
 						<div class="md:block xl:hidden">
-							<RightSidebar />
+							<RightSidebar showMusicPlayer={true} />
 						</div>
 					</div>
 				</div>
@@ -70,7 +70,7 @@ const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
 
 				<!-- 右侧边栏：大屏幕显示 -->
 				<div class="hidden xl:block">
-					<RightSidebar />
+					<RightSidebar showMusicPlayer={false} />
 				</div>
 			</div>
 	</section>

@@ -54,6 +54,15 @@ const post = defineCollection({
 				date: z.coerce.date(),
 				images: z.array(z.string()).optional(),
 			})).optional(),
+			// Watching page data
+			watching: z.array(z.object({
+				title: z.string(),
+				year: z.number(),
+				cover: z.string(),
+				rating: z.number(),
+				comment: z.string(),
+				type: z.enum(['movie', 'anime', 'book']),
+			})).optional(),
 		}),
 });
 

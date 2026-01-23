@@ -18,7 +18,22 @@ const allTags = posts.reduce((acc, post) => {
 const sortedTags = Object.entries(allTags).sort((a, b) => b[1] - a[1]);
 const randomTags = [...sortedTags].sort(() => Math.random() - 0.5).slice(0, 10);
 
-// 2. 准备所有文章的精简数据供前端随机抽取
+// 2. 网站统计
+const siteStartDate = new Date('2021-01-02');
+const today = new Date();
+const daysRunning = Math.floor((today.getTime() - siteStartDate.getTime()) / (1000 * 60 * 60 * 24));
+
+// 计算总字数（预估）
+const totalWords = posts.reduce((acc, post) => {
+  const bodyLength = post.body?.length || 0;
+  return acc + bodyLength;
+}, 0);
+
+// 计算总分类数
+const allCategories = new Set(posts.map(post => post.data.category).filter(Boolean));
+const totalCategories = allCategories.size;
+
+// 3. 准备所有文章的精简数据供前端随机抽取
 interface PostSummary {
   id: string;
   originalFileName: string;
@@ -42,6 +57,48 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 ---
 
 <aside class="hidden md:block w-[272px] space-y-6">
+  <!-- 公告卡片 -->
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
+    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">公告</h3>
+    <div class="space-y-4">
+      <!-- 第一段：虫洞图片 -->
+      <div>
+        <a href="https://www.foreverblog.cn/go.html" target="_blank" rel="noopener noreferrer">
+          <!-- 浅色主题虫洞图片 -->
+          <img
+            src="https://foreverblog.cn/assets/logo/wormhole_4_tp.gif"
+            alt="虫洞"
+            class="w-1/2 h-auto dark:hidden cursor-pointer"
+          />
+          <!-- 深色主题虫洞图片 -->
+          <img
+            src="https://foreverblog.cn/assets/logo/wormhole_2_tp.gif"
+            alt="虫洞"
+            class="w-1/2 h-auto hidden dark:block cursor-pointer"
+          />
+        </a>
+      </div>
+      <!-- 第二段：文字说明 -->
+      <p class="text-sm text-text-light dark:text-text-dark">
+        跟着<span class="font-bold text-primary-light dark:text-primary-dark">虫洞</span>一起随机跳转到十年之约正式成员的博客吧
+      </p>
+      <!-- 第三段：logo图片 -->
+      <div>
+        <a href="https://www.foreverblog.cn" target="_blank" rel="noopener noreferrer">
+          <img
+            src="https://www.foreverblog.cn/assets/logo/logo_en_default.png"
+            alt="十年之约"
+            class="w-1/2 h-auto cursor-pointer"
+          />
+        </a>
+      </div>
+      <!-- 第四段：活动说明 -->
+      <p class="text-sm text-text-light dark:text-text-dark">
+        本博客已加入<span class="font-bold text-primary-light dark:text-primary-dark">十年之约</span>活动
+      </p>
+    </div>
+  </div>
+
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">随机推荐</h3>
@@ -164,6 +221,35 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
 </div>
     
     <p class="mt-4 text-[10px] text-text-light dark:text-text-dark opacity-40 italic">支持 Feedly、Inoreader、Reeder 等</p>
+  </div>
+
+  <!-- 网站统计卡片 -->
+  <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
+    <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">网站统计</h3>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{posts.length}</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60">篇文章</div>
+      </div>
+      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{totalCategories}</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60">个分类</div>
+      </div>
+      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{Object.keys(allTags).length}</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60">个标签</div>
+      </div>
+      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{(totalWords / 10000).toFixed(1)}w</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60">总字数</div>
+      </div>
+    </div>
+    <div class="mt-3 text-center p-3 rounded-2xl bg-primary-light/10 dark:bg-primary-dark/10">
+      <div class="text-lg font-bold text-primary-light dark:text-primary-dark mb-1">
+        已运行 {daysRunning} 天
+      </div>
+      <div class="text-xs text-text-light dark:text-text-dark opacity-60">始于 2021-01-02</div>
+    </div>
   </div>
 </aside>
 
