@@ -553,21 +553,27 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       <!-- 歌单封面和信息 -->
       <div class="flex gap-4 mb-4">
         <!-- 封面图 -->
-        <div class="relative w-24 h-24 flex-shrink-0 group">
-          <!-- 封面图片 -->
-          <img
-            src="/img/df-cover.webp"
-            alt="歌单封面"
-            class="w-full h-full object-cover rounded-2xl shadow-lg relative z-10"
-            id="playlist-cover"
-            onerror="this.src='https://picsum.photos/200/200?blur'"
-          />
+        <div class="relative w-24 h-24 flex-shrink-0">
+          <!-- 黑胶唱片容器 -->
+          <div class="vinyl-record flex items-center justify-center">
+            <!-- 封面图片 -->
+            <img
+              src="/img/df-cover.webp"
+              alt="歌单封面"
+              class="object-cover rounded-full shadow-lg relative z-10 transition-opacity duration-500"
+              style="width: 56px; height: 56px;"
+              id="playlist-cover"
+              onerror="this.src='https://picsum.photos/200/200?blur'"
+            />
+          </div>
         </div>
 
         <!-- 歌单信息 -->
         <div class="flex-1 min-w-0 flex flex-col justify-between">
           <div>
-            <h4 class="text-sm font-bold text-text-light dark:text-text-dark mb-1 line-clamp-2" id="playlist-name">我的歌单</h4>
+            <a href="https://music.163.com/playlist?id=2732533345" target="_blank" rel="noopener noreferrer" class="block">
+              <h4 id="playlist-name" class="text-sm font-bold text-text-light dark:text-text-dark mb-1 line-clamp-2 hover:text-primary-light dark:hover:text-primary-dark transition-colors cursor-pointer">我的歌单</h4>
+            </a>
             <p class="text-xs text-text-light dark:text-text-dark opacity-60" id="playlist-count">加载中...</p>
             <p class="text-xs text-primary-light dark:text-primary-dark mt-1 truncate" id="current-song">未播放</p>
           </div>
@@ -623,6 +629,90 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
     #playing-indicator > div {
       animation-duration: 0.8s;
       animation-iteration-count: infinite;
+    }
+
+    .vinyl-record {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      background: #050505;
+      overflow: hidden;
+
+      /* ======================================================
+        【浅色模式适配 (针对白色背景特调)】
+        ====================================================== */
+      /* 1. 投影加重：让它在强白光下“浮起来”，防止看起来像黑洞 */
+      /* 2. 反光对比度调至 0.2，确保光泽清晰可见 */
+      --vinyl-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.9);
+      --vinyl-rim: inset 0 0 1.5px 1px rgba(255, 255, 255, 0.2);
+      --vinyl-gloss-opacity: 0.2; 
+      
+      box-shadow: var(--vinyl-shadow), var(--vinyl-rim);
+    }
+
+    /* ======================================================
+      【深色模式适配 (完全套用你提供的完美模板数值)】
+      ====================================================== */
+    .dark .vinyl-record {
+      --vinyl-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.8);
+      --vinyl-rim: inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
+      --vinyl-gloss-opacity: 0.12; /* 恢复为你原本的 0.12 */
+    }
+
+    .vinyl-record::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      background: 
+        conic-gradient(
+          from 170deg at 50% 50%,
+          transparent 0deg,
+          rgba(255, 255, 255, var(--vinyl-gloss-opacity)) 40deg, 
+          transparent 80deg,
+          transparent 180deg,
+          rgba(255, 255, 255, var(--vinyl-gloss-opacity)) 220deg,
+          transparent 260deg,
+          transparent 360deg
+        ),
+        repeating-radial-gradient(
+          circle at center,
+          #050505 0px,
+          #121212 0.8px,
+          #050505 1.6px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .vinyl-record::after {
+      content: '';
+      position: absolute;
+      inset: 15px; 
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+      z-index: 2;
+    }
+
+    /* 封面旋转动画 */
+    @keyframes cover-spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .vinyl-record.playing {
+      animation: cover-spin 8s linear infinite;
+    }
+
+    .vinyl-record.paused {
+      animation-play-state: paused;
     }
   </style>
 
@@ -834,6 +924,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
       const isPlaying = !ap.audio.paused;
       const currentSong = ap.list.audios[ap.list.index];
+      const currentIndex = ap.list.index;
 
       // 更新播放/暂停图标
       const controlPlayIcon = document.getElementById('control-play-icon');
@@ -841,6 +932,44 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       const indicator = document.getElementById('playing-indicator');
       const currentSongEl = document.getElementById('current-song');
       const coverImg = document.getElementById('playlist-cover');
+      const vinylRecord = document.querySelector('.vinyl-record');
+
+      // 检测是否切换了歌曲
+      const previousIndex = window.musicPlayerState?.previousIndex ?? -1;
+      const hasChangedSong = previousIndex !== currentIndex;
+
+      // 更新封面动画状态
+      if (isPlaying) {
+        vinylRecord?.classList.add('playing');
+        vinylRecord?.classList.remove('paused');
+      } else {
+        vinylRecord?.classList.add('paused');
+      }
+
+      // 更新当前歌曲名称和封面（带淡入淡出效果）
+      if (currentSong) {
+        if (currentSongEl) {
+          currentSongEl.textContent = `${currentSong.name} - ${currentSong.artist}`;
+        }
+
+        // 切歌时淡入淡出效果
+        if (hasChangedSong && coverImg && currentSong.cover && coverImg.src !== currentSong.cover) {
+          // 淡出
+          coverImg.style.opacity = '0';
+          setTimeout(() => {
+            // 更新封面
+            coverImg.src = currentSong.cover;
+            // 淡入
+            coverImg.style.opacity = '1';
+          }, 250); // 等待淡出动画完成一半
+        } else if (!hasChangedSong && coverImg && currentSong.cover && coverImg.src !== currentSong.cover) {
+          // 首次加载时直接更新，不带动画
+          coverImg.src = currentSong.cover;
+        }
+      }
+
+      // 保存当前歌曲索引
+      window.musicPlayerState.previousIndex = currentIndex;
 
       if (isPlaying) {
         controlPlayIcon?.classList.add('hidden');
@@ -851,9 +980,6 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
             indicator?.classList.remove('opacity-0');
           });
         });
-        if (currentSongEl && currentSong) {
-          currentSongEl.textContent = `${currentSong.name} - ${currentSong.artist}`;
-        }
       } else {
         controlPlayIcon?.classList.remove('hidden');
         controlPauseIcon?.classList.add('hidden');
