@@ -2,31 +2,50 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
-import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel';
-import { defineConfig} from 'astro/config';
+import compress from 'astro-compress'; // 引入压缩插件
+import { defineConfig } from 'astro/config';
 
+// 只有在 Vercel 环境下才加载适配器，本地和 Cloudflare (SSG) 保持 undefined
 const isVercel = process.env.VERCEL === '1' || process.env.DEPLOY_PLATFORM === 'vercel';
 
 export default defineConfig({
   site: 'https://log.1k.ink',
   trailingSlash: 'never', 
-  integrations: [mdx(), sitemap(), tailwind()],
+  
+  // compress 对生成的静态资源进行压缩
+  integrations: [
+    mdx(), 
+    sitemap(), 
+    tailwind(), 
+    compress({
+      CSS: true,
+      HTML: true,
+      Image: false, // 图片建议保持原样以配合长期缓存策略
+      JavaScript: true,
+      SVG: true,
+    })
+  ],
+
   build: {
     inlineStylesheets: 'auto',
     format: 'file', 
   },
 
-  adapter: isVercel 
-    ? vercel({ webAnalytics: { enabled: true } }) 
-    : cloudflare({ imageService: 'compile' }),
+
+  adapter: isVercel ? vercel({ webAnalytics: { enabled: true } }) : undefined,
+
+  // 显式声明静态输出
+  output: 'static',
 
   vite: {
     ssr: {
       external: ['node:fs', 'node:path'],
     },
     build: {
+      // 保持 esbuild，它的速度与 Astro 最契合，二次压缩交给 astro-compress
       minify: 'esbuild',
+      cssMinify: true,
     },
   },
 
