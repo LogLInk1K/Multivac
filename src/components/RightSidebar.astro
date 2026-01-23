@@ -227,26 +227,54 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-4">网站统计</h3>
     <div class="grid grid-cols-2 gap-3">
-      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
-        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{posts.length}</div>
-        <div class="text-xs text-text-light dark:text-text-dark opacity-60">篇文章</div>
+      <div class="relative overflow-hidden text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1 js-count-up" data-target={posts.length}>0</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60 flex items-center justify-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          文章
+        </div>
       </div>
-      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
-        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{totalCategories}</div>
-        <div class="text-xs text-text-light dark:text-text-dark opacity-60">个分类</div>
+      <div class="relative overflow-hidden text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1 js-count-up" data-target={totalCategories}>0</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60 flex items-center justify-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+          分类
+        </div>
       </div>
-      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
-        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{Object.keys(allTags).length}</div>
-        <div class="text-xs text-text-light dark:text-text-dark opacity-60">个标签</div>
+      <div class="relative overflow-hidden text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1 js-count-up" data-target={Object.keys(allTags).length}>0</div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60 flex items-center justify-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+          标签
+        </div>
       </div>
-      <div class="text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
-        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">{(totalWords / 10000).toFixed(1)}w</div>
-        <div class="text-xs text-text-light dark:text-text-dark opacity-60">总字数</div>
+      <div class="relative overflow-hidden text-center p-3 rounded-2xl bg-hover-light dark:bg-hover-dark group hover:scale-105 transition-all duration-200">
+        <div class="text-2xl font-bold text-primary-light dark:text-primary-dark mb-1">
+          <span class="js-count-up" data-target={(totalWords / 10000).toFixed(1)}>0</span>w
+        </div>
+        <div class="text-xs text-text-light dark:text-text-dark opacity-60 flex items-center justify-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          总字数
+        </div>
       </div>
     </div>
-    <div class="mt-3 flex flex-col items-center justify-center p-3 rounded-2xl bg-primary-light/10 dark:bg-primary-dark/10">
-      <div class="text-lg font-bold text-primary-light dark:text-primary-dark">
-        已运行 {daysRunning} 天
+    <div class="mt-3 flex items-center justify-between p-3 rounded-2xl bg-primary-light/10 dark:bg-primary-dark/10 group hover:scale-105 transition-all duration-200">
+      <div class="flex items-center gap-2 text-sm text-text-light dark:text-text-dark opacity-60">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        已运行
+      </div>
+      <div class="text-lg font-bold text-primary-light dark:text-primary-dark group-hover:scale-110 transition-transform">
+        <span class="js-count-up" data-target={daysRunning}>0</span> 天
       </div>
     </div>
   </div>
@@ -359,6 +387,79 @@ const initialRandomPosts = [...posts].sort(() => Math.random() - 0.5).slice(0, 3
       document.removeEventListener('click', onGlobalClick);
       document.addEventListener('click', onGlobalClick);
     });
+
+    /**
+     * 数字增长动画
+     */
+    const ANIMATION_DURATION = 1500; // 动画时长（毫秒）
+    const FRAME_RATE = 60; // 帧率
+
+    function animateNumber(element, target) {
+      const isDecimal = target.toString().includes('.');
+      const numericTarget = parseFloat(target);
+      const startTime = performance.now();
+      const startValue = 0;
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+
+        // 使用 easeOutQuart 缓动函数
+        const easeProgress = 1 - Math.pow(1 - progress, 4);
+
+        const currentValue = startValue + (numericTarget - startValue) * easeProgress;
+
+        if (isDecimal) {
+          element.textContent = currentValue.toFixed(1);
+        } else {
+          element.textContent = Math.floor(currentValue);
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.textContent = target;
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // 使用 Intersection Observer 监听元素进入视口
+    const countUpObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          const target = element.getAttribute('data-target');
+
+          if (target) {
+            animateNumber(element, target);
+            countUpObserver.unobserve(element);
+          }
+        }
+      });
+    }, {
+      threshold: 0.1, // 当元素 10% 可见时触发
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    // 初始化时监听所有数字元素
+    function initCountUpElements() {
+      const countElements = document.querySelectorAll('.js-count-up');
+      countElements.forEach((element) => {
+        countUpObserver.observe(element);
+      });
+    }
+
+    // 页面加载时初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCountUpElements);
+    } else {
+      initCountUpElements();
+    }
+
+    // 处理 Astro ViewTransitions
+    document.addEventListener('astro:after-swap', initCountUpElements);
   })();
 </script>
 
