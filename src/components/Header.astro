@@ -122,7 +122,12 @@ import SearchModal from './SearchModal.astro';
                     id="scroll-arrow"
                     class="hidden px-2 text-sm font-sans whitespace-nowrap"
                 >
-                    返回顶部
+                    <span class="md:hidden flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </span>
+                    <span class="hidden md:inline">返回顶部</span>
                 </span>
             </div>
         </div>
@@ -237,6 +242,7 @@ import SearchModal from './SearchModal.astro';
         const scrollValue = document.getElementById('scroll-value');
         const scrollArrow = document.getElementById('scroll-arrow');
         const themeToggleContainer = document.getElementById('theme-toggle-container');
+        const themeToggleButton = document.getElementById('theme-toggle-btn');
         const navLinks = document.getElementById('nav-links');
         const pageTitle = document.getElementById('page-title');
         const menuTriggerBtn = document.getElementById('menu-trigger-btn');
@@ -341,7 +347,7 @@ import SearchModal from './SearchModal.astro';
                 pageTitle?.classList.add('opacity-0', 'pointer-events-none');
             }
 
-            if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer) {
+            if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer && themeToggleButton) {
                 const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
                 const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
                 const displayValue = Math.floor(scrollPercent * 99);
@@ -353,11 +359,13 @@ import SearchModal from './SearchModal.astro';
                     scrollCounter.style.transform = 'scale(1)';
                     themeToggleContainer.classList.remove('mr-0', '-mr-2');
                     themeToggleContainer.classList.add('mr-2');
+                    themeToggleButton.classList.remove('-mr-2');
 
                     if (displayValue >= 90) {
                         scrollValue.classList.add('hidden');
                         scrollArrow.classList.remove('hidden');
-                        scrollCounter.style.width = '5rem';
+                        // 小屏幕不拓宽，大中屏幕拓宽
+                        scrollCounter.style.width = window.innerWidth >= 768 ? '5rem' : '1.75rem';
                     } else {
                         scrollValue.classList.remove('hidden');
                         scrollArrow.classList.add('hidden');
@@ -372,6 +380,7 @@ import SearchModal from './SearchModal.astro';
                     scrollCounter.style.width = '0';
                     themeToggleContainer.classList.remove('mr-2');
                     themeToggleContainer.classList.add('mr-0', '-mr-2');
+                    themeToggleButton.classList.add('-mr-2');
                 }
             }
         }
