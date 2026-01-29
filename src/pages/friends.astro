@@ -161,14 +161,21 @@ try {
 							{sections.map((section) => (
 								<div class="p-6 bg-badge-light dark:bg-badge-dark rounded-2xl">
 									<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">{section.title}</h2>
-									<div class="text-text-light/70 dark:text-text-dark/70 whitespace-pre-line leading-relaxed">
-										{section.content}
+									{/* 1. 改为 whitespace-normal，避免与手动 <br> 冲突 */}
+									<div class="text-text-light/70 dark:text-text-dark/70 whitespace-normal leading-relaxed">
+										{/* 2. 使用 .trim() 去掉字符串首尾可能的干扰换行 */}
+										{section.content.trim().split('\n').map((line, index, array) => (
+											<Fragment>
+												{line}
+												{/* 3. 只有不是最后一行时才加 <br /> */}
+												{index < array.length - 1 && <br />}
+											</Fragment>
+										))}
 									</div>
 								</div>
 							))}
 						</div>
 					)}
-
 					<!-- 评论区 -->
 					<div class="mt-12">
 						<div class="mb-8 flex flex-col items-center gap-4">
