@@ -4,6 +4,10 @@
 .prose {
   @apply text-text-light dark:text-text-dark antialiased leading-relaxed;
   max-width: 65ch; /* 最佳阅读宽度 */
+  word-wrap: break-word; /* 允许长单词或URL在任意位置断行 */
+  overflow-wrap: break-word; /* 更现代的属性，同上 */
+  word-break: break-word; /* 允许非CJK文本在任意字符间断行 */
+  hyphens: auto; /* 允许自动连字符断行 */
 }
 
 /* --- 标题系统：增加渐变感或装饰线 --- */
@@ -15,9 +19,14 @@
   @apply text-2xl font-bold text-text-light dark:text-text-dark mb-5 mt-12 flex items-center;
 }
 /* 给 H2 添加一个现代感的小修饰 */
-.prose h2::before {
+.prose h2::before{
   content: "";
   @apply mr-3 w-1.5 h-6 bg-primary-light dark:bg-primary-dark rounded-full inline-block;
+}
+
+.prose h3::before{
+  content: "";
+  @apply mr-3 w-1.5 h-4 bg-primary-light dark:bg-primary-dark rounded-full inline-block;
 }
 
 .prose h3 {
@@ -62,7 +71,7 @@
 
 /* 左上角主题色引号 - 保持原样 */
 .prose blockquote::before {
-  content: "“";
+  content: "“";                                                                       
   @apply absolute top-1 left-2 text-6xl text-primary-light dark:text-primary-dark 
          font-serif italic leading-none select-none;
 }
@@ -76,9 +85,21 @@
 
 .prose blockquote p {
   @apply text-text-light/80 dark:text-text-dark/80 not-italic leading-7 relative z-10 text-center;
-  /* text-center: (可选) 如果是短句引用，居中会更好看 */
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+  margin-inline: 1.5rem;
+  text-align:left;
+}
+
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: ""; 
+}
+
+
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+    content: "";
 }
 
 /* --- 代码块：更接近 IDE 的视觉 --- */
@@ -149,4 +170,16 @@
 
 .prose .task-list-item input {
   @apply mt-1.5 rounded border-slate-300 text-primary-light focus:ring-primary-light;
+}
+
+.prose :not(pre) > code {
+  @apply text-[1.05rem] bg-[#425aef] dark:bg-[#ffc848] text-white dark:text-black font-medium;
+}
+
+.prose video {
+  @apply w-full h-auto rounded-2xl my-10 mx-auto transform transition-transform hover:scale-[1.01];
+}
+
+.prose iframe {
+  @apply rounded-2xl my-10 mx-auto transform transition-transform hover:scale-[1.01];
 }
