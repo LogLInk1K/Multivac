@@ -20,6 +20,7 @@ interface WatchingItem {
   cover: string;
   comment: string;
   type: string;
+  country?: string;
   ratings?: Rating[];
   links?: Link[];
 }
@@ -150,7 +151,10 @@ function getLinkBySource(item: WatchingItem, source: string): string | undefined
                   <h3 class="text-white font-bold text-xl line-clamp-1 mb-1.5">{item.title}</h3>
                   <div class="flex items-center gap-2 mb-3">
                     <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.type}</span>
-                    <span class="text-white/60 text-xs">{item.year}</span>
+                    {item.country && (
+                      <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.country}</span>
+                    )}
+                    <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.year}</span>
                   </div>
                   <div class="relative pl-3 pr-2 py-2 rounded-lg bg-white/10 backdrop-blur-sm border-white/70">
                     <p class="text-white text-sm line-clamp-3 leading-relaxed font-medium">

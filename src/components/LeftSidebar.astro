@@ -17,6 +17,7 @@ interface WatchingItem {
   cover: string;
   comment: string;
   type: string;
+  country?: string;
   ratings?: Rating[];
   links?: Link[];
 }
@@ -762,7 +763,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <div class="flex items-center justify-between mb-4">
       <p class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">最近在看</p>
-      <a href="/watching" class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-70 hover:opacity-100 transition-opacity hover:text-primary-light dark:hover:text-primary-dark">
+      <a href="/watching" class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-80 hover:opacity-100 transition-opacity hover:text-primary-light dark:hover:text-primary-dark">
         <span>更多</span>
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -781,22 +782,25 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
             />
           </a>
           <div class="flex-1 min-w-0">
-            <h4 class="text-sm font-semibold text-text-light dark:text-text-dark mb-1 line-clamp-1 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
-              <a href="/watching">{item.title}</a>
-            </h4>
-            <div class="flex items-center gap-2 mb-1.5">
-              <span class="text-xs px-1.5 py-0.5 rounded bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark">
-                {item.type}
-              </span>
-              <span class="text-xs text-text-light dark:text-text-dark opacity-50">{item.year}</span>
+            <div class="flex items-center justify-between mb-1">
+              <h4 class="text-sm font-semibold text-text-light dark:text-text-dark line-clamp-1 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
+                <a href="/watching">{item.title}</a>
+              </h4>
               {item.ratings && item.ratings.length > 0 && (
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-1 flex-shrink-0 ml-2">
                   <img src={ratingIcons[item.ratings[0].source]} alt="评分" class="w-3.5 h-3.5" />
                   <span class="text-xs font-medium text-yellow-600 dark:text-yellow-400">{item.ratings[0].score.toFixed(1)}</span>
                 </div>
               )}
             </div>
-            <p class="text-xs text-text-light dark:text-text-dark opacity-70 line-clamp-2 group-hover:opacity-100 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-all cursor-pointer" onclick="window.location.href='/watching'">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs text-text-light/60 dark:text-text-dark/60">{item.type}</span>
+              {item.country && (
+                <span class="text-xs text-text-light/60 dark:text-text-dark/60">{item.country}</span>
+              )}
+              <span class="text-xs text-text-light/60 dark:text-text-dark/60">{item.year}</span>
+            </div>
+            <p class="text-xs text-text-light dark:text-text-dark opacity-80 line-clamp-2 group-hover:opacity-100 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-all cursor-pointer" onclick="window.location.href='/watching'">
               {item.comment}
             </p>
           </div>

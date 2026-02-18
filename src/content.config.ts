@@ -61,6 +61,7 @@ const post = defineCollection({
 				cover: z.string(),
 				comment: z.string(),
 				type: z.string(),
+				country: z.string().optional(),
 				ratings: z.array(z.object({
 					source: z.enum(['douban', 'bangumi']),
 					score: z.number(),
