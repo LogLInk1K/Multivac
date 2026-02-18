@@ -71,6 +71,7 @@ import SearchModal from './SearchModal.astro';
                 <HeaderLink href="/archives">文稿</HeaderLink>
                 <HeaderLink href="/friends">友链</HeaderLink>
                 <HeaderLink href="/moments">动态</HeaderLink>
+                <HeaderLink href="/watching">漫游</HeaderLink>
                 <HeaderLink href="/about">关于</HeaderLink>
             </div>
             <h1 id="page-title" class="absolute left-1/2 -translate-x-1/2 text-lg font-bold text-text-light dark:text-text-dark opacity-0 transition-all duration-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] translate-y-2 cursor-pointer hover:text-primary-light dark:hover:text-primary-dark" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"></h1>
@@ -208,6 +209,21 @@ import SearchModal from './SearchModal.astro';
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <span class="text-base font-medium text-white dark:text-black transition-all duration-300">动态</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="/watching" class="relative flex items-center gap-3 px-4 py-3 rounded-lg group/item overflow-hidden">
+                    <svg class="w-6 h-6 text-text-light dark:text-text-dark transition-all duration-300 group-hover/item:scale-75 group-hover/item:opacity-0 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                    </svg>
+                    <span class="text-base font-medium text-text-light dark:text-text-dark transition-all duration-300 group-hover/item:opacity-0">漫游</span>
+                    <div class="absolute inset-0 opacity-0 scale-75 transition-all duration-300 group-hover/item:opacity-100 group-hover/item:scale-100 pointer-events-none">
+                        <div class="bg-primary-light dark:bg-primary-dark rounded-lg absolute inset-0"></div>
+                        <div class="absolute inset-0 flex items-center gap-3 px-4 py-3">
+                            <svg class="w-6 h-6 text-white dark:text-black transition-all duration-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                            </svg>
+                            <span class="text-base font-medium text-white dark:text-black transition-all duration-300">漫游</span>
                         </div>
                     </div>
                 </a>

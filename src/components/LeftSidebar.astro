@@ -1,42 +1,49 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 
-// 定义最近在看项目的类型
+interface Rating {
+  source: 'douban' | 'bangumi';
+  score: number;
+}
+
+interface Link {
+  source: 'douban' | 'bangumi';
+  url: string;
+}
+
 interface WatchingItem {
   title: string;
   year: number;
   cover: string;
-  rating: number;
   comment: string;
   type: string;
-  link?: string;
+  ratings?: Rating[];
+  links?: Link[];
 }
 
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
 
-// 默认最近在看数据
 const defaultWatching: WatchingItem[] = [
   {
     title: '虫师',
     year: 2005,
     cover: '/img/df-cover.webp',
-    rating: 9.4,
     comment: '远山如雾',
-    type: 'anime',
-    link: 'https://movie.douban.com/subject/1800597/',
+    type: '动画',
+    ratings: [{ source: 'douban', score: 9.4 }],
+    links: [{ source: 'douban', url: 'https://movie.douban.com/subject/1800597/' }],
   },
   {
     title: '无头骑士异闻录',
     year: 2010,
     cover: '/img/df-cover.webp',
-    rating: 8.8,
     comment: '这里是池袋',
-    type: 'anime',
-    link: 'https://movie.douban.com/subject/4291876/',
+    type: '动画',
+    ratings: [{ source: 'douban', score: 8.8 }],
+    links: [{ source: 'douban', url: 'https://movie.douban.com/subject/4291876/' }],
   },
 ];
 
-// 读取最近在看的数据
 let watchingList: WatchingItem[] = defaultWatching;
 try {
   const watchingData = await getEntry('post', 'watching');
@@ -44,9 +51,14 @@ try {
     watchingList = watchingData.data.watching as WatchingItem[];
   }
 } catch (error) {
-  // 文件不存在，使用默认数据
   console.log('Using default watching data');
 }
+
+const ratingIcons: Record<string, string> = {
+  douban: '/img/douban.ico',
+  bangumi: '/img/bangumi.ico',
+};
+
 
 const categories = posts.reduce((acc, post) => {
   const category = post.data.category;
@@ -749,41 +761,42 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
   <!-- 最近在看卡片 -->
   <div class="p-6 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-border-light dark:hover:border-border-dark">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider">最近在看</h3>
-      <a href="https://www.douban.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-70 hover:opacity-100 transition-opacity">
-        <img src="/img/douban.ico" alt="豆瓣" class="w-4 h-4" />
+      <a href="/watching" class="text-base font-semibold text-text-light dark:text-text-dark uppercase tracking-wider hover:text-primary-light dark:hover:text-primary-dark transition-colors">最近在看</a>
+      <a href="/watching" class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-70 hover:opacity-100 transition-opacity hover:text-primary-light dark:hover:text-primary-dark">
+        <span>更多</span>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
       </a>
     </div>
     <div class="space-y-4">
-      {watchingList.slice(0, 3).map((item) => (
+      {watchingList.slice(0, 3).map((item, index) => (
         <div class="flex gap-3 group items-center">
-          <div class="w-16 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark">
+          <a href="/watching" class="w-16 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer block">
             <img
               src={item.cover}
               alt={item.title}
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               loading="lazy"
             />
-          </div>
+          </a>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-text-light dark:text-text-dark mb-1 line-clamp-1 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
-              {item.link ? (
-                <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
-              ) : (
-                <span>{item.title}</span>
-              )}
+              <a href="/watching">{item.title}</a>
             </h4>
             <div class="flex items-center gap-2 mb-1.5">
               <span class="text-xs px-1.5 py-0.5 rounded bg-primary-light/10 text-primary-light dark:bg-primary-dark/10 dark:text-primary-dark">
                 {item.type}
               </span>
               <span class="text-xs text-text-light dark:text-text-dark opacity-50">{item.year}</span>
-              <div class="flex items-center gap-1">
-                <span class="text-yellow-500">★</span>
-                <span class="text-xs font-medium text-yellow-600 dark:text-yellow-400">{item.rating}</span>
-              </div>
+              {item.ratings && item.ratings.length > 0 && (
+                <div class="flex items-center gap-1">
+                  <img src={ratingIcons[item.ratings[0].source]} alt="评分" class="w-3.5 h-3.5" />
+                  <span class="text-xs font-medium text-yellow-600 dark:text-yellow-400">{item.ratings[0].score.toFixed(1)}</span>
+                </div>
+              )}
             </div>
-            <p class="text-xs text-text-light dark:text-text-dark opacity-70 line-clamp-2">
+            <p class="text-xs text-text-light dark:text-text-dark opacity-70 line-clamp-2 group-hover:opacity-100 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-all cursor-pointer" onclick="window.location.href='/watching'">
               {item.comment}
             </p>
           </div>

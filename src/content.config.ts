@@ -59,11 +59,17 @@ const post = defineCollection({
 				title: z.string(),
 				year: z.number(),
 				cover: z.string(),
-				rating: z.number(),
 				comment: z.string(),
 				type: z.string(),
-				link: z.string().optional(),
-			})).optional(),
+				ratings: z.array(z.object({
+					source: z.enum(['douban', 'bangumi']),
+					score: z.number(),
+				})).optional(),
+				links: z.array(z.object({
+					source: z.enum(['douban', 'bangumi']),
+					url: z.string(),
+				})).optional(),
+			})).optional()
 		}),
 });
 
