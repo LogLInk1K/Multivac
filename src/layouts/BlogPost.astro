@@ -26,7 +26,7 @@ const displayImage = heroImage || defaultCover;
 
 <html lang="zh-CN">
 	<head>
-		<BaseHead title={title} description={description} image={displayImage} />
+		<BaseHead title={title} description={description} image={displayImage} pubDate={pubDate} updatedDate={updatedDate} article={true} />
 		<ClientRouter />
 		<script is:inline>
 			(function() {

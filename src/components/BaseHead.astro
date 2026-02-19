@@ -11,13 +11,18 @@ interface Props {
 	title: string;
 	description: string;
 	image?: string | ImageMetadata;
+	pubDate?: Date;
+	updatedDate?: Date;
+	article?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, pubDate, updatedDate, article = false } = Astro.props;
 const imageUrl = typeof image === 'string' ? image : image.src;
 const fullTitle = title.startsWith('波罗歌 - ') ? title : `${title} | 波罗歌`;
+
+const formatDate = (date: Date) => date.toISOString().split('T')[0];
 ---
 
 <!-- Global Metadata -->
@@ -53,13 +58,20 @@ const fullTitle = title.startsWith('波罗歌 - ') ? title : `${title} | 波罗�
 <title>{fullTitle}</title>
 <meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
+<meta name="author" content="波罗歌" />
+
+<!-- Article Meta Tags -->
+{pubDate && <meta property="article:published_time" content={formatDate(pubDate)} />}
+{updatedDate && <meta property="article:modified_time" content={formatDate(updatedDate)} />}
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={article ? 'article' : 'website'} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(imageUrl, Astro.url)} />
+<meta property="og:site_name" content="波罗歌" />
+<meta property="og:locale" content="zh_CN" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -67,3 +79,28 @@ const fullTitle = title.startsWith('波罗歌 - ') ? title : `${title} | 波罗�
 <meta property="twitter:title" content={fullTitle} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(imageUrl, Astro.url)} />
+
+<!-- JSON-LD Structured Data -->
+{article && pubDate && (
+<script type="application/ld+json" set:html={JSON.stringify({
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	"headline": title,
+	"description": description,
+	"image": new URL(imageUrl, Astro.url).toString(),
+	"datePublished": formatDate(pubDate),
+	"dateModified": updatedDate ? formatDate(updatedDate) : formatDate(pubDate),
+	"author": {
+		"@type": "Person",
+		"name": "波罗歌"
+	},
+	"publisher": {
+		"@type": "Person",
+		"name": "波罗歌"
+	},
+	"mainEntityOfPage": {
+		"@type": "WebPage",
+		"@id": canonicalURL.toString()
+	}
+})} />
+)}
