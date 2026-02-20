@@ -142,5 +142,64 @@ const displayImage = heroImage || defaultCover;
 			</div>
 		</main>
 		<Footer />
+		<script>
+			document.addEventListener('astro:page-load', () => {
+				const preElements = document.querySelectorAll('.prose pre');
+				preElements.forEach((pre) => {
+					const code = pre.querySelector('code');
+					if (!code) return;
+					
+					const langAttr = pre.getAttribute('data-language') || code.getAttribute('data-language');
+					const lang = langAttr ? langAttr.charAt(0).toUpperCase() + langAttr.slice(1) : 'Code';
+					
+					const header = document.createElement('div');
+					header.className = 'code-header';
+					header.innerHTML = `
+						<div class="code-title">
+							<svg class="toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+							<span>${lang}</span>
+						</div>
+						<button class="copy-btn" title="Copy">
+							<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+							</svg>
+						</button>
+					`;
+					
+					pre.insertBefore(header, code);
+					pre.classList.add('collapsed');
+					
+					header.addEventListener('click', (e) => {
+						const target = e.target as HTMLElement;
+						if (target.closest('.copy-btn')) {
+							e.stopPropagation();
+							navigator.clipboard.writeText(code.textContent || '').then(() => {
+								const btn = header.querySelector('.copy-btn');
+								if (btn) {
+									btn.innerHTML = `
+										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+										</svg>
+									`;
+									pre.classList.add('copied');
+									setTimeout(() => {
+										btn.innerHTML = `
+											<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+											</svg>
+										`;
+										pre.classList.remove('copied');
+									}, 2000);
+								}
+							});
+						} else {
+							pre.classList.toggle('collapsed');
+						}
+					});
+				});
+			});
+		</script>
 	</body>
 </html>

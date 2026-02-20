@@ -169,3 +169,8 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 .f-carousel__toolbar__column.is-right .f-button:last-child {
     border-radius: 0 12px 12px 0; /* 仅右侧末尾按钮圆角 */
 }
+
+/* 代码块折叠功能 */
+.prose pre {
+    transition: all 0.3s ease;
+}

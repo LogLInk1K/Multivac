@@ -1,36 +1,37 @@
-/* --- 进阶版 Markdown 内容样式优化 (Tailwind CSS) --- */
+/* --- 修正版：保留原色 blockquote + 优化版代码系统 --- */
 
-/* 基础 Prose 容器：增加平滑的抗锯齿处理 */
+/* 基础 Prose 容器 */
 .prose {
   @apply text-text-light dark:text-text-dark antialiased leading-relaxed;
-  max-width: 65ch; /* 最佳阅读宽度 */
-  word-wrap: break-word; /* 允许长单词或URL在任意位置断行 */
-  overflow-wrap: break-word; /* 更现代的属性，同上 */
-  word-break: break-word; /* 允许非CJK文本在任意字符间断行 */
-  hyphens: auto; /* 允许自动连字符断行 */
+  max-width: 65ch; 
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  scroll-behavior: smooth;
 }
 
-/* --- 标题系统：增加渐变感或装饰线 --- */
+/* --- 标题系统（保留侧边装饰条） --- */
 .prose h1 {
   @apply text-4xl font-extrabold tracking-tight text-text-light dark:text-text-dark mb-8 mt-10 pb-4 border-b-2 border-primary-light/20 dark:border-primary-dark/20;
 }
 
 .prose h2 {
-  @apply text-2xl font-bold text-text-light dark:text-text-dark mb-5 mt-12 flex items-center;
+  @apply text-2xl font-bold text-text-light dark:text-text-dark mb-5 mt-12 flex items-center scroll-mt-24;
 }
-/* 给 H2 添加一个现代感的小修饰 */
-.prose h2::before{
+
+.prose h2::before {
   content: "";
   @apply mr-3 w-1.5 h-6 bg-primary-light dark:bg-primary-dark rounded-full inline-block;
 }
 
-.prose h3::before{
-  content: "";
-  @apply mr-3 w-1.5 h-4 bg-primary-light dark:bg-primary-dark rounded-full inline-block;
+.prose h3 {
+  @apply text-xl font-bold text-text-light/90 dark:text-text-dark/90 mb-4 mt-8 flex items-center scroll-mt-24;
 }
 
-.prose h3 {
-  @apply text-xl font-bold text-text-light/90 dark:text-text-dark/90 mb-4 mt-8;
+.prose h3::before {
+  content: "";
+  @apply mr-3 w-1.5 h-4 bg-primary-light/60 dark:bg-primary-dark/60 rounded-full inline-block;
 }
 
 /* --- 正文与链接 --- */
@@ -42,144 +43,134 @@
   @apply text-primary-light dark:text-primary-dark font-semibold no-underline border-b border-primary-light/30 hover:border-primary-light transition-all duration-300;
 }
 
-/* --- 列表：优化间距与对齐 --- */
-.prose ul, .prose ol {
-  @apply mb-6 ml-4 space-y-3;
-}
-
-.prose li {
-  @apply pl-2 leading-7;
-}
-
-.prose ul > li {
-  @apply list-disc marker:text-primary-light dark:marker:text-primary-dark;
-}
-
-/* --- 引用块：更有设计感 --- */
-/* --- 引用块：纯双引号装饰版（去掉左侧长线） --- */
+/* --- 引用块：换回你原本的高饱和度色调 --- */
 .prose blockquote {
-  /* 1. 移除 border-l-[6px] 
-     2. 将 pl-12 调整为 pl-8，因为没有边框后不需要那么多左侧间距
-  */
   @apply relative pl-8 pr-8 py-8 my-10 
          bg-primary-light/[0.04] dark:bg-primary-dark/[0.04]
-         rounded-2xl shadow-sm overflow-hidden;
-  
-  /* 如果你想要一点非常细微的边框包围整个块，可以加下面这行，否则就保持纯背景 */
-  @apply border border-primary-light/10 dark:border-primary-dark/10;
+         rounded-2xl shadow-sm border border-primary-light/10 dark:border-primary-dark/10;
 }
 
-/* 左上角主题色引号 - 保持原样 */
+/* 还原：左上角鲜艳大引号 */
 .prose blockquote::before {
-  content: "“";                                                                       
+  content: "“";
   @apply absolute top-1 left-2 text-6xl text-primary-light dark:text-primary-dark 
-         font-serif italic leading-none select-none;
+         font-serif italic leading-none select-none opacity-100; /* 确保不透明 */
 }
 
-/* 右下角主题色引号 - 保持原样 */
+/* 还原：右下角鲜艳大引号 */
 .prose blockquote::after {
   content: "”";
-  @apply absolute bottom-[-15px] right-3 text-6xl text-primary-light dark:text-primary-dark 
-         font-serif italic leading-none select-none;
+  @apply absolute bottom-[-25px] right-4 text-6xl text-primary-light dark:text-primary-dark 
+         font-serif italic leading-none select-none opacity-100; /* 确保不透明 */
 }
 
 .prose blockquote p {
-  @apply text-text-light/80 dark:text-text-dark/80 not-italic leading-7 relative z-10 text-center;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  margin-inline: 1.5rem;
-  text-align:left;
+  @apply pl-4 pr-2 text-text-light/80 dark:text-text-dark/80 not-italic leading-7 relative z-10 text-left !important;
+  margin: 0 !important;
 }
 
-.prose blockquote p::before,
-.prose blockquote p::after {
-  content: ""; 
-}
+/* --- 代码系统：博文核心 --- */
 
-
-.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before,
-.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
-    content: "";
-}
-
-/* --- 代码块：更接近 IDE 的视觉 --- */
-/* 行内代码 */
+/* 行内代码：保持醒目但修正行高冲突 */
 .prose :not(pre) > code {
-  @apply px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-pink-600 dark:text-pink-400 rounded text-sm font-mono font-medium;
+  @apply text-[0.9em] font-mono font-medium px-1.5 py-0.5 mx-0.5 rounded-md transition-colors;
+  @apply bg-[#425aef] dark:bg-[#ffc848] text-white dark:text-black; 
 }
 
-/* 代码块容器 */
+/* 移除自动添加的引号 */
+.prose code::before, .prose code::after { content: "" !important; }
+
+/* --- 强化版 IDE 样式：兼容浅色/深色模式 --- */
+
+.prose pre code {
+  counter-reset: line; /* 初始化计数器 */
+}
+
+.prose pre .line::before {
+  counter-increment: line; /* 每一行自增 */
+  content: counter(line); /* 显示数字 */
+  @apply inline-block w-2 mr-4 text-right text-slate-600 select-none; /* 样式：宽度、间距、不可选 */
+}
+
+.prose pre, 
+.prose pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
 .prose pre {
-  @apply relative bg-slate-950 dark:bg-black border border-slate-800 rounded-xl p-5 mb-6 shadow-2xl overflow-x-auto selection:bg-slate-700;
+  @apply relative mb-8 overflow-x-auto selection:bg-blue-500/30;
+  background-color: #161b22 !important; 
+  border: 1px solid #30363d !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5) !important;
+  
+  border-radius: 12px !important;
+  padding: 0 !important; 
+}
+
+/* 代码块头部工具栏 */
+.prose pre {
+  position: relative;
+  overflow-x: auto;
+}
+
+.prose pre .code-header {
+  @apply flex items-center justify-between px-4 py-2.5 bg-[#0d1117] border-b border-[#30363d] cursor-pointer select-none;
+  position: sticky;
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+}
+
+.prose pre .code-header .code-title {
+  @apply flex items-center gap-2 text-slate-300 text-base font-semibold;
+}
+
+.prose pre .code-header .code-title .toggle-icon {
+  @apply w-5 h-5 transition-transform duration-200 flex-shrink-0;
+}
+
+.prose pre.collapsed .code-header .toggle-icon {
+  @apply -rotate-90;
+}
+
+.prose pre .code-header .copy-btn {
+  @apply flex items-center justify-center p-1.5 text-slate-300 bg-slate-700/60 rounded-md hover:bg-slate-600/60 hover:text-white transition-all flex-shrink-0;
+}
+
+.prose pre .code-header .copy-btn svg {
+  @apply w-4 h-4 block;
+}
+
+.prose pre.copied .copy-btn {
+  @apply text-green-400 bg-green-900/40;
+}
+
+/* 折叠状态 */
+.prose pre.collapsed .code-header {
+  @apply rounded-b-xl border-b-0;
+}
+
+.prose pre.collapsed code {
+  display: none;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0 text-[13px] leading-6 font-mono text-slate-200;
-  text-shadow: 0 0 1px rgba(0,0,0,0.3);
+  @apply block px-5 py-4 text-[14px] leading-7 font-mono;
+  color: #e6edf3 !important;
+  min-width: 100%;
 }
 
-/* --- 表格：清新简约 --- */
-.prose .table-wrapper { @apply overflow-x-auto mb-8; } /* 建议在 table 外层包裹一层 */
-
-.prose table {
-  @apply w-full text-sm text-left border-hidden;
+/* --- 媒体与表格 --- */
+.prose img, .prose video {
+  @apply rounded-2xl shadow-xl my-10 mx-auto border border-black/5 dark:border-white/5 transform transition-transform hover:scale-[1.01];
 }
 
-.prose th {
-  @apply bg-slate-50 dark:bg-slate-800/50 border-b border-border-light dark:border-border-dark px-4 py-3 font-bold uppercase tracking-wider text-text-light dark:text-text-dark;
+.prose img + em {
+  @apply block text-center text-sm text-text-light/50 dark:text-text-dark/50 -mt-6 mb-10 not-italic;
 }
 
-.prose td {
-  @apply border-b border-slate-100 dark:border-slate-800 px-4 py-3 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-800/30;
-}
-
-/* --- 图片与多媒体 --- */
-.prose img {
-  @apply rounded-2xl shadow-xl my-10 mx-auto border-4 border-white dark:border-slate-800 transform transition-transform hover:scale-[1.01];
-}
-
-.prose hr {
-  @apply border-0 h-px bg-gradient-to-r from-transparent via-border-light dark:via-border-dark to-transparent my-12;
-}
-
-/* --- 交互组件：Details 与 Alerts --- */
-.prose details {
-  @apply mb-6 border border-border-light dark:border-border-dark rounded-xl shadow-sm overflow-hidden transition-all;
-}
-
-.prose summary {
-  @apply p-4 bg-slate-50 dark:bg-slate-900/30 cursor-pointer font-bold select-none hover:text-primary-light dark:hover:text-primary-dark transition-colors;
-}
-
-.prose .alert {
-  @apply flex gap-3 p-4 mb-6 rounded-xl border-l-[6px] shadow-sm;
-}
-
-.prose .alert-info {
-  @apply bg-blue-50/50 dark:bg-blue-900/10 border-blue-500 text-blue-900 dark:text-blue-200;
-}
-
-.prose .alert-success {
-  @apply bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-500 text-emerald-900 dark:text-emerald-200;
-}
-
-/* --- 任务列表自定义渲染 --- */
-.prose .task-list-item {
-  @apply flex items-start gap-2 list-none ml-0;
-}
-
-.prose .task-list-item input {
-  @apply mt-1.5 rounded border-slate-300 text-primary-light focus:ring-primary-light;
-}
-
-.prose :not(pre) > code {
-  @apply text-[1.05rem] bg-[#425aef] dark:bg-[#ffc848] text-white dark:text-black font-medium;
-}
-
-.prose video {
-  @apply w-full h-auto rounded-2xl my-10 mx-auto transform transition-transform hover:scale-[1.01];
-}
-
-.prose iframe {
-  @apply rounded-2xl my-10 mx-auto transform transition-transform hover:scale-[1.01];
+/* 移除 Tailwind Prose 插件为 blockquote 自动添加的引号 */
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: "" !important;
 }
