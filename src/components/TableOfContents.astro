@@ -16,8 +16,8 @@
       return;
     }
 
-    // 提取所有标题（只提取 h2）
-    const headingElements = articleContent.querySelectorAll('h2');
+    // 提取所有标题（只提取 h1）
+    const headingElements = articleContent.querySelectorAll('h1');
 
     if (headingElements.length === 0) {
       return;
@@ -28,8 +28,8 @@
       const tocLinks = document.querySelectorAll('#toc-list a');
       let currentActiveId = null;
 
-      // 获取所有 h2 标题
-      const headings = document.querySelectorAll('.prose h2');
+      // 获取所有 h1 标题
+      const headings = document.querySelectorAll('.prose h1');
 
       if (headings.length === 0) return;
 
@@ -37,7 +37,7 @@
       const scrollY = window.pageYOffset;
       const viewportMiddleAbsolute = scrollY + window.innerHeight / 2;
 
-      // 从前往后遍历所有 h2 标题，找到视口中间位置之后第一个标题
+      // 从前往后遍历所有 h1 标题，找到视口中间位置之后第一个标题
       // 那么当前阅读的章节就是这个标题的上一个章节
       for (let i = 0; i < headings.length; i++) {
         const heading = headings[i];
@@ -45,7 +45,7 @@
 
         // 如果找到第一个在视口中间之后的标题
         if (headingTop > viewportMiddleAbsolute) {
-          // 当前章节是前一个 h2
+          // 当前章节是前一个 h1
           if (i > 0) {
             currentActiveId = headings[i - 1].id;
           } else {
