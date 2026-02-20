@@ -19,7 +19,7 @@ const post = defineCollection({
 			tags: z.array(z.string()).default([]),
 			category: z.string().optional(),
 			draft: z.boolean().default(false),
-			author: z.string().default('Anonymous'),
+			author: z.string().default('波罗歌'),
 			readingTime: z.number().optional(),
 			password: z.string().optional(),
 			passwordHint: z.string().optional(),
