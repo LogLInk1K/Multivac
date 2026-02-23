@@ -68,20 +68,203 @@ function formatDate(date: Date): string {
   return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-const ratingIcons: Record<string, string> = {
-  douban: '/img/douban.ico',
-  bangumi: '/img/bangumi.ico',
-};
-
-const ratingAlts: Record<string, string> = {
-  douban: '豆瓣评分',
-  bangumi: 'Bangumi评分',
-};
-
-function getLinkBySource(item: WatchingItem, source: string): string | undefined {
-  return item.links?.find(link => link.source === source)?.url;
-}
 ---
+
+<script is:inline define:vars={{ watchingList }}>
+  const ratingIcons = { douban: '/img/douban.ico', bangumi: '/img/bangumi.ico' };
+  const ratingAlts = { douban: '豆瓣评分', bangumi: 'Bangumi评分' };
+  
+  let currentPage = 1;
+  let itemsPerPage = 18;
+  let totalPages = Math.ceil(watchingList.length / itemsPerPage);
+
+  function getItemsPerPage() {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 640 ? 9 : 18;
+    }
+    return 18;
+  }
+
+  function updateItemsPerPage() {
+    itemsPerPage = getItemsPerPage();
+    totalPages = Math.ceil(watchingList.length / itemsPerPage);
+    currentPage = Math.min(currentPage, totalPages) || 1;
+    render();
+  }
+
+  function getCurrentPageItems() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return watchingList.slice(startIndex, startIndex + itemsPerPage);
+  }
+
+  function goToPage(page) {
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function getVisiblePages() {
+    const total = totalPages;
+    const current = currentPage;
+    const ELLIPSIS = '···';
+
+    if (total <= 4) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    let pages = [];
+
+    if (current <= 3) {
+      pages = [1, 2, 3, 4];
+    } else if (current >= total - 2) {
+      return [1, ELLIPSIS, total - 3, total - 2, total - 1, total];
+    } else {
+      const start = current - 1;
+      pages = [start, start + 1, start + 2, start + 3];
+    }
+
+    let finalPages = [];
+    
+    if (pages[0] !== 1) {
+      finalPages.push(1);
+      if (pages[0] > 2) finalPages.push(ELLIPSIS);
+    }
+    
+    finalPages.push(...pages);
+
+    const lastPageInSequence = pages[pages.length - 1];
+    if (lastPageInSequence < total - 1) {
+      finalPages.push(ELLIPSIS);
+      finalPages.push(total);
+    } else if (lastPageInSequence === total - 1) {
+      finalPages.push(total);
+    }
+
+    return finalPages;
+  }
+
+  function render() {
+    const gridContainer = document.getElementById('watching-grid');
+    const paginationContainer = document.getElementById('watching-pagination');
+    const countDisplay = document.getElementById('watching-count');
+    
+    if (!gridContainer || !paginationContainer) return;
+
+    const currentItems = getCurrentPageItems();
+    
+    gridContainer.innerHTML = currentItems.map((item) => {
+      const getLinkBySource = (item, source) => item.links?.find(link => link.source === source)?.url;
+      
+      const ratingsHtml = item.ratings && item.ratings.length > 0 ? `
+        <div class="absolute top-4 right-4 flex gap-1">
+          ${item.ratings.map((rating) => {
+            const link = getLinkBySource(item, rating.source);
+            return link ? `
+              <a href="${link}" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm flex items-center gap-1 hover:bg-black/80 transition-colors cursor-pointer">
+                <img src="${ratingIcons[rating.source]}" alt="${ratingAlts[rating.source]}" class="w-4 h-4" />
+                <span class="text-white text-sm font-medium">${rating.score.toFixed(1)}</span>
+              </a>
+            ` : `
+              <div class="px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm flex items-center gap-1">
+                <img src="${ratingIcons[rating.source]}" alt="${ratingAlts[rating.source]}" class="w-4 h-4" />
+                <span class="text-white text-sm font-medium">${rating.score.toFixed(1)}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : '';
+
+      return `
+        <article class="group bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden border border-border-light/50 dark:border-border-dark/50 hover:border-border-light dark:hover:border-border-dark">
+          <div class="relative aspect-[3/4] overflow-hidden bg-hover-light dark:bg-hover-dark rounded-t-2xl">
+            <img src="${item.cover}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 will-change-transform" loading="lazy" />
+            ${ratingsHtml}
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 pt-12">
+              <h3 class="text-white font-bold text-xl line-clamp-1 mb-1.5">${item.title}</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">${item.type}</span>
+                ${item.country ? `<span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">${item.country}</span>` : ''}
+                <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">${item.year}</span>
+              </div>
+              <div class="relative pl-3 pr-2 py-2 rounded-lg bg-white/10 backdrop-blur-sm border-white/70">
+                <p class="text-white text-sm line-clamp-5 leading-relaxed font-medium">
+                  <svg class="w-4 h-4 text-white/50 inline-block mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"></path>
+                  </svg>
+                  ${item.comment}
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    const visiblePages = getVisiblePages();
+    const ELLIPSIS = '···';
+
+    paginationContainer.innerHTML = totalPages > 1 ? `
+      <div class="flex justify-center items-center mt-12 mb-8 px-4">
+        <nav class="flex items-center gap-1 md:gap-2" aria-label="分页导航">
+          ${currentPage > 1 ? `
+            <button onclick="window.goToPage(${currentPage - 1})" class="group flex items-center justify-center w-10 h-10 md:w-auto md:px-4 rounded-full border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-primary-light/5 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-300" title="上一页">
+              <svg class="w-5 h-5 md:-ml-1 md:mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span class="hidden md:inline font-medium text-sm">上一页</span>
+            </button>
+          ` : ''}
+
+          <div class="flex items-center gap-1 md:gap-2">
+            ${visiblePages.map((page) => {
+              if (page === ELLIPSIS) {
+                return `<span class="w-8 text-center text-text-light/40 dark:text-text-dark/40">${ELLIPSIS}</span>`;
+              }
+              
+              const pageNum = page;
+              const isActive = currentPage === pageNum;
+
+              return `
+                <button onclick="window.goToPage(${pageNum})" class="relative flex items-center justify-center min-w-[2.5rem] h-10 px-2 rounded-full text-sm font-medium transition-all duration-300 ${isActive ? 'bg-primary-light dark:bg-primary-dark text-white shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 scale-105 z-10' : 'text-text-light/70 dark:text-text-dark/70 hover:bg-gray-200 dark:hover:bg-hover-dark hover:text-text-light dark:hover:text-text-dark'}">
+                  ${pageNum}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${currentPage < totalPages ? `
+            <button onclick="window.goToPage(${currentPage + 1})" class="group flex items-center justify-center w-10 h-10 md:w-auto md:px-4 rounded-full border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-primary-light/5 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-300" title="下一页">
+              <span class="hidden md:inline font-medium text-sm">下一页</span>
+              <svg class="w-5 h-5 md:-mr-1 md:ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          ` : ''}
+        </nav>
+      </div>
+    ` : '';
+
+    if (countDisplay) {
+      countDisplay.textContent = `第 ${currentPage} / ${totalPages} 页，共 ${watchingList.length} 部作品`;
+    }
+  }
+
+  window.goToPage = goToPage;
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', () => {
+      updateItemsPerPage();
+    });
+    
+    document.addEventListener('astro:page-load', () => {
+      updateItemsPerPage();
+    });
+    
+    updateItemsPerPage();
+  }
+</script>
 
 <MainLayout title={pageTitle} description={pageDescription}>
   <section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -105,7 +288,7 @@ function getLinkBySource(item: WatchingItem, source: string): string | undefined
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
             </svg>
-            <span>共 {watchingList.length} 部作品</span>
+            <span id="watching-count">共 {watchingList.length} 部作品</span>
             {pubDate && (
                 <span class="flex items-center">
                   <span class="mr-2">·</span>
@@ -115,60 +298,7 @@ function getLinkBySource(item: WatchingItem, source: string): string | undefined
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {watchingList.map((item) => (
-            <article class="group bg-card-light dark:bg-card-dark rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden border border-border-light/50 dark:border-border-dark/50 hover:border-border-light dark:hover:border-border-dark">
-              <div class="relative aspect-[3/4] overflow-hidden bg-hover-light dark:bg-hover-dark rounded-t-2xl">
-                <img
-                  src={item.cover}
-                  alt={item.title}
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 will-change-transform"
-                  loading="lazy"
-                />
-                {item.ratings && item.ratings.length > 0 && (
-                  <div class="absolute top-4 right-4 flex gap-1">
-                    {item.ratings.map((rating) => {
-                      const link = getLinkBySource(item, rating.source);
-                      return link ? (
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm flex items-center gap-1 hover:bg-black/80 transition-colors cursor-pointer"
-                        >
-                          <img src={ratingIcons[rating.source]} alt={ratingAlts[rating.source]} class="w-4 h-4" />
-                          <span class="text-white text-sm font-medium">{rating.score.toFixed(1)}</span>
-                        </a>
-                      ) : (
-                        <div class="px-2 py-1 rounded-lg bg-black/40 backdrop-blur-sm flex items-center gap-1">
-                          <img src={ratingIcons[rating.source]} alt={ratingAlts[rating.source]} class="w-4 h-4" />
-                          <span class="text-white text-sm font-medium">{rating.score.toFixed(1)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 pt-12">
-                  <h3 class="text-white font-bold text-xl line-clamp-1 mb-1.5">{item.title}</h3>
-                  <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.type}</span>
-                    {item.country && (
-                      <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.country}</span>
-                    )}
-                    <span class="text-xs px-1.5 py-0.5 rounded bg-white/20 text-white">{item.year}</span>
-                  </div>
-                  <div class="relative pl-3 pr-2 py-2 rounded-lg bg-white/10 backdrop-blur-sm border-white/70">
-                    <p class="text-white text-sm line-clamp-5 leading-relaxed font-medium">
-                      <svg class="w-4 h-4 text-white/50 inline-block mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"></path>
-                      </svg>
-                      {item.comment}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
+        <div id="watching-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         </div>
 
         {watchingList.length === 0 && (
@@ -181,6 +311,8 @@ function getLinkBySource(item: WatchingItem, source: string): string | undefined
             </p>
           </div>
         )}
+
+        <div id="watching-pagination"></div>
 
         <div class="mt-12">
           <div class="mb-8 flex flex-col items-center gap-4">

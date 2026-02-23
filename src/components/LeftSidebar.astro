@@ -589,7 +589,6 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               class="object-cover rounded-full shadow-lg relative z-10 transition-opacity duration-500"
               style="width: 56px; height: 56px;"
               id="playlist-cover"
-              onerror="this.src='https://picsum.photos/200/200?blur'"
             />
           </div>
         </div>
@@ -771,7 +770,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       </a>
     </div>
     <div class="space-y-4">
-      {watchingList.slice(0, 3).map((item, index) => (
+      {watchingList.slice(0, 3).map((item) => (
         <div class="flex gap-3 group items-center">
           <a href="/watching" class="w-16 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer block">
             <img
@@ -826,6 +825,14 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         el.textContent = '醉后不知天在水，满船清梦压星河。';
       });
     }
+  }
+
+  // 图片错误处理
+  const playlistCover = document.getElementById('playlist-cover');
+  if (playlistCover) {
+    playlistCover.addEventListener('error', function() {
+      this.src = 'https://picsum.photos/200/200?blur';
+    });
   }
 
   // 直接执行

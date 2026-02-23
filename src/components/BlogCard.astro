@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, heroImage, category, tags } = post.data;
+const { title, description, pubDate, heroImage, category } = post.data;
 const originalFileName = getOriginalFileName(post.id);
 const displayImage = heroImage || defaultCover;
 ---
