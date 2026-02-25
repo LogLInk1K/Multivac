@@ -1,52 +1,54 @@
 ---
-// 组件逻辑
-const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) {
-    return '早上好，夜之城！';
-  } else if (hour >= 12 && hour < 14) {
-    return '真香！';
-  } else if (hour >= 14 && hour < 18) {
-    return '三点几哩，饮茶先啦！';
-  } else if (hour >= 18 && hour < 22) {
-    return '打工是不可能打工的！';
-  } else {
-    return '你见过凌晨四点的洛杉矶吗？';
-  }
-};
 ---
-
 <div id="time-greeting" class="fixed top-[4.5rem] left-0 right-0 z-40 flex justify-center opacity-0 -translate-y-full transition-all duration-500">
   <div class="bg-white dark:bg-black text-text-light dark:text-text-dark px-12 py-2.5 rounded-full shadow-lg backdrop-blur-md ring-1 ring-white/20">
-    <span class="text-base font-bold">{getGreeting()}</span>
+    <span class="text-base font-bold" id="greeting-text"></span>
   </div>
 </div>
 
-<script>
-  function initGreeting() {
-    // 检查是否首次访问
-    const hasSeenGreeting = sessionStorage.getItem('timeGreetingSeen');
-
-    if (!hasSeenGreeting) {
-      const greeting = document.getElementById('time-greeting');
-      if (greeting) {
-        // 延迟显示动画 - 从顶部向下滑入
-        setTimeout(() => {
-          greeting.classList.remove('opacity-0', '-translate-y-full');
-          greeting.classList.add('opacity-100', 'translate-y-0');
-        }, 800);
-
-        // 4秒后自动消失 - 向上滑出
-        setTimeout(() => {
-          greeting.classList.add('opacity-0', '-translate-y-full');
-          greeting.classList.remove('opacity-100', 'translate-y-0');
-        }, 4800);
+<script is:inline>
+  (function() {
+    function getGreeting() {
+      const hour = new Date().getHours();
+      
+      if (hour >= 5 && hour < 12) {
+        return '早上好，夜之城！';
+      } else if (hour >= 12 && hour < 14) {
+        return '真香！';
+      } else if (hour >= 14 && hour < 18) {
+        return '三点几哩，饮茶先啦！';
+      } else if (hour >= 18 && hour < 22) {
+        return '打工是不可能打工的！';
+      } else {
+        return '你见过凌晨四点的洛杉矶吗？';
       }
-
-      // 标记已显示
-      sessionStorage.setItem('timeGreetingSeen', 'true');
     }
-  }
 
-  initGreeting();
+    function initGreeting() {
+      const hasSeenGreeting = sessionStorage.getItem('timeGreetingSeen');
+
+      if (!hasSeenGreeting) {
+        const greeting = document.getElementById('time-greeting');
+        const greetingText = document.getElementById('greeting-text');
+        
+        if (greeting && greetingText) {
+          greetingText.textContent = getGreeting();
+          
+          setTimeout(() => {
+            greeting.classList.remove('opacity-0', '-translate-y-full');
+            greeting.classList.add('opacity-100', 'translate-y-0');
+          }, 800);
+
+          setTimeout(() => {
+            greeting.classList.add('opacity-0', '-translate-y-full');
+            greeting.classList.remove('opacity-100', 'translate-y-0');
+          }, 4800);
+        }
+
+        sessionStorage.setItem('timeGreetingSeen', 'true');
+      }
+    }
+
+    initGreeting();
+  })();
 </script>
