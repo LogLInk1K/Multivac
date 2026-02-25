@@ -23,7 +23,7 @@ import SearchModal from './SearchModal.astro';
             <button
                 id="menu-trigger-btn"
                 onclick="window.toggleMenuPanel()"
-                class="group relative text-text-light dark:text-text-dark transition-all duration-300 focus:outline-none mr-4"
+                class="group relative text-text-light dark:text-text-dark transition-all duration-300 focus:outline-none border-none bg-transparent mr-4"
                 aria-label="菜单"
             >
                 <svg
@@ -245,6 +245,26 @@ import SearchModal from './SearchModal.astro';
             </div>
         </div>
     </nav>
+
+    <style>
+        /* 移除导航栏所有按钮和链接的焦点样式 */
+        #menu-trigger-btn:focus,
+        #menu-trigger-btn:focus-visible,
+        button[onclick*="openSearchModal"]:focus,
+        button[onclick*="openSearchModal"]:focus-visible,
+        #scroll-counter:focus,
+        #scroll-counter:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 移除导航链接的焦点样式 */
+        a[href]:focus,
+        a[href]:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    </style>
 </header>
 
 <SearchModal />

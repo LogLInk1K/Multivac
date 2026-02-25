@@ -131,7 +131,7 @@
             : [`circle(${endRadius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`],
         },
         {
-          duration: 450,
+          duration: 500,
           easing: 'ease-in-out',
           fill: 'forwards',
           // 根据亮暗决定是在旧层还是新层上做裁剪
@@ -179,7 +179,7 @@
     const handleTouchEnd = () => {
       setTimeout(() => {
         btn.classList.remove('touch-active');
-      }, 300);
+      }, 500);
     };
 
     btn.removeEventListener('touchstart', handleTouchStart);
@@ -217,11 +217,11 @@
 
   @media (hover: none) {
     #theme-toggle-btn > div {
-      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     #theme-toggle-btn > svg {
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     #theme-toggle-btn.touch-active > div {
@@ -239,12 +239,19 @@
   .theme-toggle-bg.color-locked svg {
     transition: none !important;
   }
+
+  /* 移除所有焦点样式 */
+  #theme-toggle-btn:focus,
+  #theme-toggle-btn:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 </style>
 
 <button
   id="theme-toggle-btn"
   type="button"
-  class="-mr-2 group relative p-2 text-text-light dark:text-text-dark transition-all duration-300 focus:outline-none z-[60] pointer-events-auto"
+  class="-mr-2 group relative p-2 text-text-light dark:text-text-dark transition-all duration-300 focus:outline-none border-none bg-transparent z-[60] pointer-events-auto"
   aria-label="Toggle dark mode"
 >
   <svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">

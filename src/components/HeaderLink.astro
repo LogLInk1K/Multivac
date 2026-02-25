@@ -12,7 +12,7 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 <a 
 	href={href} 
 	class:list={[
-		"group relative text-text-light dark:text-text-dark transition-all duration-300 font-bold",
+		"group relative text-text-light dark:text-text-dark transition-all duration-300 font-bold focus:outline-none",
 		{ "underline underline-offset-4": isActive },
 		className
 	]} 
@@ -29,3 +29,12 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 		</div>
 	</div>
 </a>
+
+<style>
+	/* 移除导航链接的焦点样式 */
+	a[href]:focus,
+	a[href]:focus-visible {
+		outline: none !important;
+		box-shadow: none !important;
+	}
+</style>
