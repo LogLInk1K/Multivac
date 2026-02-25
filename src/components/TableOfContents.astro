@@ -16,8 +16,8 @@
       return;
     }
 
-    // 提取所有标题（只提取 h1）
-    const headingElements = articleContent.querySelectorAll('h1');
+    // 提取所有标题（h1 和 h2）
+    const headingElements = articleContent.querySelectorAll('h1, h2');
 
     if (headingElements.length === 0) {
       return;
@@ -28,8 +28,8 @@
       const tocLinks = document.querySelectorAll('#toc-list a');
       let currentActiveId = null;
 
-      // 获取所有 h1 标题
-      const headings = document.querySelectorAll('.prose h1');
+      // 获取所有 h1 和 h2 标题
+      const headings = document.querySelectorAll('.prose h1, .prose h2');
 
       if (headings.length === 0) return;
 
@@ -37,7 +37,7 @@
       const scrollY = window.pageYOffset;
       const viewportMiddleAbsolute = scrollY + window.innerHeight / 2;
 
-      // 从前往后遍历所有 h1 标题，找到视口中间位置之后第一个标题
+      // 从前往后遍历所有 h1 和 h2 标题，找到视口中间位置之后第一个标题
       // 那么当前阅读的章节就是这个标题的上一个章节
       for (let i = 0; i < headings.length; i++) {
         const heading = headings[i];
@@ -45,7 +45,7 @@
 
         // 如果找到第一个在视口中间之后的标题
         if (headingTop > viewportMiddleAbsolute) {
-          // 当前章节是前一个 h1
+          // 当前章节是前一个标题
           if (i > 0) {
             currentActiveId = headings[i - 1].id;
           } else {
@@ -58,6 +58,26 @@
         // 如果这是最后一个标题，且在视口中间之前或重合，使用这个标题
         if (i === headings.length - 1) {
           currentActiveId = heading.id;
+        }
+      }
+
+      // 如果当前active的是h2，找到它的父级h1
+      let parentH1Id = null;
+      if (currentActiveId) {
+        const currentHeading = Array.from(headings).find(h => h.id === currentActiveId);
+        if (currentHeading && currentHeading.tagName === 'H2') {
+          // 找到这个h2之前的最后一个h1
+          for (let i = 0; i < headings.length; i++) {
+            if (headings[i].id === currentActiveId) {
+              for (let j = i - 1; j >= 0; j--) {
+                if (headings[j].tagName === 'H1') {
+                  parentH1Id = headings[j].id;
+                  break;
+                }
+              }
+              break;
+            }
+          }
         }
       }
 
@@ -83,7 +103,7 @@
           // 小横条保持低调色
           bar.classList.remove('bg-text-light/50', 'dark:bg-text-dark/50', 'bg-primary-light', 'dark:bg-primary-dark');
           bar.classList.add('bg-text-light/30', 'dark:bg-text-dark/30');
-        } else if (headingId === currentActiveId) {
+        } else if (headingId === currentActiveId || headingId === parentH1Id) {
           link.style.visibility = 'visible';
           link.style.opacity = '1';
           link.style.transform = 'translateX(0)';
@@ -116,6 +136,7 @@
     headingElements.forEach((heading) => {
       const text = heading.textContent || '';
       const id = heading.id || text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
+      const level = heading.tagName.toLowerCase();
 
       if (!heading.id) {
         heading.id = id;
@@ -124,6 +145,7 @@
       headings.push({
         id,
         text,
+        level,
       });
     });
 
@@ -137,12 +159,14 @@
       wrapper.className = 'flex items-center group/bar';
 
       const bar = document.createElement('span');
-      bar.className = 'w-4 h-1 rounded-full bg-text-light/30 dark:bg-text-dark/30 mr-2 flex-shrink-0 transition-colors duration-300 group-hover/bar:bg-primary-light dark:group-hover/bar:bg-primary-dark';
+      const barWidth = item.level === 'h2' ? 'w-2.5' : 'w-4';
+      bar.className = `${barWidth} h-1 rounded-full bg-text-light/30 dark:bg-text-dark/30 mr-2 flex-shrink-0 transition-colors duration-300 group-hover/bar:bg-primary-light dark:group-hover/bar:bg-primary-dark`;
 
       const a = document.createElement('a');
       a.href = `#${item.id}`;
       a.textContent = item.text;
-      a.className = 'block text-sm transition-all duration-300 ease-in-out truncate text-text-light/60 dark:text-text-dark/60 font-medium hover:text-primary-light dark:hover:text-primary-dark';
+      const linkMargin = item.level === 'h2' ? 'ml-1.5' : '';
+      a.className = `block text-sm transition-all duration-300 ease-in-out truncate text-text-light/60 dark:text-text-dark/60 font-medium hover:text-primary-light dark:hover:text-primary-dark ${linkMargin}`;
       a.dataset.headingId = item.id;
 
       wrapper.appendChild(bar);

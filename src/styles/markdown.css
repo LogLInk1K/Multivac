@@ -13,11 +13,11 @@
 
 /* --- 标题系统（保留侧边装饰条） --- */
 .prose h1 {
-  @apply text-4xl font-extrabold tracking-tight text-text-light dark:text-text-dark mb-8 mt-10 pb-4 border-b-2 border-primary-light/20 dark:border-primary-dark/20;
+  @apply text-4xl font-extrabold tracking-tight text-text-light dark:text-text-dark mb-8 mt-8 pb-4 border-b-2 border-primary-light/20 dark:border-primary-dark/20;
 }
 
 .prose h2 {
-  @apply text-2xl font-bold text-text-light dark:text-text-dark mb-5 mt-12 flex items-center scroll-mt-24;
+  @apply text-3xl font-bold text-text-light dark:text-text-dark mb-8 mt-8 flex items-center scroll-mt-24;
 }
 
 .prose h2::before {
@@ -26,7 +26,7 @@
 }
 
 .prose h3 {
-  @apply text-xl font-bold text-text-light/90 dark:text-text-dark/90 mb-4 mt-8 flex items-center scroll-mt-24;
+  @apply text-2xl font-bold text-text-light/90 dark:text-text-dark/90 mb-8 mt-8 flex items-center scroll-mt-24;
 }
 
 .prose h3::before {
