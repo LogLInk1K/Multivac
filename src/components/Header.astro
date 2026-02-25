@@ -264,6 +264,18 @@ import SearchModal from './SearchModal.astro';
             outline: none !important;
             box-shadow: none !important;
         }
+
+        /* 菜单按钮触摸屏点击状态 */
+        @media (hover: none) {
+            #menu-trigger-btn.touch-active > div {
+                opacity: 1 !important;
+                transform: scale(1) !important;
+            }
+            
+            #menu-trigger-btn.touch-active > svg {
+                transform: scale(0.95);
+            }
+        }
     </style>
 </header>
 
@@ -290,6 +302,7 @@ import SearchModal from './SearchModal.astro';
         if (menuTriggerBtn && menuPanel) {
             let hideTimeout: ReturnType<typeof setTimeout> | undefined;
             let isMenuOpen = false;
+            let touchActiveTimeout: ReturnType<typeof setTimeout> | undefined;
 
             // 检测设备是否支持hover
             const hasHover = window.matchMedia('(hover: hover)').matches;
@@ -306,18 +319,45 @@ import SearchModal from './SearchModal.astro';
                 menuPanel.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
                 menuPanel.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
                 isMenuOpen = true;
+                
+                // 清除圆形背景的内联样式，让CSS类重新生效
+                const bgDiv = menuTriggerBtn.querySelector('div');
+                if (bgDiv) {
+                    bgDiv.style.removeProperty('opacity');
+                    bgDiv.style.removeProperty('transform');
+                }
             };
 
             const hideMenu = () => {
                 menuPanel.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
                 menuPanel.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
                 isMenuOpen = false;
+                
+                // 清除触摸激活定时器并移除触摸点击状态
+                clearTimeout(touchActiveTimeout);
+                menuTriggerBtn.classList.remove('touch-active');
+                
+                // 完全移除圆形背景的内联样式，让其恢复到CSS类控制的状态
+                const bgDiv = menuTriggerBtn.querySelector('div');
+                if (bgDiv) {
+                    bgDiv.style.removeProperty('opacity');
+                    bgDiv.style.removeProperty('transform');
+                }
             };
 
             // 始终定义 toggleMenuPanel，供 onclick 使用
             (window as any).toggleMenuPanel = () => {
+                const bgDiv = menuTriggerBtn.querySelector('div');
+                
                 if (isMenuOpen) {
                     hideMenu();
+                    // 确保移除触摸激活状态
+                    menuTriggerBtn.classList.remove('touch-active');
+                    // 强制隐藏圆形背景
+                    if (bgDiv) {
+                        bgDiv.style.setProperty('opacity', '0', 'important');
+                        bgDiv.style.setProperty('transform', 'scale(0.9)', 'important');
+                    }
                 } else {
                     showMenu();
                 }
@@ -333,6 +373,19 @@ import SearchModal from './SearchModal.astro';
                 menuPanel.addEventListener('mouseleave', hideMenu);
             } else {
                 // 触控设备：点击触发（toggleMenuPanel 已在上面定义）
+
+                // 添加触摸屏点击状态
+                menuTriggerBtn.addEventListener('touchstart', () => {
+                    requestAnimationFrame(() => {
+                        if (!isMenuOpen) {
+                            menuTriggerBtn.classList.add('touch-active');
+                        }
+                    });
+                });
+                menuTriggerBtn.addEventListener('touchend', () => {
+                    // 立即移除，让菜单关闭时圆形背景立即消失
+                    menuTriggerBtn.classList.remove('touch-active');
+                });
 
                 // 点击外部关闭面板
                 document.addEventListener('click', (e) => {
