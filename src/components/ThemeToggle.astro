@@ -27,13 +27,63 @@
     event.stopImmediatePropagation();
 
     const html = document.documentElement;
+    const btn = event.currentTarget as HTMLElement;
+    const bgElement = btn?.querySelector('.theme-toggle-bg') as HTMLElement;
+    
     html.classList.add('no-transitions');
+
+    // 在主题切换前锁定圆形背景和图标的颜色，并锁定图标显示状态
+    if (bgElement) {
+      // 直接使用颜色值
+      const isDark = html.classList.contains('dark');
+      const bgColor = isDark ? '#ffc848' : '#425aef';
+      const shadowColor = isDark ? 'rgba(255, 200, 72, 0.2)' : 'rgba(66, 90, 239, 0.2)';
+      const iconStrokeColor = isDark ? '#000000' : '#ffffff';
+      
+      bgElement.style.setProperty('background-color', bgColor, 'important');
+      bgElement.style.setProperty('box-shadow', `0 10px 15px -3px ${shadowColor}, 0 4px 6px -2px ${shadowColor}`, 'important');
+      bgElement.classList.add('color-locked');
+      
+      // 锁定内部图标的显示状态和颜色
+      const iconElements = bgElement.querySelectorAll('svg');
+      iconElements.forEach(icon => {
+        icon.style.setProperty('stroke', iconStrokeColor, 'important');
+        icon.classList.add('color-locked');
+        
+        // 根据当前主题确定应该显示哪个图标
+        const isMoonIcon = icon.querySelector('path[d*="M20.354 15.354"]');
+        const shouldShow = isDark ? isMoonIcon : !isMoonIcon;
+        
+        // 使用opacity实现平滑过渡，而不是display
+        icon.style.setProperty('opacity', shouldShow ? '1' : '0', 'important');
+        icon.style.setProperty('transition', 'opacity 0.3s ease', 'important');
+      });
+    }
 
     // 降级处理：不支持 View Transition 的浏览器
     if (!document.startViewTransition) {
       const isDark = html.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
       html.classList.remove('no-transitions');
+      
+      // 动画结束后解锁圆形背景和图标的颜色
+      setTimeout(() => {
+        if (bgElement) {
+          bgElement.style.removeProperty('background-color');
+          bgElement.style.removeProperty('box-shadow');
+          bgElement.classList.remove('color-locked');
+          
+          // 解锁内部图标的颜色和显示状态
+          const iconElements = bgElement.querySelectorAll('svg');
+          iconElements.forEach(icon => {
+            icon.style.removeProperty('stroke');
+            icon.style.removeProperty('opacity');
+            icon.style.removeProperty('transition');
+            icon.classList.remove('color-locked');
+          });
+        }
+      }, 500);
+      
       return;
     }
 
@@ -49,6 +99,24 @@
     const transition = document.startViewTransition(() => {
       const isDark = html.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      // 在主题切换后立即重新锁定图标状态
+      if (bgElement) {
+        // 使用requestAnimationFrame确保在Tailwind类生效后执行
+        requestAnimationFrame(() => {
+          const iconElements = bgElement.querySelectorAll('svg');
+          iconElements.forEach(icon => {
+            // 根据切换前的主题判断（此时isDark已经是切换后的值，所以取反）
+            const isMoonIcon = icon.querySelector('path[d*="M20.354 15.354"]');
+            const shouldShow = !isDark ? isMoonIcon : !isMoonIcon;
+            
+            icon.style.setProperty('opacity', shouldShow ? '1' : '0', 'important');
+          });
+          
+          // 强制重绘，确保样式立即生效
+          void bgElement.offsetHeight;
+        });
+      }
     });
 
     try {
@@ -74,16 +142,50 @@
     } finally {
       // 动画结束后移除屏蔽类
       html.classList.remove('no-transitions');
+      
+      // 动画结束后解锁圆形背景和图标的颜色
+      setTimeout(() => {
+        if (bgElement) {
+          bgElement.style.removeProperty('background-color');
+          bgElement.style.removeProperty('box-shadow');
+          bgElement.classList.remove('color-locked');
+          
+          // 解锁内部图标的颜色和显示状态
+          const iconElements = bgElement.querySelectorAll('svg');
+          iconElements.forEach(icon => {
+            icon.style.removeProperty('stroke');
+            icon.style.removeProperty('opacity');
+            icon.style.removeProperty('transition');
+            icon.classList.remove('color-locked');
+          });
+        }
+      }, 100);
     }
   }
 
   function init() {
     const btn = document.querySelector('#theme-toggle-btn');
-    if (btn) {
-      // 先移除再添加，彻底解决 ClientRouter 模式下重复绑定的问题
-      btn.removeEventListener('click', toggleTheme as any); 
-      btn.addEventListener('click', toggleTheme as any);
-    }
+    if (!btn) return;
+
+    // 先移除再添加，彻底解决 ClientRouter 模式下重复绑定的问题
+    btn.removeEventListener('click', toggleTheme as any); 
+    btn.addEventListener('click', toggleTheme as any);
+
+    // 触摸屏动画优化
+    const handleTouchStart = () => {
+      btn.classList.add('touch-active');
+    };
+
+    const handleTouchEnd = () => {
+      setTimeout(() => {
+        btn.classList.remove('touch-active');
+      }, 300);
+    };
+
+    btn.removeEventListener('touchstart', handleTouchStart);
+    btn.removeEventListener('touchend', handleTouchEnd);
+    btn.addEventListener('touchstart', handleTouchStart);
+    btn.addEventListener('touchend', handleTouchEnd);
   }
 
   // 适配 ClientRouter 生命周期：初始加载 + 路由切换
@@ -91,20 +193,68 @@
   document.addEventListener('astro:page-load', init);
 </script>
 
+<style>
+  #theme-toggle-btn > div {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  #theme-toggle-btn > svg {
+    transition: transform 0.5s ease;
+  }
+
+  @media (hover: hover) {
+    #theme-toggle-btn:hover > div {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    #theme-toggle-btn:hover > svg {
+      transform: scale(0.9);
+    }
+  }
+
+  @media (hover: none) {
+    #theme-toggle-btn > div {
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #theme-toggle-btn > svg {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #theme-toggle-btn.touch-active > div {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    #theme-toggle-btn.touch-active > svg {
+      transform: scale(0.95);
+    }
+  }
+
+  /* 锁定颜色时禁用过渡 */
+  .theme-toggle-bg.color-locked,
+  .theme-toggle-bg.color-locked svg {
+    transition: none !important;
+  }
+</style>
+
 <button
   id="theme-toggle-btn"
   type="button"
-  class="-mr-2 group relative p-2 text-text-light hover:text-primary-light dark:text-text-dark dark:hover:text-primary-dark transition-colors focus:outline-none z-[60] pointer-events-auto"
+  class="-mr-2 group relative p-2 text-text-light dark:text-text-dark transition-all duration-300 focus:outline-none z-[60] pointer-events-auto"
   aria-label="Toggle dark mode"
 >
-  <svg class="w-6 h-6 dark:hidden transition-all duration-300 group-hover:scale-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
   </svg>
-  <svg class="w-6 h-6 hidden dark:block transition-all duration-300 group-hover:scale-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
   </svg>
-  <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-75 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
-    <div class="bg-primary-light dark:bg-primary-dark rounded-full px-1 py-1">
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="theme-toggle-bg bg-primary-light dark:bg-primary-dark rounded-full px-1 py-1 shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20">
       <svg class="w-6 h-6 text-white dark:text-black dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
       </svg>
