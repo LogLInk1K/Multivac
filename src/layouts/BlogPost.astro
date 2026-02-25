@@ -9,6 +9,7 @@ import SidebarOfContents from '../components/SidebarOfContents.astro';
 import Twikoo from '../components/Twikoo.astro';
 const defaultCover = '/img/df-cover.webp';
 import { ClientRouter } from 'astro:transitions';
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 type Props = Partial<CollectionEntry<'post'>['data']> & {
   title: string;
@@ -143,6 +144,18 @@ const displayImage = heroImage || defaultCover;
 		</main>
 		<Footer />
 		<script>
+			import { Fancybox } from "@fancyapps/ui";
+
+			function bindFancybox() {
+				Fancybox.unbind("[data-fancybox]");
+				Fancybox.close();
+
+				Fancybox.bind("[data-fancybox]", {
+					Hash: false,
+					hideScrollbar: false,
+				});
+			}
+
 			document.addEventListener('astro:page-load', () => {
 				const preElements = document.querySelectorAll('.prose pre');
 				preElements.forEach((pre) => {
@@ -208,6 +221,34 @@ const displayImage = heroImage || defaultCover;
 						link.setAttribute('rel', 'noopener noreferrer');
 					}
 				});
+
+				const images = document.querySelectorAll('.prose img');
+				console.log('Found images:', images.length);
+				
+				const seenImages = new Set();
+				images.forEach((img, index) => {
+					const htmlImg = img as HTMLElement;
+					const src = img.getAttribute('src');
+					console.log(`Image ${index}:`, src, 'Already has fancybox:', img.hasAttribute('data-fancybox'), 'Already seen:', seenImages.has(src), 'Is visible:', htmlImg.offsetParent !== null);
+					
+					if (src && !src.startsWith('data:') && htmlImg.offsetParent !== null) {
+						if (seenImages.has(src)) {
+							console.log(`Image ${index} - Duplicate, skipping`);
+							return;
+						}
+						seenImages.add(src);
+						img.setAttribute('data-fancybox', 'gallery');
+						img.setAttribute('data-src', src);
+						img.setAttribute('data-caption', img.getAttribute('alt') || '');
+						img.classList.add('cursor-pointer', 'hover:scale-105', 'transition-transform', 'duration-300');
+						console.log(`Image ${index} - Set fancybox attributes`);
+					}
+				});
+
+				const fancyboxImages = document.querySelectorAll('[data-fancybox]');
+				console.log('Total fancybox images:', fancyboxImages.length);
+
+				bindFancybox();
 			});
 		</script>
 	</body>
