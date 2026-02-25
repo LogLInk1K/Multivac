@@ -56,7 +56,7 @@
         
         // 使用opacity实现平滑过渡，而不是display
         icon.style.setProperty('opacity', shouldShow ? '1' : '0', 'important');
-        icon.style.setProperty('transition', 'opacity 0.3s ease', 'important');
+        icon.style.setProperty('transition', 'opacity 0.5s ease', 'important');
       });
     }
 
@@ -139,11 +139,16 @@
         }
       );
       await transition.finished;
+      
+      // 主题切换动画完成后，移除触摸屏的圆形背景
+      if (btn && btn.classList.contains('touch-active')) {
+        btn.classList.remove('touch-active');
+      }
     } finally {
       // 动画结束后移除屏蔽类
       html.classList.remove('no-transitions');
       
-      // 动画结束后解锁圆形背景和图标的颜色
+      // 动画结束后解锁圆形背景和图标的颜色，等待圆形背景淡出完成
       setTimeout(() => {
         if (bgElement) {
           bgElement.style.removeProperty('background-color');
@@ -159,7 +164,7 @@
             icon.classList.remove('color-locked');
           });
         }
-      }, 100);
+      }, 300);
     }
   }
 
@@ -177,9 +182,7 @@
     };
 
     const handleTouchEnd = () => {
-      setTimeout(() => {
-        btn.classList.remove('touch-active');
-      }, 500);
+      // 不再使用setTimeout，让主题切换动画完成后控制圆形背景的消失
     };
 
     btn.removeEventListener('touchstart', handleTouchStart);
@@ -217,11 +220,11 @@
 
   @media (hover: none) {
     #theme-toggle-btn > div {
-      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     }
     
     #theme-toggle-btn > svg {
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s ease-in-out;
     }
     
     #theme-toggle-btn.touch-active > div {
