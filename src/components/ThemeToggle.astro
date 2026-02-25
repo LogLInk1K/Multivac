@@ -21,7 +21,6 @@
 <script>
   // --- 2. 交互逻辑：圆形扩散动画 ---
   async function toggleTheme(event: MouseEvent) {
-    // 彻底切断事件链
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
@@ -32,62 +31,15 @@
     
     html.classList.add('no-transitions');
 
-    // 在主题切换前锁定圆形背景和图标的颜色，并锁定图标显示状态
-    if (bgElement) {
-      // 直接使用颜色值
-      const isDark = html.classList.contains('dark');
-      const bgColor = isDark ? '#ffc848' : '#425aef';
-      const shadowColor = isDark ? 'rgba(255, 200, 72, 0.2)' : 'rgba(66, 90, 239, 0.2)';
-      const iconStrokeColor = isDark ? '#000000' : '#ffffff';
-      
-      bgElement.style.setProperty('background-color', bgColor, 'important');
-      bgElement.style.setProperty('box-shadow', `0 10px 15px -3px ${shadowColor}, 0 4px 6px -2px ${shadowColor}`, 'important');
-      bgElement.classList.add('color-locked');
-      
-      // 锁定内部图标的显示状态和颜色
-      const iconElements = bgElement.querySelectorAll('svg');
-      iconElements.forEach(icon => {
-        icon.style.setProperty('stroke', iconStrokeColor, 'important');
-        icon.classList.add('color-locked');
-        
-        // 根据当前主题确定应该显示哪个图标
-        const isMoonIcon = icon.querySelector('path[d*="M20.354 15.354"]');
-        const shouldShow = isDark ? isMoonIcon : !isMoonIcon;
-        
-        // 使用opacity实现平滑过渡，而不是display
-        icon.style.setProperty('opacity', shouldShow ? '1' : '0', 'important');
-        icon.style.setProperty('transition', 'opacity 0.5s ease', 'important');
-      });
-    }
-
     // 降级处理：不支持 View Transition 的浏览器
     if (!document.startViewTransition) {
       const isDark = html.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
       html.classList.remove('no-transitions');
-      
-      // 动画结束后解锁圆形背景和图标的颜色
-      setTimeout(() => {
-        if (bgElement) {
-          bgElement.style.removeProperty('background-color');
-          bgElement.style.removeProperty('box-shadow');
-          bgElement.classList.remove('color-locked');
-          
-          // 解锁内部图标的颜色和显示状态
-          const iconElements = bgElement.querySelectorAll('svg');
-          iconElements.forEach(icon => {
-            icon.style.removeProperty('stroke');
-            icon.style.removeProperty('opacity');
-            icon.style.removeProperty('transition');
-            icon.classList.remove('color-locked');
-          });
-        }
-      }, 500);
-      
       return;
     }
 
-    // 获取点击中心点，如果不是点击触发（如键盘）则取屏幕中心
+    // 获取点击中心点
     const x = event.clientX ?? window.innerWidth / 2;
     const y = event.clientY ?? window.innerHeight / 2;
     const endRadius = Math.hypot(
@@ -99,24 +51,6 @@
     const transition = document.startViewTransition(() => {
       const isDark = html.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      
-      // 在主题切换后立即重新锁定图标状态
-      if (bgElement) {
-        // 使用requestAnimationFrame确保在Tailwind类生效后执行
-        requestAnimationFrame(() => {
-          const iconElements = bgElement.querySelectorAll('svg');
-          iconElements.forEach(icon => {
-            // 根据切换前的主题判断（此时isDark已经是切换后的值，所以取反）
-            const isMoonIcon = icon.querySelector('path[d*="M20.354 15.354"]');
-            const shouldShow = !isDark ? isMoonIcon : !isMoonIcon;
-            
-            icon.style.setProperty('opacity', shouldShow ? '1' : '0', 'important');
-          });
-          
-          // 强制重绘，确保样式立即生效
-          void bgElement.offsetHeight;
-        });
-      }
     });
 
     try {
@@ -134,7 +68,6 @@
           duration: 500,
           easing: 'ease-in-out',
           fill: 'forwards',
-          // 根据亮暗决定是在旧层还是新层上做裁剪
           pseudoElement: isEnteringDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
         }
       );
@@ -145,26 +78,7 @@
         btn.classList.remove('touch-active');
       }
     } finally {
-      // 动画结束后移除屏蔽类
       html.classList.remove('no-transitions');
-      
-      // 动画结束后解锁圆形背景和图标的颜色，等待圆形背景淡出完成
-      setTimeout(() => {
-        if (bgElement) {
-          bgElement.style.removeProperty('background-color');
-          bgElement.style.removeProperty('box-shadow');
-          bgElement.classList.remove('color-locked');
-          
-          // 解锁内部图标的颜色和显示状态
-          const iconElements = bgElement.querySelectorAll('svg');
-          iconElements.forEach(icon => {
-            icon.style.removeProperty('stroke');
-            icon.style.removeProperty('opacity');
-            icon.style.removeProperty('transition');
-            icon.classList.remove('color-locked');
-          });
-        }
-      }, 300);
     }
   }
 
@@ -172,7 +86,6 @@
     const btn = document.querySelector('#theme-toggle-btn');
     if (!btn) return;
 
-    // 先移除再添加，彻底解决 ClientRouter 模式下重复绑定的问题
     btn.removeEventListener('click', toggleTheme as any); 
     btn.addEventListener('click', toggleTheme as any);
 
@@ -182,7 +95,9 @@
     };
 
     const handleTouchEnd = () => {
-      // 不再使用setTimeout，让主题切换动画完成后控制圆形背景的消失
+      setTimeout(() => {
+        btn.classList.remove('touch-active');
+      }, 300);
     };
 
     btn.removeEventListener('touchstart', handleTouchStart);
@@ -235,12 +150,6 @@
     #theme-toggle-btn.touch-active > svg {
       transform: scale(0.95);
     }
-  }
-
-  /* 锁定颜色时禁用过渡 */
-  .theme-toggle-bg.color-locked,
-  .theme-toggle-bg.color-locked svg {
-    transition: none !important;
   }
 
   /* 移除所有焦点样式 */
