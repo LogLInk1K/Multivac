@@ -148,7 +148,7 @@ function formatDate(date: Date): string {
   function render() {
     const gridContainer = document.getElementById('watching-grid');
     const paginationContainer = document.getElementById('watching-pagination');
-    const countDisplay = document.getElementById('watching-count');
+    const countDisplay = document.getElementById('watching-count-text');
     
     if (!gridContainer || !paginationContainer) return;
 
@@ -284,17 +284,21 @@ function formatDate(date: Date): string {
           <p class="text-text-light/70 dark:text-text-dark/70">
             {pageDescription}
           </p>
-          <div class="flex items-center gap-2 mt-4 text-sm text-text-light/60 dark:text-text-dark/60">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
-            </svg>
-            <span id="watching-count">共 {watchingList.length} 部作品</span>
+          <div class="flex flex-col gap-1 mt-4 text-sm text-text-light/60 dark:text-text-dark/60">
             {pubDate && (
-                <span class="flex items-center">
-                  <span class="mr-2">·</span>
-                  始于 {formatDate(pubDate)}
-                </span>
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                始于 {formatDate(pubDate)}
+              </span>
             )}
+            <span id="watching-count" class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+              </svg>
+              <span id="watching-count-text">共 {watchingList.length} 部作品</span>
+            </span>
           </div>
         </div>
 
