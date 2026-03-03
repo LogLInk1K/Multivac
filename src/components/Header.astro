@@ -475,9 +475,10 @@ import SearchModal from './SearchModal.astro';
         }
 
         function setPageTitle() {
-            // 在 ClientRouter 下，document.title 需要一点时间同步，或者手动获取
             if (pageTitle) {
-                pageTitle.textContent = document.title;
+                const fullTitle = document.title;
+                const separatorIndex = fullTitle.indexOf(' | ');
+                pageTitle.textContent = separatorIndex > 0 ? fullTitle.substring(0, separatorIndex) : fullTitle;
             }
         }
 
