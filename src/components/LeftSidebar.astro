@@ -225,17 +225,28 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
         // 初始化时不修改问候语，保持默认的"醉后不知天在水"显示
         // 第一次动画时再显示第一个问候语
 
+        // Matrix文本对：原始文本和变换文本
+        const matrixTextPairs = [
+          { name: '波罗歌', desc: '万维网中潮汛来' },
+          { name: '波罗阁', desc: '今日方知我是我' }
+        ];
+        let currentTextPairIndex = 0;
+
         // Matrix效果函数
         function triggerMatrixEffect() {
           if (isAnimating || matrixTexts.length === 0) return;
           isAnimating = true;
           changeCount++;
           
+          // 切换到下一组文本
+          currentTextPairIndex = (currentTextPairIndex + 1) % matrixTextPairs.length;
+          const newTextPair = matrixTextPairs[currentTextPairIndex];
+          
           // 为每个文本元素添加动画效果
           matrixTexts.forEach((element, index) => {
-            const originalText = (element as HTMLElement).dataset.text || '';
-            if (!originalText) return;
-            const chars = originalText.split('');
+            // 根据索引决定显示哪个文本（0=名字，1=描述）
+            const targetText = index === 0 ? newTextPair.name : newTextPair.desc;
+            const chars = targetText.split('');
             const isEvenIndex = index % 2 === 0;
             const isEvenChange = changeCount % 2 === 0;
             // 根据索引和变化次数共同决定动画方向
@@ -250,10 +261,10 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
               element.textContent = element.textContent.split('').map((_, i) => {
                 if (shouldReverse) {
                   // 从右到左动画
-                  return i >= revealIndex ? originalText[i] : matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                  return i >= revealIndex ? targetText[i] : matrixChars[Math.floor(Math.random() * matrixChars.length)];
                 } else {
                   // 从左到右动画
-                  return i < revealIndex ? originalText[i] : matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                  return i < revealIndex ? targetText[i] : matrixChars[Math.floor(Math.random() * matrixChars.length)];
                 }
               }).join('');
               
@@ -262,16 +273,20 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
                 revealIndex--;
                 if (revealIndex < 0) {
                   clearInterval(scrambleInterval);
-                  element.textContent = originalText;
+                  element.textContent = targetText;
+                  // 更新 data-text 以便下次动画使用
+                  (element as HTMLElement).dataset.text = targetText;
                   if (index === matrixTexts.length - 1) {
                     isAnimating = false;
                   }
                 }
               } else {
                 revealIndex++;
-                if (revealIndex > originalText.length) {
+                if (revealIndex > chars.length) {
                   clearInterval(scrambleInterval);
-                  element.textContent = originalText;
+                  element.textContent = targetText;
+                  // 更新 data-text 以便下次动画使用
+                  (element as HTMLElement).dataset.text = targetText;
                   if (index === matrixTexts.length - 1) {
                     isAnimating = false;
                   }
