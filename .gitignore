@@ -54,4 +54,6 @@ coverage/
 # ignore private posts
 post/*
 !post/example/
+
 .vercel
+twikoo_template/
