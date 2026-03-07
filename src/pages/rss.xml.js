@@ -23,7 +23,7 @@ export async function GET(context) {
 				title: post.data.title,
 				pubDate: post.data.pubDate,
 				description: post.data.description,
-				link: `/p/${post.id}.html`,
+				link: `/p/${post.id}`,
 				customData: `<author>${author}</author>
 <enclosure url="${coverUrl}" type="${imageType}"/>
 ${tags.map(tag => `<category>${tag}</category>`).join('\n')}`,
