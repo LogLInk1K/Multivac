@@ -11,7 +11,7 @@ const isVercel = process.env.VERCEL === '1' || process.env.DEPLOY_PLATFORM === '
 
 export default defineConfig({
   site: 'https://log.1k.ink',
-  trailingSlash: 'never', 
+  trailingSlash: 'never',
   
   // compress 对生成的静态资源进行压缩
   integrations: [
@@ -21,7 +21,7 @@ export default defineConfig({
     compress({
       CSS: true,
       HTML: true,
-      Image: false, // 图片建议保持原样以配合长期缓存策略
+      Image: false,
       JavaScript: true,
       SVG: true,
     })
@@ -29,7 +29,7 @@ export default defineConfig({
 
   build: {
     inlineStylesheets: 'auto',
-    format: 'directory', 
+    format: 'file', 
   },
 
 
