@@ -2,6 +2,38 @@
     @apply text-text-light dark:text-text-dark;
   }
 
+  /* 排序选择器 */
+  .tk-comments-sort {
+    @apply inline-flex items-center;
+  }
+
+  .tk-sort-select {
+    @apply rounded-lg px-3 py-1.5 text-sm
+       bg-gray-100 dark:bg-gray-800
+       text-text-light dark:text-text-dark
+       border border-border-light dark:border-border-dark
+       cursor-pointer
+       focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark
+       hover:bg-gray-200 dark:hover:bg-gray-700
+       transition-all duration-200;
+  }
+
+  .tk-sort-select option {
+    @apply bg-white dark:bg-gray-900 text-text-light dark:text-text-dark;
+  }
+
+  /* 图标按钮垂直居中 */
+  .tk-icon {
+    @apply inline-flex items-center justify-center;
+    height: 32px;
+    width: 32px;
+  }
+
+  /* 确保包含排序选择器和图标的容器垂直居中 */
+  .tk-comments-title > span {
+    @apply inline-flex items-center;
+  }
+
   .tk-submit {
     .tk-avatar {
       @apply hidden;
@@ -55,6 +87,7 @@
 
   /* Comment title */
   .tk-comments-title {
+    @apply flex items-center gap-3;
     .__comments svg {
       @apply fill-primary-light dark:fill-primary-dark;
     }
