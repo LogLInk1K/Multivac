@@ -900,12 +900,36 @@ const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
       try {
         await loadAPlayer();
 
-        // 获取歌单数据
-        const response = await fetch('https://api.injahow.cn/meting/?type=playlist&id=2732533345&server=netease&limit=50');
-        const data = await response.json();
+        // 备用API地址列表
+        const apiEndpoints = [
+          'https://api.injahow.cn/meting/?type=playlist&id=2732533345&server=netease&limit=50',
+          'https://meting.jinghuashang.cn/?type=playlist&id=2732533345&server=netease&limit=50',
+          'https://metingapi.mo-app.cn/?type=playlist&id=2732533345&server=netease&limit=50'
+        ];
+
+        let data = null;
+
+        // 尝试每个API端点
+        for (const endpoint of apiEndpoints) {
+          try {
+            const response = await fetch(endpoint);
+            const responseData = await response.json();
+
+            // 检查返回的数据是否为数组
+            if (Array.isArray(responseData) && responseData.length > 0) {
+              data = responseData;
+              console.log(`Successfully fetched playlist from: ${endpoint}`);
+              break;
+            } else {
+              console.warn(`API returned invalid data from: ${endpoint}`, responseData);
+            }
+          } catch (error) {
+            console.warn(`Failed to fetch from ${endpoint}:`, error);
+          }
+        }
 
         if (!data || data.length === 0) {
-          console.error('Failed to fetch playlist');
+          console.error('Failed to fetch playlist from all endpoints');
           return;
         }
 

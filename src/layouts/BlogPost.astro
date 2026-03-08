@@ -40,7 +40,9 @@ const displayImage = heroImage || defaultCover;
 		<script is:inline>
 			(function() {
 				if (!sessionStorage.getItem('hasVisited')) {
-					document.write('<style>#main-content{opacity:0;}</style>');
+					const style = document.createElement('style');
+					style.textContent = '#main-content{opacity:0;}';
+					document.head.appendChild(style);
 				}
 			})();
 		</script>
