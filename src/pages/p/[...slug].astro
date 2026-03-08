@@ -31,7 +31,7 @@ if (isEncrypted && post.data.password && post.body) {
 }
 ---
 
-<BlogPost {...post.data} isEncrypted={isEncrypted}>
+<BlogPost {...post.data} id={post.id} isEncrypted={isEncrypted}>
 	{isEncrypted ? (
 		<>
 			<PasswordProtect passwordHint={post.data.passwordHint} />
