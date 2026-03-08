@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import TimeGreeting from '../components/TimeGreeting.astro';
+import WelcomeAnimation from '../components/WelcomeAnimation.astro';
 import { ClientRouter } from 'astro:transitions';
 import type { ImageMetadata } from 'astro';
 
@@ -50,13 +50,105 @@ const { title, description, image } = Astro.props;
             document.documentElement.classList.toggle('dark', theme === 'dark');
           })();
         </script>
+        <script is:inline>
+          (function() {
+            if (!sessionStorage.getItem('hasVisited')) {
+              document.write('<style>#main-content{opacity:0;}</style>');
+            }
+          })();
+        </script>
     </head>
     <body class="min-h-screen flex flex-col bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
-        <Header />
-        <TimeGreeting />
-        <main class="flex-1 pt-2 page-transition">
-            <slot />
-        </main>
-        <Footer />
+        <WelcomeAnimation />
+        <div id="main-content" class="flex flex-col min-h-screen transition-opacity duration-300">
+            <Header />
+            <main class="flex-1 pt-2 page-transition">
+                <slot />
+            </main>
+            <Footer />
+        </div>
+
+        <script is:inline>
+          function getGreeting() {
+            var hour = new Date().getHours();
+            
+            if (hour >= 5 && hour < 12) {
+              return '早上好，夜之城!';
+            } else if (hour >= 12 && hour < 14) {
+              return '真香!';
+            } else if (hour >= 14 && hour < 18) {
+              return '三点几哩，饮茶先啦!';
+            } else if (hour >= 18 && hour < 22) {
+              return '打工是不可能打工的!';
+            } else {
+              return '你见过凌晨四点的洛杉矶吗?';
+            }
+          }
+
+          function runWelcomeAnimation() {
+            var hasVisited = sessionStorage.getItem('hasVisited');
+
+            if (hasVisited) {
+              return;
+            }
+
+            sessionStorage.setItem('hasVisited', 'true');
+
+            var mainContent = document.getElementById('main-content');
+            var overlay = document.getElementById('welcome-overlay');
+            var avatar = document.getElementById('welcome-avatar');
+            var logo = document.getElementById('welcome-logo');
+            var tagline = document.getElementById('welcome-tagline');
+            var greeting = document.getElementById('welcome-greeting');
+            var greetingInner = document.getElementById('welcome-greeting-inner');
+
+            if (!overlay || !avatar || !logo || !tagline || !greeting || !greetingInner) return;
+
+            greetingInner.textContent = getGreeting();
+
+            if (mainContent) {
+              mainContent.style.opacity = '0';
+            }
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(function() {
+              avatar.classList.add('animate');
+            }, 100);
+
+            setTimeout(function() {
+              logo.classList.add('animate');
+            }, 300);
+
+            setTimeout(function() {
+              tagline.classList.add('animate');
+            }, 500);
+
+            setTimeout(function() {
+              greeting.classList.add('animate');
+            }, 700);
+
+            setTimeout(function() {
+              overlay.classList.add('fade-out');
+              document.body.style.overflow = '';
+
+              if (mainContent) {
+                mainContent.style.opacity = '1';
+              }
+
+              setTimeout(function() {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+              }, 500);
+            }, 2500);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runWelcomeAnimation);
+          } else {
+            runWelcomeAnimation();
+          }
+        </script>
     </body>
 </html>
