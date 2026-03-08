@@ -59,14 +59,14 @@ const allPostUrls = otherPosts.map(post => `/p/${post.id.toLowerCase()}`);
     return (
       <a 
         href={`/p/${originalFileName}`}
-        class="group flex items-center gap-4 p-6 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+        class="group flex flex-col sm:flex-row items-center sm:items-center gap-4 p-6 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
       >
-        <div class="flex-1 min-w-0 flex flex-col justify-between h-28">
-          <h3 class="text-2xl font-bold line-clamp-2 text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
+        <div class="flex-1 min-w-0 flex flex-col justify-between w-full order-2 sm:order-1">
+          <h3 class="text-xl sm:text-2xl font-bold line-clamp-2 text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
             {title}
           </h3>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 mt-3">
             <span class="flex items-center gap-1.5 text-xs text-text-light dark:text-text-dark opacity-60">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -94,7 +94,7 @@ const allPostUrls = otherPosts.map(post => `/p/${post.id.toLowerCase()}`);
           </div>
         </div>
 
-        <div class="relative w-36 h-28 flex-shrink-0 overflow-hidden rounded-xl">
+        <div class="relative w-full sm:w-36 h-48 sm:h-28 flex-shrink-0 overflow-hidden rounded-xl order-1 sm:order-2">
           <div
             class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
             style={`background-image: url('${displayImage}');`}
