@@ -9,6 +9,7 @@ import SidebarOfContents from '../components/SidebarOfContents.astro';
 import Twikoo from '../components/Twikoo.astro';
 import WelcomeAnimation from '../components/WelcomeAnimation.astro';
 import ArticleMetaCard from '../components/ArticleMetaCard.astro';
+import { calculateReadingTime, calculateWordCount } from '../utils/readingTime';
 const defaultCover = '/img/df-cover.webp';
 import { ClientRouter } from 'astro:transitions';
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
@@ -26,20 +27,9 @@ type Props = Partial<CollectionEntry<'post'>['data']> & {
 const { title, description, pubDate, updatedDate, heroImage, heroImageWidth, showDate = true, showComments = true } = Astro.props;
 const displayImage = heroImage || defaultCover;
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-}
-
-function countWords(text: string): number {
-  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-  const englishWords = (text.match(/[a-zA-Z]+/g) || []).length;
-  return chineseChars + englishWords;
-}
-
 const content = Astro.slots.has('default') ? await Astro.slots.render('default') : '';
-const plainText = stripHtml(content);
-const wordCount = countWords(plainText);
-const readingTime = Math.ceil(wordCount / 400);
+const wordCount = calculateWordCount(content);
+const readingTime = calculateReadingTime(content);
 ---
 
 <html lang="zh-CN">

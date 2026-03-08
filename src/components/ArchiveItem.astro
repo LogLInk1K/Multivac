@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { calculateReadingTime } from '../utils/readingTime';
 const defaultCover = '/img/df-cover.webp';
 
 interface Props {
@@ -12,6 +13,7 @@ const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = post.data;
 const originalFileName = post.id.toLowerCase();
 const displayImage = heroImage || defaultCover;
+const readingTime = calculateReadingTime(post.body || '');
 ---
 
 <article class="py-4 border-b border-border-light dark:border-border-dark last:border-b-0">
@@ -65,7 +67,7 @@ const displayImage = heroImage || defaultCover;
           <FormattedDate date={pubDate} />
         </time>
         <span class="text-gray-400">•</span>
-        <span>{Math.ceil((post.body?.length || 0) / 500)} 分钟阅读</span>
+        <span>{readingTime} 分钟</span>
       </div>
     </div>
   </div>

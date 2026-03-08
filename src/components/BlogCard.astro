@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { calculateReadingTime, calculateWordCount } from '../utils/readingTime';
 const defaultCover = '/img/df-cover.webp';
 
 interface Props {
@@ -12,6 +13,8 @@ const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category } = post.data;
 const originalFileName = post.id.toLowerCase();
 const displayImage = heroImage || defaultCover;
+const wordCount = calculateWordCount(post.body || '');
+const readingTime = calculateReadingTime(post.body || '');
 ---
 
 <article class="group relative bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden">
@@ -51,7 +54,7 @@ const displayImage = heroImage || defaultCover;
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          {Math.ceil((post.body?.length || 0) / 500)} 分钟阅读
+          {readingTime} 分钟
         </span>
       </div>
 
