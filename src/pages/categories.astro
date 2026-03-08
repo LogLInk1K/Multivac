@@ -1,0 +1,49 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
+
+const allCategories = new Set(posts.map(post => post.data.category).filter(Boolean));
+const categories = Array.from(allCategories).sort();
+
+const postsByCategory = posts.reduce((acc, post) => {
+  const category = post.data.category;
+  if (category) {
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(post);
+  }
+  return acc;
+}, {} as Record<string, CollectionEntry<'post'>[]>);
+---
+
+<MainLayout title="全部分类" description="查看博客的所有分类">
+  <section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-4xl font-bold text-text-light dark:text-text-dark mb-8 text-center">全部分类</h1>
+      <div class="flex flex-wrap gap-4 justify-center">
+        {categories.map(category => {
+          const categoryPosts = postsByCategory[category as string] || [];
+          return (
+            <a
+              href={`/category/${category}`}
+              class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-card-light dark:bg-card-dark hover:shadow-lg hover:-translate-y-1 transition-all duration-300 will-change-transform"
+            >
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary-light dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="text-base font-medium text-text-light dark:text-text-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">{category}</span>
+              </div>
+              <span class="px-3 py-1 bg-badge-light dark:bg-badge-dark text-text-light/60 dark:text-text-dark/60 text-sm font-medium rounded-full">
+                {categoryPosts.length}
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</MainLayout>
