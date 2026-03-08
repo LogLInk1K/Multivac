@@ -437,8 +437,20 @@ import SearchModal from './SearchModal.astro';
             }
 
             if (scrollCounter && scrollValue && scrollArrow && themeToggleContainer && themeToggleButton) {
-                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
+                const articleContent = document.getElementById('article-content');
+                let scrollPercent;
+
+                if (articleContent) {
+                    const articleTop = articleContent.offsetTop;
+                    const articleBottom = articleTop + articleContent.offsetHeight;
+                    const articleHeight = articleBottom - articleTop;
+                    const relativeScrollY = scrollY - articleTop;
+                    scrollPercent = articleHeight > 0 ? Math.max(0, Math.min(1, relativeScrollY / articleHeight)) : 0;
+                } else {
+                    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    scrollPercent = scrollHeight > 0 ? scrollY / scrollHeight : 0;
+                }
+
                 const displayValue = Math.floor(scrollPercent * 99);
 
                 if (scrollY > 20) {
