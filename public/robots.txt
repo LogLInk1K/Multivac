@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://log.1k.ink/sitemap-index.xml
