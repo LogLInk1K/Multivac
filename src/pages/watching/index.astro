@@ -1,8 +1,8 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import LeftSidebar from '../components/LeftSidebar.astro';
-import RightSidebar from '../components/RightSidebar.astro';
-import Twikoo from '../components/Twikoo.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
+import Twikoo from '../../components/Twikoo.astro';
 import { getEntry } from 'astro:content';
 
 interface Rating {
@@ -67,7 +67,6 @@ try {
 function formatDate(date: Date): string {
   return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 }
-
 ---
 
 <script is:inline define:vars={{ watchingList }}>

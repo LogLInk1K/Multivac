@@ -8,21 +8,29 @@ import { SITE_DESCRIPTION } from '../../consts';
 
 export async function getStaticPaths() {
   const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
-  const categories = new Set(posts.map(post => post.data.category).filter(Boolean));
+  const tags = new Set();
   
-  return Array.from(categories).map(category => ({
-    params: { category },
+  posts.forEach(post => {
+    const postTags = post.data.tags || [];
+    postTags.forEach(tag => tags.add(tag));
+  });
+  
+  return Array.from(tags).map(tag => ({
+    params: { slug: tag },
   }));
 }
 
-const { category } = Astro.params;
+const { slug } = Astro.params;
 const allPosts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
-const posts = allPosts.filter(post => post.data.category === category).sort(
+const posts = allPosts.filter(post => {
+	const tags = post.data.tags as string[] | undefined;
+	return tags?.includes(slug as string);
+}).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<MainLayout title={`分类: ${category}`} description={SITE_DESCRIPTION}>
+<MainLayout title={`标签: ${slug}`} description={SITE_DESCRIPTION}>
 	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
 			<!-- 响应式布局：小屏幕单列，中等及大屏幕双栏 -->
 			<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] gap-6">

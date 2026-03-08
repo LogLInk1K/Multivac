@@ -1,5 +1,5 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
@@ -28,7 +28,7 @@ const postsByCategory = posts.reduce((acc, post) => {
           const categoryPosts = postsByCategory[category as string] || [];
           return (
             <a
-              href={`/category/${category}`}
+              href={`/categories/${category}`}
               class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-card-light dark:bg-card-dark hover:shadow-lg hover:-translate-y-1 transition-all duration-300 will-change-transform"
             >
               <div class="flex items-center gap-3">

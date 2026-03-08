@@ -1,5 +1,5 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
@@ -22,7 +22,7 @@ const sortedTags = Object.entries(allTags).sort((a, b) => b[1] - a[1]);
       <div class="flex flex-wrap gap-3 justify-center">
         {sortedTags.map(([tag, count]) => (
           <a
-            href={`/tag/${tag}`}
+            href={`/tags/${tag}`}
             class="group relative inline-flex items-center rounded-full overflow-hidden hover:scale-105 transition-transform duration-200 will-change-transform"
           >
             <span class="px-5 py-3 bg-badge-light text-text-light dark:bg-badge-dark dark:text-text-dark text-base font-medium">
