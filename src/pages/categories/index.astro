@@ -4,9 +4,6 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 const posts = await getCollection('post', ({ data }) => !data.draft && !data.friends && !data.friendGroups && !data.moments);
 
-const allCategories = new Set(posts.map(post => post.data.category).filter(Boolean));
-const categories = Array.from(allCategories).sort();
-
 const postsByCategory = posts.reduce((acc, post) => {
   const category = post.data.category;
   if (category) {
@@ -17,6 +14,8 @@ const postsByCategory = posts.reduce((acc, post) => {
   }
   return acc;
 }, {} as Record<string, CollectionEntry<'post'>[]>);
+
+const categories = Object.keys(postsByCategory).sort((a, b) => postsByCategory[b].length - postsByCategory[a].length);
 ---
 
 <MainLayout title="全部分类" description="查看博客的所有分类">

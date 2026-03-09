@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
-import { calculateReadingTime, calculateWordCount } from '../utils/readingTime';
+import { calculateReadingTime } from '../utils/readingTime';
 const defaultCover = '/img/df-cover.webp';
 
 interface Props {
@@ -13,7 +13,6 @@ const { post } = Astro.props;
 const { title, description, pubDate, heroImage, category } = post.data;
 const originalFileName = post.id.toLowerCase();
 const displayImage = heroImage || defaultCover;
-const wordCount = calculateWordCount(post.body || '');
 const readingTime = calculateReadingTime(post.body || '');
 ---
 
