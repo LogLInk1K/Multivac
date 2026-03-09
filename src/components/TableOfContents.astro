@@ -98,7 +98,7 @@
           link.style.opacity = '1';
           link.style.transform = 'translateX(0)';
           link.classList.remove('text-text-light', 'dark:text-text-dark', 'text-text-light/80', 'dark:text-text-dark/80');
-          link.classList.add('text-text-light/60', 'dark:text-text-dark/60');
+          link.classList.add('text-text-light/70', 'dark:text-text-dark/70');
 
           // 小横条保持低调色
           bar.classList.remove('bg-text-light/50', 'dark:bg-text-dark/50', 'bg-primary-light', 'dark:bg-primary-dark');
@@ -107,7 +107,7 @@
           link.style.visibility = 'visible';
           link.style.opacity = '1';
           link.style.transform = 'translateX(0)';
-          link.classList.remove('text-text-light', 'dark:text-text-dark', 'text-text-light/60', 'dark:text-text-dark/60');
+          link.classList.remove('text-text-light', 'dark:text-text-dark', 'text-text-light/70', 'dark:text-text-dark/70');
           link.classList.add('text-text-light/80', 'dark:text-text-dark/80', 'font-bold');
 
           // 小横条保持低调色，但稍微亮一点
@@ -121,8 +121,8 @@
               link.style.visibility = 'hidden';
             }
           }, 300);
-          link.classList.remove('text-text-light/60', 'dark:text-text-dark/60', 'text-text-light/80', 'dark:text-text-dark/80', 'font-bold');
-          link.classList.add('text-text-light/60', 'dark:text-text-dark/60');
+          link.classList.remove('text-text-light/70', 'dark:text-text-dark/70', 'text-text-light/80', 'dark:text-text-dark/80', 'font-bold');
+          link.classList.add('text-text-light/70', 'dark:text-text-dark/70');
 
           // 小横条恢复最低调色
           bar.classList.remove('bg-text-light/50', 'dark:bg-text-dark/50', 'bg-primary-light', 'dark:bg-primary-dark');
@@ -166,7 +166,7 @@
       a.href = `#${item.id}`;
       a.textContent = item.text;
       const linkMargin = item.level === 'h2' ? 'ml-1.5' : '';
-      a.className = `block text-sm transition-all duration-300 ease-in-out truncate text-text-light/60 dark:text-text-dark/60 font-medium hover:text-primary-light dark:hover:text-primary-dark ${linkMargin}`;
+      a.className = `block text-sm transition-all duration-300 ease-in-out truncate text-text-light/70 dark:text-text-dark/70 font-medium hover:text-primary-light dark:hover:text-primary-dark ${linkMargin}`;
       a.dataset.headingId = item.id;
 
       wrapper.appendChild(bar);

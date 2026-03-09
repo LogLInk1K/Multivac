@@ -219,7 +219,7 @@ function formatDate(date: Date): string {
           <div class="flex items-center gap-1 md:gap-2">
             ${visiblePages.map((page) => {
               if (page === ELLIPSIS) {
-                return `<span class="w-8 text-center text-text-light/40 dark:text-text-dark/40">${ELLIPSIS}</span>`;
+                return `<span class="w-8 text-center text-text-light/70 dark:text-text-dark/70">${ELLIPSIS}</span>`;
               }
               
               const pageNum = page;
@@ -283,7 +283,7 @@ function formatDate(date: Date): string {
           <p class="text-text-light/70 dark:text-text-dark/70">
             {pageDescription}
           </p>
-          <div class="flex flex-col gap-1 mt-4 text-sm text-text-light/60 dark:text-text-dark/60">
+          <div class="flex flex-col gap-1 mt-4 text-sm text-text-light/70 dark:text-text-dark/70">
             {pubDate && (
               <span class="flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,10 +306,10 @@ function formatDate(date: Date): string {
 
         {watchingList.length === 0 && (
           <div class="p-12 bg-card-light dark:bg-card-dark rounded-3xl shadow-sm text-center">
-            <svg class="w-16 h-16 mx-auto mb-4 text-text-light/40 dark:text-text-dark/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-16 h-16 mx-auto mb-4 text-text-light/70 dark:text-text-dark/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
             </svg>
-            <p class="text-text-light/60 dark:text-text-dark/60">
+            <p class="text-text-light/70 dark:text-text-dark/70">
               暂无记录
             </p>
           </div>
