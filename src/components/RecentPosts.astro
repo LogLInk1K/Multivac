@@ -106,14 +106,17 @@ const allPostUrls = otherPosts.map(post => `/p/${post.id.toLowerCase()}`);
 </div>
 
 <script>
+  import { navigate } from 'astro:transitions/client';
+  
   document.addEventListener('astro:page-load', () => {
     const btn = document.getElementById('random-walk-btn');
     if (btn) {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
         const urls = JSON.parse(btn.dataset.urls || '[]');
         if (urls.length > 0) {
           const randomIndex = Math.floor(Math.random() * urls.length);
-          window.location.href = urls[randomIndex];
+          navigate(urls[randomIndex]);
         }
       });
     }
