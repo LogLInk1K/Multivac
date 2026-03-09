@@ -444,7 +444,7 @@ const dfAbout = '/img/df-about.webp';
 
       try {
         // 获取当前页面信息
-        const pageTitle = document.querySelector('h1')?.textContent || document.title;
+        const pageTitle = document.querySelector('[data-article-title]')?.textContent || document.querySelector('h1')?.textContent || document.title;
         const pageDescription = (document.querySelector('meta[name="description"]') as HTMLMetaElement)?.content || '分享这篇文章';
         const pageUrl = window.location.href;
 
