@@ -486,17 +486,14 @@ const readingTime = calculateReadingTime(content);
 				});
 
 				const images = document.querySelectorAll('.prose img');
-				console.log('Found images:', images.length);
 				
 				const seenImages = new Set();
-				images.forEach((img, index) => {
+				images.forEach((img) => {
 					const htmlImg = img as HTMLElement;
 					const src = img.getAttribute('src');
-					console.log(`Image ${index}:`, src, 'Already has fancybox:', img.hasAttribute('data-fancybox'), 'Already seen:', seenImages.has(src), 'Is visible:', htmlImg.offsetParent !== null);
 					
 					if (src && !src.startsWith('data:') && htmlImg.offsetParent !== null) {
 						if (seenImages.has(src)) {
-							console.log(`Image ${index} - Duplicate, skipping`);
 							return;
 						}
 						seenImages.add(src);
@@ -504,12 +501,8 @@ const readingTime = calculateReadingTime(content);
 						img.setAttribute('data-src', src);
 						img.setAttribute('data-caption', img.getAttribute('alt') || '');
 						img.classList.add('cursor-pointer', 'hover:scale-105', 'transition-transform', 'duration-300');
-						console.log(`Image ${index} - Set fancybox attributes`);
 					}
 				});
-
-				const fancyboxImages = document.querySelectorAll('[data-fancybox]');
-				console.log('Total fancybox images:', fancyboxImages.length);
 
 				bindFancybox();
 			});
