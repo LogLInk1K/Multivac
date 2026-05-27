@@ -133,7 +133,7 @@ function formatDateForDisplay(date: Date): string {
           imagesHtml = `
             <div class="mb-4">
               <a data-fancybox="gallery-${moment.id}" data-src="${moment.images[0]}" href="${moment.images[0]}">
-                <img src="${moment.images[0]}" alt="动态图片" class="w-auto max-h-[120px] object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300" />
+                <img src="${moment.images[0]}" alt="动态图片" loading="lazy" decoding="async" class="w-auto max-h-[120px] object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300" />
               </a>
             </div>
           `;
@@ -144,7 +144,7 @@ function formatDateForDisplay(date: Date): string {
               <div class="grid gap-3 max-w-[500px] ${gridCols}">
                 ${moment.images.map((image) => `
                   <a data-fancybox="gallery-${moment.id}" data-src="${image}" href="${image}">
-                    <img src="${image}" alt="动态图片" class="w-full aspect-square object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300" />
+                    <img src="${image}" alt="动态图片" loading="lazy" decoding="async" class="w-full aspect-square object-cover rounded-xl bg-hero-light dark:bg-hero-dark cursor-pointer hover:scale-105 transition-transform duration-300 will-change-transform" />
                   </a>
                 `).join('')}
               </div>
@@ -217,6 +217,10 @@ function formatDateForDisplay(date: Date): string {
 
     if (countDisplay) {
       countDisplay.textContent = `第 ${currentPage} / ${totalPages} 页，共 ${moments.length} 条动态`;
+    }
+
+    if (typeof window.bindFancybox === 'function') {
+      window.bindFancybox();
     }
   }
 
@@ -291,6 +295,8 @@ function formatDateForDisplay(date: Date): string {
       hideScrollbar: false,
     });
   }
+
+  (window as any).bindFancybox = bindFancybox;
 
   document.addEventListener("astro:page-load", bindFancybox);
 </script>
