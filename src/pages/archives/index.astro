@@ -22,7 +22,7 @@ const postsByYear = posts.reduce((acc, post) => {
 const sortedYears = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 ---
 
-<MainLayout title=时光机 description={SITE_DESCRIPTION}>
+<MainLayout title=文稿 description={SITE_DESCRIPTION}>
 	<section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
 			<!-- 响应式布局：小屏幕单列，中等及大屏幕双栏 -->
 			<div class="grid grid-cols-1 md:grid-cols-[272px_1fr] gap-6">

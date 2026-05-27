@@ -1,0 +1,368 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
+
+interface Rating {
+  source: 'douban' | 'bangumi';
+  score: number;
+}
+
+interface Link {
+  source: 'douban' | 'bangumi';
+  url: string;
+}
+
+interface WatchingItem {
+  title: string;
+  year: number;
+  cover: string;
+  comment: string;
+  type: string;
+  country?: string;
+  ratings?: Rating[];
+  links?: Link[];
+}
+
+let watchingList: WatchingItem[] = [];
+
+try {
+  const watchingData = await getEntry('post', 'watching');
+  if (watchingData && watchingData.data.watching) {
+    watchingList = watchingData.data.watching as WatchingItem[];
+  }
+} catch (error) {
+  console.log('Using empty watching data');
+}
+
+const idxParam = Astro.url.searchParams.get('idx');
+const urlIdx = idxParam !== null && !isNaN(Number(idxParam)) && Number(idxParam) >= 0 && Number(idxParam) < watchingList.length
+  ? Number(idxParam)
+  : null;
+
+const startIdx = urlIdx !== null ? urlIdx : Math.floor(Math.random() * Math.max(1, watchingList.length));
+const initialItem = watchingList[startIdx] || null;
+
+const initialPicks: number[] = [];
+if (watchingList.length > 1) {
+  const shown = new Set([startIdx]);
+  for (let i = 0; i < Math.min(15, watchingList.length - 1); i++) {
+    let ri: number;
+    do {
+      ri = Math.floor(Math.random() * watchingList.length);
+    } while (shown.has(ri));
+    shown.add(ri);
+    initialPicks.push(ri);
+  }
+}
+
+const ratingIcons: Record<string, string> = { douban: '/img/douban.ico', bangumi: '/img/bangumi.ico' };
+const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangumi' };
+---
+
+<MainLayout title="时光机 · 随机推荐" description="随机穿梭，发现一部值得观看的作品">
+  <section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div id="time-machine-root" data-list={JSON.stringify(watchingList)} data-initial-idx={startIdx}>
+        <div class="time-machine-hero relative rounded-3xl overflow-hidden bg-card-light dark:bg-card-dark shadow-xl border border-transparent hover:border-border-light dark:hover:border-border-dark transition-all duration-500 min-h-[600px] flex items-center">
+          <div 
+            class="time-machine-backdrop absolute inset-0 bg-cover bg-center scale-105" 
+            id="time-machine-bg"
+            style={{ 
+              backgroundImage: initialItem ? `url(${initialItem.cover})` : 'none',
+              opacity: initialItem ? 0.35 : 0
+            }}
+          ></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent dark:from-black/90 dark:via-black/60"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+          <div class="relative flex flex-col md:flex-row items-center gap-10 p-8 md:p-12 lg:p-16 w-full">
+            <div class="flex-shrink-0 w-52 md:w-64 lg:w-72 relative" id="time-machine-poster-wrap">
+              <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 relative">
+                <img 
+                  id="time-machine-poster" 
+                  src={initialItem?.cover || ''} 
+                  alt={initialItem?.title || ''} 
+                  class="w-full h-full object-cover" 
+                />
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0 pt-2">
+              <div class="flex items-center gap-2 mb-5">
+                <span class="px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-bold tracking-wider uppercase font-mono">Time Machine</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+              </div>
+
+              <h1 id="time-machine-title" class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">
+                {initialItem?.title || '加载中...'}
+              </h1>
+
+              <div class="flex flex-wrap items-center gap-2.5 mb-7" id="time-machine-meta">
+                {initialItem?.type ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.type}</span> : null}
+                {initialItem?.country ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.country}</span> : null}
+                {initialItem?.year ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.year}</span> : null}
+                {initialItem?.ratings?.map(r => (
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-semibold backdrop-blur-sm">
+                    <img src={ratingIcons[r.source] || ''} alt="" class="w-4 h-4" />
+                    {r.score.toFixed(1)}
+                  </span>
+                ))}
+              </div>
+
+              <div class="relative pl-5 mb-8">
+                <div class="absolute left-0 top-0 bottom-0 w-1.5 rounded-full bg-amber-400/60"></div>
+                <p id="time-machine-comment" class="text-white/80 text-lg md:text-xl leading-relaxed italic">
+                  {initialItem?.comment || ''}
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-4" id="time-machine-links">
+                {initialItem?.links?.map(l => (
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm transition-all duration-300">
+                    <img src={ratingIcons[l.source] || ''} alt="" class="w-4 h-4" />
+                    {ratingLabels[l.source] || l.source}
+                    <svg class="w-3.5 h-3.5 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-center gap-4">
+          <button id="time-machine-reroll" class="group flex items-center gap-2 px-6 py-3 rounded-full bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark hover:border-primary-light dark:hover:border-primary-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 font-medium text-text-light dark:text-text-dark">
+            <svg class="w-5 h-5 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            换一部
+          </button>
+          <a href="/watching" class="flex items-center gap-2 px-6 py-3 rounded-full bg-primary-light dark:bg-primary-dark text-white font-medium hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-light/30 dark:hover:shadow-primary-dark/20 transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+            </svg>
+            全部片单
+          </a>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="text-lg font-bold text-text-light dark:text-text-dark mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+              </svg>
+              更多推荐
+            </h2>
+            <div id="time-machine-more" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {initialPicks.map(ri => {
+                const m = watchingList[ri];
+                return (
+                  <a href="javascript:void(0)" data-idx={ri} class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer ring-1 ring-white/5 hover:ring-amber-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                    <img src={m.cover} alt={m.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <p class="text-white text-xs font-bold truncate">{m.title}</p>
+                      <p class="text-white/60 text-[10px]">{m.type} · {m.year}</p>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+      </div>
+    </section>
+</MainLayout>
+
+<script>
+  const ratingIcons: Record<string, string> = { douban: '/img/douban.ico', bangumi: '/img/bangumi.ico' };
+  const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangumi' };
+
+  let list: any[] = [];
+  let currentIdx = -1;
+
+  function pick(exclude?: number) {
+    if (list.length <= 1) return 0;
+    let idx: number;
+    do {
+      idx = Math.floor(Math.random() * list.length);
+    } while (idx === exclude);
+    return idx;
+  }
+
+  function render(idx: number, animate: boolean = true) {
+    currentIdx = idx;
+    const item = list[idx];
+    if (!item) return;
+
+    const root = document.getElementById('time-machine-root');
+    if (!root) return;
+
+    const bg = document.getElementById('time-machine-bg') as HTMLElement;
+    const poster = document.getElementById('time-machine-poster') as HTMLImageElement;
+    const title = document.getElementById('time-machine-title') as HTMLElement;
+    const comment = document.getElementById('time-machine-comment') as HTMLElement;
+    const meta = document.getElementById('time-machine-meta') as HTMLElement;
+    const links = document.getElementById('time-machine-links') as HTMLElement;
+    const more = document.getElementById('time-machine-more') as HTMLElement;
+    const hero = root.querySelector('.time-machine-hero') as HTMLElement;
+
+    if (animate) {
+      bg.style.opacity = '0';
+      bg.style.transform = 'scale(1.1)';
+      if (hero) {
+        hero.style.opacity = '0';
+        hero.style.transform = 'translateY(12px)';
+      }
+    }
+
+    setTimeout(() => {
+      if (bg) {
+        bg.style.backgroundImage = `url(${item.cover})`;
+        bg.style.opacity = '0.35';
+        bg.style.transform = 'scale(1.05)';
+      }
+
+      if (poster) {
+        poster.src = item.cover;
+        poster.alt = item.title;
+        poster.className = 'w-full h-full object-cover';
+      }
+
+      if (title) title.textContent = item.title;
+      if (comment) comment.textContent = item.comment;
+
+      if (meta) {
+        const tags: string[] = [];
+        if (item.type) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.type}</span>`);
+        if (item.country) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.country}</span>`);
+        if (item.year) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.year}</span>`);
+        if (item.ratings) {
+          item.ratings.forEach((r: any) => {
+            tags.push(`<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-semibold backdrop-blur-sm"><img src="${ratingIcons[r.source] || ''}" alt="" class="w-4 h-4" />${r.score.toFixed(1)}</span>`);
+          });
+        }
+        meta.innerHTML = tags.join('');
+      }
+
+      if (links) {
+        if (item.links && item.links.length > 0) {
+          links.innerHTML = item.links.map((l: any) => `
+            <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm transition-all duration-300">
+              <img src="${ratingIcons[l.source] || ''}" alt="" class="w-4 h-4" />
+              ${ratingLabels[l.source] || l.source}
+              <svg class="w-3.5 h-3.5 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+          `).join('');
+        } else {
+          links.innerHTML = '';
+        }
+      }
+
+      if (more) {
+        const shown = new Set<number>([idx]);
+        const picks: number[] = [];
+        for (let i = 0; i < Math.min(15, list.length - 1); i++) {
+          let ri: number;
+          do { ri = Math.floor(Math.random() * list.length); } while (shown.has(ri));
+          shown.add(ri);
+          picks.push(ri);
+        }
+        more.innerHTML = picks.map((ri) => {
+          const m = list[ri];
+          return `
+            <a href="javascript:void(0)" data-idx="${ri}" class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer ring-1 ring-white/5 hover:ring-amber-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+              <img src="${m.cover}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <p class="text-white text-xs font-bold truncate">${m.title}</p>
+                <p class="text-white/60 text-[10px]">${m.type} · ${m.year}</p>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        more.querySelectorAll('.time-machine-pick').forEach((el) => {
+          el.addEventListener('click', () => {
+            const targetIdx = parseInt((el as HTMLElement).dataset.idx || '0');
+            render(targetIdx);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      }
+
+      if (animate) {
+        const hero = root.querySelector('.time-machine-hero') as HTMLElement;
+        if (hero) {
+          requestAnimationFrame(() => {
+            hero.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            hero.style.opacity = '1';
+            hero.style.transform = 'translateY(0)';
+          });
+        }
+      }
+    }, animate ? 150 : 0);
+  }
+
+  function init() {
+    const root = document.getElementById('time-machine-root');
+    if (!root) return;
+
+    const raw = root.getAttribute('data-list');
+    if (!raw) return;
+
+    try {
+      list = JSON.parse(raw);
+    } catch { return; }
+
+    if (list.length === 0) return;
+
+    const initialIdxStr = root.getAttribute('data-initial-idx');
+    const initialIdx = initialIdxStr !== null ? parseInt(initialIdxStr) : -1;
+    currentIdx = initialIdx;
+
+    const params = new URLSearchParams(window.location.search);
+    const idxParam = params.get('idx');
+    const targetIdx = idxParam !== null && !isNaN(Number(idxParam)) && Number(idxParam) >= 0 && Number(idxParam) < list.length
+      ? Number(idxParam)
+      : null;
+
+    if (targetIdx !== null && targetIdx !== currentIdx) {
+      render(targetIdx, false);
+    } else {
+      const more = document.getElementById('time-machine-more');
+      if (more) {
+        more.querySelectorAll('.time-machine-pick').forEach((el) => {
+          el.addEventListener('click', () => {
+            const targetIdx = parseInt((el as HTMLElement).dataset.idx || '0');
+            render(targetIdx);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      }
+    }
+
+    const rerollBtn = document.getElementById('time-machine-reroll');
+    if (rerollBtn) {
+      rerollBtn.addEventListener('click', () => {
+        render(pick(currentIdx));
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style is:global>
+  .time-machine-hero {
+    min-height: 420px;
+  }
+
+  @media (min-width: 768px) {
+    .time-machine-hero {
+      min-height: 520px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .time-machine-hero {
+      min-height: 580px;
+    }
+  }
+</style>
