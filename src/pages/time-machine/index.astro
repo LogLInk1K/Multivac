@@ -59,68 +59,83 @@ const ratingIcons: Record<string, string> = { douban: '/img/douban.ico', bangumi
 const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangumi' };
 ---
 
-<MainLayout title="时光机 · 随机推荐" description="随机穿梭，发现一部值得观看的作品">
-  <section class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<MainLayout title="或者是这部" description="随机穿梭，发现一部值得观看的作品">
+  <section class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 antialiased mt-6">
     <div id="time-machine-root" data-list={JSON.stringify(watchingList)} data-initial-idx={startIdx}>
-        <div class="time-machine-hero relative rounded-3xl overflow-hidden bg-card-light dark:bg-card-dark shadow-xl border border-transparent hover:border-border-light dark:hover:border-border-dark transition-all duration-500 min-h-[600px] flex items-center">
+        
+        {/* 主舞台卡片：优化为现代 Bento 与卡片融合质感 */}
+        <div class="time-machine-hero relative rounded-[28px] overflow-hidden border border-zinc-200/60 dark:border-zinc-800/50 bg-white dark:bg-zinc-950 shadow-[0_4px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-all duration-500 min-h-[540px] flex items-center">
+          
+          {/* 高级朦胧背景层 */}
           <div 
-            class="time-machine-backdrop absolute inset-0 bg-cover bg-center scale-105" 
+            class="time-machine-backdrop absolute inset-0 bg-cover bg-center scale-105 transition-all duration-700 select-none pointer-events-none" 
             id="time-machine-bg"
             style={{ 
               backgroundImage: initialItem ? `url(${initialItem.cover})` : 'none',
-              opacity: initialItem ? 0.35 : 0
+              opacity: initialItem ? 0.08 : 0
             }}
           ></div>
-          <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent dark:from-black/90 dark:via-black/60"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          {/* 细腻环境遮罩 */}
+          <div class="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-zinc-50/90 via-zinc-50/40 to-transparent dark:from-zinc-950/90 dark:via-zinc-950/40"></div>
 
-          <div class="relative flex flex-col md:flex-row items-center gap-10 p-8 md:p-12 lg:p-16 w-full">
-            <div class="flex-shrink-0 w-52 md:w-64 lg:w-72 relative" id="time-machine-poster-wrap">
-              <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 relative">
+          {/* 核心内容区 */}
+          <div class="relative flex flex-col md:flex-row items-center gap-8 lg:gap-12 p-6 md:p-10 lg:p-14 w-full z-10">
+            
+            {/* 左侧海报：现代悬浮杂志质感 */}
+            <div class="flex-shrink-0 w-44 md:w-56 lg:w-64 relative" id="time-machine-poster-wrap">
+              <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_16px_40px_-10px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7)] border border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-100 dark:bg-zinc-900 transition-all duration-500">
                 <img 
                   id="time-machine-poster" 
                   src={initialItem?.cover || ''} 
                   alt={initialItem?.title || ''} 
-                  class="w-full h-full object-cover" 
+                  class="w-full h-full object-cover transition-opacity duration-300" 
                 />
               </div>
             </div>
 
-            <div class="flex-1 min-w-0 pt-2">
-              <div class="flex items-center gap-2 mb-5">
-                <span class="px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-bold tracking-wider uppercase font-mono">Time Machine</span>
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            {/* 右侧文本：去工业流水线味，注重排版对比 */}
+            <div class="flex-1 min-w-0 w-full text-center md:text-left pt-2">
+              <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
+                <span class="text-[10px] tracking-widest uppercase font-mono font-bold text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded">Watching Shuffle</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               </div>
 
-              <h1 id="time-machine-title" class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">
+              <h1 id="time-machine-title" class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight mb-3 leading-tight">
                 {initialItem?.title || '加载中...'}
               </h1>
 
-              <div class="flex flex-wrap items-center gap-2.5 mb-7" id="time-machine-meta">
-                {initialItem?.type ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.type}</span> : null}
-                {initialItem?.country ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.country}</span> : null}
-                {initialItem?.year ? <span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">{initialItem.year}</span> : null}
+              {/* 信息去胶囊化，采用点状串联，只给评分独立高级色彩 */}
+              <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-sm text-zinc-500 dark:text-zinc-400 mb-6 font-medium" id="time-machine-meta">
+                {initialItem?.type && <span>{initialItem.type}</span>}
+                {(initialItem?.country || initialItem?.year) && <span class="text-zinc-300 dark:text-zinc-700">·</span>}
+                {initialItem?.country && <span>{initialItem.country}</span>}
+                {initialItem?.year && <span class="text-zinc-300 dark:text-zinc-700">·</span>}
+                {initialItem?.year && <span class="font-mono">{initialItem.year}</span>}
+                
+                {/* 评分独立渲染 */}
                 {initialItem?.ratings?.map(r => (
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-semibold backdrop-blur-sm">
-                    <img src={ratingIcons[r.source] || ''} alt="" class="w-4 h-4" />
+                  <span class={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-bold ml-1 font-mono ${
+                    r.source === 'douban' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-pink-500/10 text-pink-600 dark:text-pink-400'
+                  }`}>
                     {r.score.toFixed(1)}
                   </span>
                 ))}
               </div>
 
-              <div class="relative pl-5 mb-8">
-                <div class="absolute left-0 top-0 bottom-0 w-1.5 rounded-full bg-amber-400/60"></div>
-                <p id="time-machine-comment" class="text-white/80 text-lg md:text-xl leading-relaxed italic">
-                  {initialItem?.comment || ''}
+              {/* 评论文本区 */}
+              <div class="relative mb-8 max-w-2xl">
+                <p id="time-machine-comment" class="text-zinc-600 dark:text-zinc-300 text-base md:text-lg leading-relaxed font-normal">
+                  “ {initialItem?.comment || ''} ”
                 </p>
               </div>
 
-              <div class="flex flex-wrap items-center gap-4" id="time-machine-links">
+              {/* 外链按钮组：扁平化、细腻化 */}
+              <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5" id="time-machine-links">
                 {initialItem?.links?.map(l => (
-                  <a href={l.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm transition-all duration-300">
-                    <img src={ratingIcons[l.source] || ''} alt="" class="w-4 h-4" />
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 text-xs font-medium transition-all duration-300 shadow-sm">
+                    <img src={ratingIcons[l.source] || ''} alt="" class="w-3.5 h-3.5 opacity-80" />
                     {ratingLabels[l.source] || l.source}
-                    <svg class="w-3.5 h-3.5 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <svg class="w-3 h-3 opacity-40 ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path></svg>
                   </a>
                 ))}
               </div>
@@ -128,38 +143,36 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
           </div>
         </div>
 
-        <div class="mt-6 flex items-center justify-center gap-4">
-          <button id="time-machine-reroll" class="group flex items-center gap-2 px-6 py-3 rounded-full bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark hover:border-primary-light dark:hover:border-primary-dark hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 font-medium text-text-light dark:text-text-dark">
-            <svg class="w-5 h-5 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        {/* 核心控制区域 */}
+        <div class="mt-8 flex items-center justify-center gap-3">
+          <button id="time-machine-reroll" class="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 transition-all duration-300 text-sm font-semibold shadow-md shadow-zinc-950/10 dark:shadow-none">
+            <svg class="w-4 h-4 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
             </svg>
-            换一部
+            换一部作品
           </button>
-          <a href="/watching" class="flex items-center gap-2 px-6 py-3 rounded-full bg-primary-light dark:bg-primary-dark text-white font-medium hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-light/30 dark:hover:shadow-primary-dark/20 transition-all duration-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
-            </svg>
-            全部片单
+          <a href="/watching" class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-all duration-300 text-sm font-semibold shadow-sm">
+            前往漫游
           </a>
         </div>
 
-        <div class="mt-10">
-            <h2 class="text-lg font-bold text-text-light dark:text-text-dark mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
-              </svg>
-              更多推荐
-            </h2>
-            <div id="time-machine-more" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+        {/* 下方推荐网格 */}
+        <div class="mt-14">
+            <div class="flex items-center gap-2 mb-4 border-b border-zinc-100 dark:border-zinc-900 pb-3">
+              <span class="text-sm font-bold text-zinc-800 dark:text-zinc-200 tracking-wide">点一下，今晚看这部</span>
+              <span class="text-xs font-mono text-zinc-400">How about...</span>
+            </div>
+            
+            <div id="time-machine-more" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
               {initialPicks.map(ri => {
                 const m = watchingList[ri];
                 return (
-                  <a href="javascript:void(0)" data-idx={ri} class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer ring-1 ring-white/5 hover:ring-amber-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                    <img src={m.cover} alt={m.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <p class="text-white text-xs font-bold truncate">{m.title}</p>
-                      <p class="text-white/60 text-[10px]">{m.type} · {m.year}</p>
+                  <a href="javascript:void(0)" data-idx={ri} class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 cursor-pointer border border-zinc-200/40 dark:border-zinc-800/40 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-md">
+                    <img src={m.cover} alt={m.title} class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <p class="text-white text-xs font-bold truncate tracking-wide">{m.title}</p>
+                      <p class="text-zinc-300 text-[10px] mt-0.5 font-mono">{m.year}</p>
                     </div>
                   </a>
                 );
@@ -186,6 +199,7 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
     return idx;
   }
 
+  // 现代无闪烁、带物理平滑度的渲染函数
   function render(idx: number, animate: boolean = true) {
     currentIdx = idx;
     const item = list[idx];
@@ -203,76 +217,70 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
     const more = document.getElementById('time-machine-more') as HTMLElement;
     const hero = root.querySelector('.time-machine-hero') as HTMLElement;
 
-    if (animate) {
-      bg.style.opacity = '0';
-      bg.style.transform = 'scale(1.1)';
-      if (hero) {
-        hero.style.opacity = '0';
-        hero.style.transform = 'translateY(12px)';
-      }
+    if (animate && hero) {
+      // 优雅的向内收缩淡出动画
+      hero.style.opacity = '0.4';
+      hero.style.transform = 'scale(0.995)';
     }
 
     setTimeout(() => {
       if (bg) {
         bg.style.backgroundImage = `url(${item.cover})`;
-        bg.style.opacity = '0.35';
-        bg.style.transform = 'scale(1.05)';
       }
 
       if (poster) {
         poster.src = item.cover;
         poster.alt = item.title;
-        poster.className = 'w-full h-full object-cover';
       }
 
       if (title) title.textContent = item.title;
-      if (comment) comment.textContent = item.comment;
+      if (comment) comment.textContent = `“ ${item.comment} ”`;
 
       if (meta) {
-        const tags: string[] = [];
-        if (item.type) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.type}</span>`);
-        if (item.country) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.country}</span>`);
-        if (item.year) tags.push(`<span class="px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm">${item.year}</span>`);
+        const parts: string[] = [];
+        if (item.type) parts.push(`<span>${item.type}</span>`);
+        if (item.country) parts.push(`<span>${item.country}</span>`);
+        if (item.year) parts.push(`<span class="font-mono">${item.year}</span>`);
+        
+        let html = parts.join('<span class="text-zinc-300 dark:text-zinc-700">·</span>');
+        
         if (item.ratings) {
           item.ratings.forEach((r: any) => {
-            tags.push(`<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-400 text-sm font-semibold backdrop-blur-sm"><img src="${ratingIcons[r.source] || ''}" alt="" class="w-4 h-4" />${r.score.toFixed(1)}</span>`);
+            const colorClass = r.source === 'douban' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-pink-500/10 text-pink-600 dark:text-pink-400';
+            html += `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-bold ml-1 font-mono ${colorClass}">${r.score.toFixed(1)}</span>`;
           });
         }
-        meta.innerHTML = tags.join('');
+        meta.innerHTML = html;
       }
 
       if (links) {
-        if (item.links && item.links.length > 0) {
-          links.innerHTML = item.links.map((l: any) => `
-            <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-white/90 text-sm font-medium backdrop-blur-sm transition-all duration-300">
-              <img src="${ratingIcons[l.source] || ''}" alt="" class="w-4 h-4" />
-              ${ratingLabels[l.source] || l.source}
-              <svg class="w-3.5 h-3.5 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </a>
-          `).join('');
-        } else {
-          links.innerHTML = '';
-        }
+        links.innerHTML = (item.links || []).map((l: any) => `
+          <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 text-xs font-medium transition-all duration-300 shadow-sm">
+            <img src="${ratingIcons[l.source] || ''}" alt="" class="w-3.5 h-3.5 opacity-80" />
+            ${ratingLabels[l.source] || l.source}
+            <svg class="w-3 h-3 opacity-40 ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path></svg>
+          </a>
+        `).join('');
       }
 
       if (more) {
         const shown = new Set<number>([idx]);
-        const picks: number[] = [];
+        const pks: number[] = [];
         for (let i = 0; i < Math.min(15, list.length - 1); i++) {
           let ri: number;
           do { ri = Math.floor(Math.random() * list.length); } while (shown.has(ri));
           shown.add(ri);
-          picks.push(ri);
+          pks.push(ri);
         }
-        more.innerHTML = picks.map((ri) => {
+        more.innerHTML = pks.map((ri) => {
           const m = list[ri];
           return `
-            <a href="javascript:void(0)" data-idx="${ri}" class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-hover-light dark:bg-hover-dark cursor-pointer ring-1 ring-white/5 hover:ring-amber-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-              <img src="${m.cover}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div class="absolute bottom-0 left-0 right-0 p-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <p class="text-white text-xs font-bold truncate">${m.title}</p>
-                <p class="text-white/60 text-[10px]">${m.type} · ${m.year}</p>
+            <a href="javascript:void(0)" data-idx="${ri}" class="time-machine-pick group block relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 cursor-pointer border border-zinc-200/40 dark:border-zinc-800/40 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-md">
+              <img src="${m.cover}" alt="${m.title}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <p class="text-white text-xs font-bold truncate tracking-wide">${m.title}</p>
+                <p class="text-zinc-300 text-[10px] mt-0.5 font-mono">${m.year}</p>
               </div>
             </a>
           `;
@@ -287,17 +295,14 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
         });
       }
 
-      if (animate) {
-        const hero = root.querySelector('.time-machine-hero') as HTMLElement;
-        if (hero) {
-          requestAnimationFrame(() => {
-            hero.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            hero.style.opacity = '1';
-            hero.style.transform = 'translateY(0)';
-          });
-        }
+      if (animate && hero) {
+        requestAnimationFrame(() => {
+          hero.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          hero.style.opacity = '1';
+          hero.style.transform = 'scale(1)';
+        });
       }
-    }, animate ? 150 : 0);
+    }, animate ? 120 : 0);
   }
 
   function init() {
@@ -307,10 +312,7 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
     const raw = root.getAttribute('data-list');
     if (!raw) return;
 
-    try {
-      list = JSON.parse(raw);
-    } catch { return; }
-
+    try { list = JSON.parse(raw); } catch { return; }
     if (list.length === 0) return;
 
     const initialIdxStr = root.getAttribute('data-initial-idx');
@@ -348,21 +350,3 @@ const ratingLabels: Record<string, string> = { douban: '豆瓣', bangumi: 'Bangu
 
   document.addEventListener('astro:page-load', init);
 </script>
-
-<style is:global>
-  .time-machine-hero {
-    min-height: 420px;
-  }
-
-  @media (min-width: 768px) {
-    .time-machine-hero {
-      min-height: 520px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .time-machine-hero {
-      min-height: 580px;
-    }
-  }
-</style>
