@@ -209,8 +209,8 @@
     let scrollTimeout;
     window.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(updateVisibleHeadings, 50);
-    });
+      scrollTimeout = setTimeout(updateVisibleHeadings, 100);
+    }, { passive: true });
 
     // 添加平滑滚动
     document.querySelectorAll('#toc-list a').forEach((anchor) => {

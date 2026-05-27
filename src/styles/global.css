@@ -3,12 +3,138 @@
 @import "tailwindcss/utilities";
 @import "../styles/markdown.css";
 
+/* --- Inter Variable 全局 OpenType 特性 --- */
+html {
+  font-feature-settings: "cv01", "ss03";
+  -webkit-font-feature-settings: "cv01", "ss03";
+  font-kerning: none;
+}
+
+/* --- 光晕背景 --- */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.bg-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+html.dark .bg-glow::before {
+  opacity: 0.8;
+}
+
+.bg-glow__orb {
+  position: absolute;
+  border-radius: 50%;
+  contain: layout style;
+}
+
+.bg-glow__orb--1 {
+  width: 60vmax;
+  height: 60vmax;
+  top: -25%;
+  left: -15%;
+  filter: blur(50px);
+}
+
+.bg-glow__orb--2 {
+  width: 50vmax;
+  height: 50vmax;
+  bottom: -30%;
+  right: -20%;
+  filter: blur(55px);
+}
+
+.bg-glow__orb--3 {
+  width: 40vmax;
+  height: 40vmax;
+  top: 20%;
+  left: 35%;
+  filter: blur(60px);
+}
+
+/* 亮色主题 - 蓝色光晕 */
+.bg-glow__orb--1 {
+  background: radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.10) 0%, rgba(99,102,241,0.04) 40%, transparent 70%);
+}
+.bg-glow__orb--2 {
+  background: radial-gradient(ellipse at 70% 60%, rgba(99,102,241,0.09) 0%, rgba(59,130,246,0.03) 40%, transparent 70%);
+}
+.bg-glow__orb--3 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(14,165,233,0.08) 0%, rgba(59,130,246,0.03) 50%, transparent 70%);
+}
+
+/* 暗色主题 - 紫色光晕 */
+html.dark .bg-glow__orb--1 {
+  background: radial-gradient(ellipse at 30% 40%, rgba(139,92,246,0.14) 0%, rgba(94,106,210,0.05) 40%, transparent 70%);
+}
+html.dark .bg-glow__orb--2 {
+  background: radial-gradient(ellipse at 70% 60%, rgba(168,85,247,0.12) 0%, rgba(113,112,255,0.04) 40%, transparent 70%);
+}
+html.dark .bg-glow__orb--3 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(192,132,252,0.10) 0%, rgba(139,92,246,0.04) 50%, transparent 70%);
+}
+
+
+
+/* --- 毛玻璃卡片 --- */
+.bg-card-light {
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.03),
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark .bg-card-dark {
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* --- 悬浮提示框（不透明） --- */
+.tooltip-solid {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dark .tooltip-solid {
+  background: rgba(30, 30, 30, 0.95) !important;
+}
+
 /* --- 字体定义 --- */
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('/fonts/PlusJakartaSans-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
+  font-family: 'Inter Variable';
+  src: url('/fonts/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('/fonts/InterVariable-Italic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -47,18 +173,21 @@
 .dark::view-transition-new(root) { z-index: 999; }
 .dark::view-transition-old(root) { z-index: 1; }
 
-/* --- 5. 局部交互 transition：优化为更细腻的反馈 --- */
-.nav-link, .blog-card, button, a {
-  /* 时长改为 0.4s，使用更优雅的曲线 */
+/* --- 5. 局部交互 transition --- */
+.nav-link, .blog-card {
   transition: 
-    color 0.4s var(--ease-gentle), 
-    background-color 0.4s var(--ease-gentle), 
-    transform 0.4s var(--ease-gentle), 
-    opacity 0.4s var(--ease-gentle),
-    box-shadow 0.4s var(--ease-gentle);
+    color 0.3s var(--ease-gentle), 
+    background-color 0.3s var(--ease-gentle), 
+    border-color 0.3s var(--ease-gentle),
+    box-shadow 0.3s var(--ease-gentle);
 }
 
-/* 按钮点击瞬间的反馈可以稍微快一点 */
+button, a {
+  transition: 
+    color 0.3s var(--ease-gentle), 
+    opacity 0.3s var(--ease-gentle);
+}
+
 button:active {
   transform: scale(0.96);
   transition-duration: 0.1s;

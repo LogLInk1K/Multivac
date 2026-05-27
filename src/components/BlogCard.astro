@@ -16,7 +16,7 @@ const displayImage = heroImage || defaultCover;
 const readingTime = calculateReadingTime(post.body || '');
 ---
 
-<article class="group relative bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden">
+<article class="group relative bg-card-light dark:bg-card-dark rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden border border-transparent hover:border-border-light dark:hover:border-border-dark">
   <div class="relative grid grid-rows-[auto_1fr]">
     {/* 封面图片区域 */}
     <a href={`/p/${originalFileName}`} class="relative overflow-hidden bg-hero-light dark:bg-hero-dark block" style="min-height: 220px;">

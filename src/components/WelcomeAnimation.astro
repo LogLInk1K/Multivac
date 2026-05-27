@@ -88,8 +88,8 @@ const { siteName = '波罗歌', avatarUrl = '/img/avatar.webp' } = Astro.props;
     padding: 0.5rem 1.25rem;
     border-radius: 9999px;
     background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     color: var(--text-light);
@@ -168,7 +168,7 @@ const { siteName = '波罗歌', avatarUrl = '/img/avatar.webp' } = Astro.props;
     />
     <div
       id="welcome-logo"
-      class="font-plus-jakarta font-extrabold text-text-light dark:text-text-dark"
+      class="font-plus-jakarta font-extrabold tracking-wide text-text-light dark:text-text-dark"
     >
       {siteName}
     </div>

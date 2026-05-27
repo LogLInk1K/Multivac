@@ -61,8 +61,13 @@ const { title, description, image } = Astro.props;
         </script>
     </head>
     <body class="min-h-screen flex flex-col bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
+        <div class="bg-glow" aria-hidden="true">
+            <div class="bg-glow__orb bg-glow__orb--1"></div>
+            <div class="bg-glow__orb bg-glow__orb--2"></div>
+            <div class="bg-glow__orb bg-glow__orb--3"></div>
+        </div>
         <WelcomeAnimation />
-        <div id="main-content" class="flex flex-col min-h-screen transition-opacity duration-300">
+        <div id="main-content" class="relative z-10 flex flex-col min-h-screen transition-opacity duration-300">
             <Header />
             <main class="flex-1 pt-2 page-transition">
                 <slot />

@@ -59,6 +59,11 @@ const readingTime = calculateReadingTime(content);
 	</head>
 
 	<body class="min-h-screen flex flex-col bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
+		<div class="bg-glow" aria-hidden="true">
+			<div class="bg-glow__orb bg-glow__orb--1"></div>
+			<div class="bg-glow__orb bg-glow__orb--2"></div>
+			<div class="bg-glow__orb bg-glow__orb--3"></div>
+		</div>
 		<WelcomeAnimation />
 		<div id="main-content" class="flex flex-col min-h-screen transition-opacity duration-300">
 			<Header />
@@ -81,8 +86,8 @@ const readingTime = calculateReadingTime(content);
 							<h1 data-article-title class="text-4xl font-bold text-text-light dark:text-text-dark mb-4">{title}</h1>
 							{showDate && (
 								<div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											文章字数统计
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,8 +95,8 @@ const readingTime = calculateReadingTime(content);
 										</svg>
 										<span>{(wordCount / 1000).toFixed(1)}K 字</span>
 									</div>
-									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											预计阅读时间
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,8 +104,8 @@ const readingTime = calculateReadingTime(content);
 										</svg>
 										<span>{readingTime} 分钟</span>
 									</div>
-									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											文章发布日期
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,8 +114,8 @@ const readingTime = calculateReadingTime(content);
 										<span><FormattedDate date={pubDate} /></span>
 									</div>
 									{updatedDate && (
-										<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+										<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
+											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 												文章更新日期
 											</div>
 											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,9 +127,9 @@ const readingTime = calculateReadingTime(content);
 									{category && (
 										<a 
 											href={`/categories/${category}`}
-											class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
+											class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark hover:bg-white dark:hover:bg-badge-dark/90 transition-colors"
 										>
-											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 												查看 {category} 分类下的所有文章
 											</div>
 											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,9 +153,9 @@ const readingTime = calculateReadingTime(content);
 												{tags.map((tag) => (
 													<a 
 														href={`/tags/${tag}`}
-														class="group relative px-2 py-1 text-xs font-medium bg-gray-100/80 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
+														class="group relative px-2 py-1 text-xs font-medium bg-gray-100/80 dark:bg-white/10 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200/80 dark:hover:bg-white/20 transition-colors"
 													>
-														<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+														<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 															查看 {tag} 标签下的所有文章
 														</div>
 														# {tag}
@@ -159,7 +164,7 @@ const readingTime = calculateReadingTime(content);
 											</div>
 										)}
 									</div>
-									<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100/80 dark:bg-gray-800/80 flex-shrink-0 mr-2">
+									<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100/80 dark:bg-white/10 flex-shrink-0 mr-2">
 										<svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
 										</svg>
@@ -179,7 +184,7 @@ const readingTime = calculateReadingTime(content);
 								<div id="comments-section" class="mt-16 mb-8 flex flex-col items-center gap-4">
 									<div class="flex items-center gap-3">
 										<div class="h-px w-12 sm:w-32 bg-gradient-to-r from-transparent to-text-light/20 dark:to-text-dark/40"></div>
-										<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 flex-shrink-0">
+										<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 dark:bg-badge-dark/60 flex-shrink-0">
 											<svg class="w-5 h-5 text-primary-light dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
 											</svg>
@@ -209,7 +214,7 @@ const readingTime = calculateReadingTime(content);
 							{showDate && (
 								<div class="flex flex-wrap items-center justify-center gap-3 mb-4">
 									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											文章字数统计
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +223,7 @@ const readingTime = calculateReadingTime(content);
 										<span>{(wordCount / 1000).toFixed(1)}K 字</span>
 									</div>
 									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											预计阅读时间
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,7 +232,7 @@ const readingTime = calculateReadingTime(content);
 										<span>{readingTime} 分钟</span>
 									</div>
 									<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+										<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 											文章发布日期
 										</div>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +242,7 @@ const readingTime = calculateReadingTime(content);
 									</div>
 									{updatedDate && (
 										<div class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark">
-											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 												文章更新日期
 											</div>
 											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,7 +256,7 @@ const readingTime = calculateReadingTime(content);
 											href={`/categories/${category}`}
 											class="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-badge-light dark:bg-badge-dark/60 text-sm text-text-light dark:text-text-dark hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
 										>
-											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+											<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 												查看分类 {category} 下的所有文章
 											</div>
 											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,9 +280,9 @@ const readingTime = calculateReadingTime(content);
 												{tags.map((tag) => (
 													<a 
 														href={`/tags/${tag}`}
-														class="group relative px-2 py-1 text-xs font-medium bg-gray-100/80 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
+														class="group relative px-2 py-1 text-xs font-medium bg-gray-100/80 dark:bg-white/80 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
 													>
-														<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
+														<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 whitespace-nowrap px-3 py-2 bg-card-light dark:bg-card-dark tooltip-solid text-text-light dark:text-text-dark text-sm rounded-xl shadow-2xl opacity-0 invisible scale-95 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:visible [@media(hover:hover)]:group-hover:scale-100 transition-all duration-300 pointer-events-none z-10 origin-bottom">
 															查看标签 {tag} 下的所有文章
 														</div>
 														# {tag}
