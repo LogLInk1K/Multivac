@@ -4,15 +4,11 @@
 @import "../styles/markdown.css";
 
 html, body {
-  width: 100%;
-  /* 关键：阻止 iOS 的横向溢出滚动，彻底锁死宽度 */
   overflow-x: hidden; 
-  /* 关键：配合 user-scalable=no，彻底禁用 iOS 某些怪异区域的手势放大 */
-  touch-action: pan-y; 
+  touch-action: manipulate; 
 }
 
 html {
-  /* 禁用 iOS Safari 自动调整字体大小的功能 */
   -webkit-text-size-adjust: 100%;
 }
 
