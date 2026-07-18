@@ -5,6 +5,7 @@ import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 import type { AstroUserConfig } from 'astro';
 import fs from 'node:fs';
+import path from 'node:path';
 import YAML from 'yaml';
 
 let siteUrl = 'https://example.com';
@@ -32,7 +33,26 @@ const config: AstroUserConfig = {
   output: 'static',
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      {
+        name: 'expose-watching-yaml',
+        buildStart() {
+          const srcPath = path.resolve('./post/watching/index.yaml');
+          const targetPath = path.resolve('./public/watching.yaml');
+          
+          if (fs.existsSync(srcPath)) {
+            fs.copyFileSync(srcPath, targetPath);
+          }
+        },
+        closeBundle() {
+          const targetPath = path.resolve('./public/watching.yaml');
+          if (fs.existsSync(targetPath)) {
+            fs.unlinkSync(targetPath);
+          }
+        }
+      }
+    ],
     ssr: {
       external: ['node:fs', 'node:path'],
     },
