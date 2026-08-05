@@ -263,6 +263,6 @@ npm run build
 
 > 二次创作请保留版权信息
 
-本项目基于 [GPL-3.0](LICENSE) 协议开源
+本项目基于 [Apache-2.0](LICENSE) 协议开源
 
 此仓库按 "现状" 提供，暂不保证回复 Issue。
