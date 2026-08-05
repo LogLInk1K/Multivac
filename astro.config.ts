@@ -6,6 +6,7 @@ import { defineConfig } from 'astro/config';
 import type { AstroUserConfig } from 'astro';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import YAML from 'yaml';
 
 let siteUrl = 'https://example.com';
@@ -22,7 +23,25 @@ const config: AstroUserConfig = {
   site: siteUrl,
   trailingSlash: 'never',
 
-  integrations: [mdx(), sitemap()],
+integrations: [
+    mdx(), 
+    sitemap(),
+    {
+      name: 'copy-watching-on-build',
+      hooks: {
+        'astro:build:done': ({ dir }) => {
+          const srcPath = path.resolve('./post/watching/index.yaml');
+          const targetDir = fileURLToPath(dir);
+          const targetPath = path.join(targetDir, 'watching.yaml');
+
+          if (fs.existsSync(srcPath)) {
+            fs.copyFileSync(srcPath, targetPath);
+            console.log('Successfully copied watching.yaml to build output');
+          }
+        }
+      }
+    }
+  ],
 
   build: {
     inlineStylesheets: 'auto',
@@ -35,23 +54,6 @@ const config: AstroUserConfig = {
   vite: {
     plugins: [
       tailwindcss(),
-      {
-        name: 'expose-watching-yaml',
-        buildStart() {
-          const srcPath = path.resolve('./post/watching/index.yaml');
-          const targetPath = path.resolve('./public/watching.yaml');
-          
-          if (fs.existsSync(srcPath)) {
-            fs.copyFileSync(srcPath, targetPath);
-          }
-        },
-        closeBundle() {
-          const targetPath = path.resolve('./public/watching.yaml');
-          if (fs.existsSync(targetPath)) {
-            fs.unlinkSync(targetPath);
-          }
-        }
-      }
     ],
     ssr: {
       external: ['node:fs', 'node:path'],
