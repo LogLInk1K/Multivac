@@ -28,25 +28,25 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.7",
     "@tailwindcss/typography": "^0.5.20",
-    "@tailwindcss/vite": "^4.3.1",
+    "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.4",
-    "marked": "^18.0.5",
+    "marked": "^18.0.10",
     "qrcode": "^1.5.4",
-    "tailwindcss": "^4.3.1",
-    "typescript": "^6.0.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.2.0",
     "@types/qrcode": "^1.5.6",
-    "@typescript-eslint/parser": "^8.62.0",
-    "astro-eslint-parser": "^2.1.0",
-    "eslint": "^10.6.0",
-    "eslint-plugin-astro": "^2.1.1",
-    "globals": "^17.7.0",
-    "prettier": "^3.9.1",
+    "@typescript-eslint/parser": "^8.67.0",
+    "astro-eslint-parser": "^3.1.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-astro": "^3.1.0",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "typescript-eslint": "^8.62.0"
+    "typescript-eslint": "^8.67.0"
   }
 }
