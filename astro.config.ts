@@ -23,8 +23,8 @@ const config: AstroUserConfig = {
   site: siteUrl,
   trailingSlash: 'never',
 
-integrations: [
-    mdx(), 
+  integrations: [
+    mdx(),
     sitemap(),
     {
       name: 'copy-watching-on-build',
@@ -38,9 +38,9 @@ integrations: [
             fs.copyFileSync(srcPath, targetPath);
             console.log('Successfully copied watching.yaml to build output');
           }
-        }
-      }
-    }
+        },
+      },
+    },
   ],
 
   build: {
@@ -52,9 +52,7 @@ integrations: [
   output: 'static',
 
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+    plugins: [tailwindcss()],
     ssr: {
       external: ['node:fs', 'node:path'],
     },
