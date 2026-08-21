@@ -10,7 +10,7 @@ _支持动态说说 · 观影记录 · 赛博塔罗等功能_
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwind-css&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v6-3178C6?logo=typescript&logoColor=white)
 ![node version](https://img.shields.io/badge/node-22.18.0+-white?logo=node.js&logoColor=white)
-![License](https://img.shields.io/badge/License-GPL--3.0-green)
+![License](https://img.shields.io/badge/License-Apache--2.0-FF5531)
 
 </div>
 
